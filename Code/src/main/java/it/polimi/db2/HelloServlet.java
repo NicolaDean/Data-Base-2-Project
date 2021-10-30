@@ -1,6 +1,8 @@
 package it.polimi.db2;
 
+import com.google.gson.Gson;
 import it.polimi.db2.Entitys.OptionalProduct;
+import it.polimi.db2.Entitys.Service;
 
 import java.io.*;
 import java.util.List;
@@ -30,7 +32,12 @@ public class HelloServlet extends HttpServlet {
 
 
         Query students = entitymanager.createQuery("select p from OptionalProduct p");
+        Query services = entitymanager.createQuery("select s from Service s");
 
+        Gson gson = new Gson();
+
+        List<Service> resultServices = services.getResultList();
+        System.out.println("SIZEE:"+resultServices.size());
         List<OptionalProduct> products = students.getResultList();
 
         // Hello
@@ -41,7 +48,14 @@ public class HelloServlet extends HttpServlet {
             out.println("<h2> "+p.getName()+"</h2>");
         }
         out.println("</body></html>");
+
+        for(Service x:resultServices)
+        {
+            out.println("<h2> "+gson.toJson(x)+"</h2>");
+        }
     }
+
+
 
     public void destroy() {
     }
