@@ -1,13 +1,11 @@
 package it.polimi.db2.Entitys;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name="users", schema = "test")
+@NamedQuery(name = "User.authentication", query = "select usr from User usr WHERE usr.username = :username and usr.password = :password")
+@Table(name="Users", schema = "test")
 public class User {
     @Id
     @GeneratedValue
@@ -16,4 +14,8 @@ public class User {
     String username;
     String password;
     String email;
+
+    public String getUsername() {
+        return this.username;
+    }
 }

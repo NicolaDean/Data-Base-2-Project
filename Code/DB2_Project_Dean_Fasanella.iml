@@ -9,6 +9,7 @@
         <webroots>
           <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
         </webroots>
+        <sourceRoots />
       </configuration>
     </facet>
     <facet type="jpa" name="JPA">
@@ -16,7 +17,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="EclipseLink" />
         <datasource-mapping>
-          <factory-entry name="default" />
+          <factory-entry name="default" value="015159f7-b3ba-4469-9c17-b9470867fdec" />
         </datasource-mapping>
         <naming-strategy-map />
         <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/main/resources/META-INF/persistence.xml" />
