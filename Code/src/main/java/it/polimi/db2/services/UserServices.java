@@ -1,5 +1,7 @@
 package it.polimi.db2.services;
 
+import it.polimi.db2.entitys.Package;
+import it.polimi.db2.entitys.ServiceTypes.MobilePhoneServices;
 import it.polimi.db2.entitys.User;
 import it.polimi.db2.exception.AuthenticationFailed;
 import it.polimi.db2.exception.NotUniqueUsername;
@@ -46,6 +48,16 @@ public class UserServices extends BasicService{
         if(user.size()>0)   throw new NotUniqueUsername();
 
             return null;
+    }
+
+    public void createUser(String username,String password,String email)
+    {
+        User tmp = new User();
+        tmp.setUsername(username);
+        tmp.setEmail(email);
+        tmp.setPassword(password);
+
+        this.em.persist(tmp);
     }
 
 

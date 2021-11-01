@@ -2,8 +2,10 @@ package it.polimi.db2.services;
 
 import it.polimi.db2.entitys.Package;
 
+import javax.ejb.Stateless;
 import java.util.List;
 
+@Stateless
 public class PackageService extends BasicService{
 
     /**
@@ -11,7 +13,7 @@ public class PackageService extends BasicService{
      */
     public List<Package> getAllPackages()
     {
-        return null;
+        return this.em.createNamedQuery("Packages.All",Package.class).getResultList();
     }
 
     /**

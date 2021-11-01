@@ -19,4 +19,8 @@ public class Service {
     {
 
     }
+
+    public void setPackageId(int packageId) {
+        this.packageId = packageId;
+    }
 }

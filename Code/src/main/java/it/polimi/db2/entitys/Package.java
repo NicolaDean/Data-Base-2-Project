@@ -1,6 +1,7 @@
 package it.polimi.db2.entitys;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @NamedQuery(name="Packages.All",query="select p from Package p")
@@ -10,10 +11,21 @@ public class Package {
     @GeneratedValue
     int     id;
     String  name;
-    //@OneToMany //TODO find a way to do ManyToMany relations
-    //List<OptionalProduct> optionalProducts;
-    //TODO find a way to do OneToMany relations
-    /*@OneToMany(mappedBy = "p",fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true )
-    List<Service> services;*/
 
+
+    @OneToMany
+    @JoinColumn(name = "packageId")
+    List<Service> services;
+
+    @OneToMany
+    @JoinColumn(name = "packageId")
+    List<RateCost> rates;
+
+    @JoinTable(
+            name = "Packages_OptionalProducts",
+            schema = "test",
+            joinColumns = @JoinColumn(name = "packageId"),
+            inverseJoinColumns = @JoinColumn(name = "productId"))
+    @ManyToMany
+    List<OptionalProduct> products;
 }

@@ -48,8 +48,6 @@ public class HelloServlet extends HttpServlet {
 
         List<Service> resultServices = services.getResultList();
 
-
-
         System.out.println("SIZEE:"+resultServices.size());
         List<OptionalProduct> products = students.getResultList();
 
