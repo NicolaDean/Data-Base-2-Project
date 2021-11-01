@@ -1,15 +1,17 @@
 package it.polimi.db2;
 
 import com.google.gson.Gson;
-import it.polimi.db2.Entitys.OptionalProduct;
-import it.polimi.db2.Entitys.Packagee;
-import it.polimi.db2.Entitys.Service;
-import it.polimi.db2.Entitys.ServiceTypes.MobilePhoneServices;
-import it.polimi.db2.Entitys.User;
-import it.polimi.db2.Services.UserServices;
+import it.polimi.db2.entitys.OptionalProduct;
+import it.polimi.db2.entitys.Package;
+import it.polimi.db2.entitys.Service;
+import it.polimi.db2.entitys.ServiceTypes.MobilePhoneServices;
+import it.polimi.db2.exception.AuthenticationFailed;
+import it.polimi.db2.exception.NotUniqueUsername;
+import it.polimi.db2.services.UserServices;
 
 import java.io.*;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -21,6 +23,8 @@ import javax.servlet.annotation.*;
 public class HelloServlet extends HttpServlet {
     private String message;
 
+    @EJB(name="it.polimi.db2.Services/UserServices")
+    private UserServices userServices;
     public void init() {
         message = "Hello World!";
     }
@@ -34,13 +38,12 @@ public class HelloServlet extends HttpServlet {
 
         EntityManager entitymanager = emfactory.createEntityManager( );
 
-        UserServices usr = new UserServices();
         Gson gson = new Gson();
 
 
         Query students = entitymanager.createQuery("select p from OptionalProduct p");
         Query services = entitymanager.createQuery("select s from Service s");
-        Query packages = entitymanager.createQuery("select p from Packagee p");
+        Query packages = entitymanager.createQuery("select p from Package p");
 
 
         List<Service> resultServices = services.getResultList();
@@ -57,8 +60,7 @@ public class HelloServlet extends HttpServlet {
         {
             out.println("<h2> "+p.getName()+"</h2>");
         }
-        //out.println("<h2> "+gson.toJson(usr.checkAuthentication("nico","1234"))+"</h2>");
-        //out.println("<h2> "+gson.toJson(usr.checkAuthentication("aa","1234"))+"</h2>");
+
         out.println("</body></html>");
 
         for(Service x:resultServices)
@@ -66,8 +68,8 @@ public class HelloServlet extends HttpServlet {
             out.println("<h2> "+gson.toJson(x)+"</h2>");
         }
         try {
-            List<Packagee> resultPackages = packages.getResultList();
-            for(Packagee x:resultPackages)
+            List<Package> resultPackages = packages.getResultList();
+            for(Package x:resultPackages)
             {
                 out.println("<h2> "+gson.toJson(x)+"</h2>");
             }

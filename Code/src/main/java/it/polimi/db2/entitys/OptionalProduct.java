@@ -1,4 +1,4 @@
-package it.polimi.db2.Entitys;
+package it.polimi.db2.entitys;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

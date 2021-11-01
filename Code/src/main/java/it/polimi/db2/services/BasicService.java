@@ -1,4 +1,4 @@
-package it.polimi.db2.Services;
+package it.polimi.db2.services;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

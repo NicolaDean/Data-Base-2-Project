@@ -1,18 +1,18 @@
-package it.polimi.db2.Entitys;
+package it.polimi.db2.entitys;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
+@NamedQuery(name="Packages.All",query="select p from Package p")
 @Table(name = "Packages", schema = "test")
-public class Packagee {
+public class Package {
     @Id
     @GeneratedValue
     int     id;
     String  name;
-    //@OneToMany
+    //@OneToMany //TODO find a way to do ManyToMany relations
     //List<OptionalProduct> optionalProducts;
-
+    //TODO find a way to do OneToMany relations
     /*@OneToMany(mappedBy = "p",fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true )
     List<Service> services;*/
 

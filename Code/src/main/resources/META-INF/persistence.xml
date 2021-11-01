@@ -4,9 +4,9 @@
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
              version="2.2">
     <persistence-unit name="default">
-        <class>it.polimi.db2.Entitys.Service</class>
-        <class>it.polimi.db2.Entitys.ServiceTypes.MobilePhoneServices</class>
-        <class>it.polimi.db2.Entitys.ServiceTypes.InternetServices</class>
+        <class>it.polimi.db2.entitys.Service</class>
+        <class>it.polimi.db2.entitys.ServiceTypes.MobilePhoneServices</class>
+        <class>it.polimi.db2.entitys.ServiceTypes.InternetServices</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>

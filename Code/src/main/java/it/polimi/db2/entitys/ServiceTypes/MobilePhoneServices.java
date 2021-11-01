@@ -1,6 +1,6 @@
-package it.polimi.db2.Entitys.ServiceTypes;
+package it.polimi.db2.entitys.ServiceTypes;
 
-import it.polimi.db2.Entitys.Service;
+import it.polimi.db2.entitys.Service;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;

@@ -1,4 +1,4 @@
-package it.polimi.db2.Exception;
+package it.polimi.db2.exception;
 
 public class NotUniqueUsername extends Exception{
 
