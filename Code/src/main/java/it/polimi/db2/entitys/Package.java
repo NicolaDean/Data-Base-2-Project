@@ -28,4 +28,24 @@ public class Package {
             inverseJoinColumns = @JoinColumn(name = "productId"))
     @ManyToMany
     List<OptionalProduct> products;
+
+
+    public String getName() {
+        return this.name;
+    }
+
+    public List<OptionalProduct> getOptionalProducts()
+    {
+        return this.products;
+    }
+
+    public List<RateCost> getRates()
+    {
+        return this.rates;
+    }
+
+    public List<Service> getServices()
+    {
+        return this.services;
+    }
 }

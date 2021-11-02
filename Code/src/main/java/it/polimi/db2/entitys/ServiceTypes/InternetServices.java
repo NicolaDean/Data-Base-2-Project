@@ -14,4 +14,12 @@ import javax.persistence.Table;
 public class InternetServices extends Service {
     int   gigabyte;
     float extraFee;
+
+    public float getExtraFee() {
+        return extraFee;
+    }
+
+    public int getGiga() {
+        return gigabyte;
+    }
 }

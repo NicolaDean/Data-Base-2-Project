@@ -10,6 +10,8 @@ public class Service {
     @GeneratedValue
     int id;
     int packageId;
+    @Column(name = "DTYPE")
+    String type;
 
     /*@ManyToOne
     @JoinColumn(name="packageId", nullable=false)
@@ -22,5 +24,10 @@ public class Service {
 
     public void setPackageId(int packageId) {
         this.packageId = packageId;
+    }
+
+    public String getType()
+    {
+        return this.type;
     }
 }

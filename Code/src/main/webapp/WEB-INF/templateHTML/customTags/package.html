@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+<div th:fragment="package (p)">
+    <div>
+        <h1 th:text="${p.getName()}"></h1>
+        <h4>Possinles Rates</h4>
+        <div class="card-columns" style="margin:8px 0 15px 0;">
+            <div th:each="rate : ${p.getRates()}" class="card bg-success">
+                <div class="row">
+                    <div class="col">
+                        <h6>Month Validity:</h6>
+                    </div>
+                    <div class="col">
+                        <p th:text="${rate.getMonthValidity()} + '$'"></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <h6>Price:</h6>
+                    </div>
+                    <div class="col">
+                        <p th:text="${rate.getPrice()} + '$'"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <h4>SERVICES:</h4>
+        <div class="card-columns">
+            <div th:each="s :${p.getServices()}" class="card bg-warning">
+                <div th:replace="/WEB-INF/templateHTML/customTags/service::service(${s})"></div>
+            </div>
+        </div>
+
+        <h4>OPTIONAL PRODUCT:</h4>
+        <div th:each="prod : ${p.getOptionalProducts()}">
+            <h6 th:text="${prod.getName()}"></h6>
+        </div>
+        <hr>
+    </div>
+</div>
+</body>
+</html>

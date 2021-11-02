@@ -13,11 +13,10 @@ import javax.persistence.Table;
 @DiscriminatorValue(value = "MPS")
 public class MobilePhoneServices extends Service {
 
-    int   minutes;
-    int   sms;
+    int    minutes;
+    int    sms;
     double extraMinutesFee;
     double extraSMSFee;
-
 
     public MobilePhoneServices() {
 
@@ -38,5 +37,21 @@ public class MobilePhoneServices extends Service {
 
     public void setExtraSMSFee(double extraSMSFee) {
         this.extraSMSFee = extraSMSFee;
+    }
+
+    public double getExtraMinutesFee() {
+        return extraMinutesFee;
+    }
+
+    public int getMinutes() {
+        return minutes;
+    }
+
+    public int getSms() {
+        return sms;
+    }
+
+    public double getExtraSMSFee() {
+        return extraSMSFee;
     }
 }

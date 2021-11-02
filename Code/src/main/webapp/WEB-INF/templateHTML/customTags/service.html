@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="service (s)">
+    <div th:switch="${s.getType()}" >
+        <div th:case="'MIS'">
+            <p>Mobile internet services</p>
+            <div class="row">
+                <div class="col"><h6> Gigabyte:</h6></div>
+                <div class="col"><p th:text="${s.getGiga()}"></p></div>
+            </div>
+            <div class="row">
+                <div class="col"><h6> Extra GB Fee:</h6> </div>
+                <div class="col"> <p th:text="${s.getExtraFee()}"></p></div>
+            </div>
+
+        </div>
+        <div th:case="'MPS'">
+            <p>Mobile phone services:</p>
+
+            <div class="row">
+                <div class="col"><h6> Minutes:</h6> </div>
+                <div class="col"> <p th:text="${s.getMinutes()}"></p></div>
+            </div>
+            <div class="row">
+                <div class="col"><h6> SMS:</h6>  </div>
+                <div class="col"> <p th:text="${s.getSms()}"></p></div>
+            </div>
+            <div class="row">
+                <div class="col"><h6> Extra SMS Fee:</h6> </div>
+                <div class="col"><p th:text="${s.getExtraSMSFee()}"></p></div>
+            </div>
+            <div class="row">
+                <div class="col"><h6> Extra Minutes Fee:</h6> </div>
+                <div class="col"><p th:text="${s.getExtraMinutesFee()}"></p></div>
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

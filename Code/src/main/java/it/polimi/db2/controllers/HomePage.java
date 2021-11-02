@@ -3,6 +3,7 @@ package it.polimi.db2.controllers;
 import com.google.gson.Gson;
 import it.polimi.db2.entitys.Package;
 import it.polimi.db2.services.PackageService;
+import it.polimi.db2.utils.TemplatePathManager;
 
 import javax.ejb.EJB;
 import javax.servlet.annotation.WebServlet;
@@ -20,17 +21,10 @@ public class HomePage extends BaseServerlet{
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        // Hello
-        PrintWriter out = response.getWriter();
-        out.println("<html><body>");
-
         List<Package> packages = this.packageService.getAllPackages();
-        for(Package p:packages)
-        {
-            Gson g = new Gson();
-            System.out.println(g.toJson(p));
-            out.println("<h2>"  + g.toJson(p) + "</h2>");
-        }
-        out.println("</html></body>");
+
+        request.setAttribute("packages",packages);
+        request.setAttribute("naa",1);
+        this.templateRenderer(request,response, TemplatePathManager.homePage);
     }
 }

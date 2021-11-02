@@ -5,7 +5,7 @@ package it.polimi.db2.utils;
  */
 public class TemplatePathManager {
 
-    public static String root           = "/WEB-INF/TemplateHTML/";
+    public static String root           = "/WEB-INF/templateHTML/";
 
     //Login
     public static String loginPage      = "index";
