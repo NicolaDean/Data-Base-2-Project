@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class BaseServerlet extends HttpServlet {
+public class BasicServerlet extends HttpServlet {
 
     protected TemplateEngine templateEngine;
 

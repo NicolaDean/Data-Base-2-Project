@@ -1,8 +1,6 @@
 package it.polimi.db2.controllers;
 
 
-import com.google.gson.Gson;
-import it.polimi.db2.entitys.Package;
 import it.polimi.db2.exception.AuthenticationFailed;
 import it.polimi.db2.exception.NotUniqueUsername;
 import it.polimi.db2.exception.WrongCredential;
@@ -10,17 +8,15 @@ import it.polimi.db2.services.UserServices;
 
 import javax.ejb.EJB;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 import it.polimi.db2.utils.TemplatePathManager;
 import org.apache.commons.lang.StringEscapeUtils;
 
 @WebServlet(name = "login", value = "/login")
-public class CheckLogin extends BaseServerlet {
+public class CheckLogin extends BasicServerlet {
 
     @EJB(name="it.polimi.db2.services/UserService")
     private UserServices userServices;
