@@ -17,6 +17,6 @@ public class PackageService extends BasicService{
     }
 
     /**
-     * //TODO ADD ALL POSSIBLE QUERYES FOR PACKAGE
+     * //TODO ADD ALL POSSIBLE QUERIES FOR PACKAGE
      */
 }

@@ -4,32 +4,14 @@
   <title>Page Title</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    /* Style the body */
-    body {
-      font-family: Arial;
-      margin: 0;
-    }
-
-    /* Header/Logo Title */
-    .header {
-      padding: 5px;
-      text-align: right;
-      background: #1abc9c;
-      color: white;
-      font-size: 20px;
-    }
-
-    /* Page Content */
-    .content {padding:10px;}
-  </style>
 </head>
 <body>
-
-<div th:fragment="name" class="header">
-  <h4>Welcome,</h4> <p th:text="${name}"></p>
+<link rel="stylesheet" href="LoggedBannerStyle.css">
+<div th:fragment="name (n)">
+<div class="header">
+  <h2>Welcome, <h3 th:text="${n}"></h3></h2>
 </div>
-
+</div>
 </body>
 
 </body>
