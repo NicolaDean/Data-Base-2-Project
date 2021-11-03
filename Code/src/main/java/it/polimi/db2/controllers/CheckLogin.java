@@ -7,10 +7,10 @@ import it.polimi.db2.exception.WrongCredential;
 import it.polimi.db2.services.UserServices;
 
 import javax.ejb.EJB;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 import it.polimi.db2.utils.TemplatePathManager;
@@ -33,6 +33,8 @@ public class CheckLogin extends BasicServerlet {
 
         try {
             userServices.checkAuthentication(username,password);
+            HttpSession session=request.getSession();
+            session.setAttribute("name",username);
             response.sendRedirect("home");
             this.templateRenderer(request,response,TemplatePathManager.homePage);
             return;

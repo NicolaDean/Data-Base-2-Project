@@ -8,6 +8,7 @@ import javax.ejb.EJB;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -23,5 +24,14 @@ public class HomePage extends BasicServerlet {
 
         request.setAttribute("packages",packages);
         this.templateRenderer(request,response, TemplatePathManager.homePage);
+        
+      //Setting Name if logged
+        HttpSession session=request.getSession(false);
+
+        if(session!=null){
+            String name=(String)session.getAttribute("name");
+
+            request.setAttribute("name",name);
+        }
     }
 }
