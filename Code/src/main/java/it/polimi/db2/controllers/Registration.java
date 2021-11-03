@@ -35,10 +35,10 @@ public class Registration extends BasicServerlet {
         try {
             this.userServices.createUser(username,password,email);
             this.templateRenderer(request,response, TemplatePathManager.loginPage);
-
-
             return;
-        }catch (GenericSignatureFormatError registrationFailed){
+
+        }catch (RegistrationFailed registrationFailed){
+            this.setError(request,response,"Registration failed. Check if all forms are filled! ", TemplatePathManager.registration);
         }
     }
 

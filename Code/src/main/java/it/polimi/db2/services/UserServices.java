@@ -5,6 +5,7 @@ import it.polimi.db2.entitys.ServiceTypes.MobilePhoneServices;
 import it.polimi.db2.entitys.User;
 import it.polimi.db2.exception.AuthenticationFailed;
 import it.polimi.db2.exception.NotUniqueUsername;
+import it.polimi.db2.exception.RegistrationFailed;
 import it.polimi.db2.exception.WrongCredential;
 
 import javax.ejb.Stateless;
@@ -50,12 +51,15 @@ public class UserServices extends BasicService{
             return null;
     }
 
-    public void createUser(String username,String password,String email)
-    {
+    public void createUser(String username,String password,String email) throws RegistrationFailed {
         User tmp = new User();
         tmp.setUsername(username);
         tmp.setEmail(email);
         tmp.setPassword(password);
+
+        if(username.isEmpty() || email.isEmpty() || password.isEmpty()){
+            throw new RegistrationFailed();
+        }
 
         this.em.persist(tmp);
     }

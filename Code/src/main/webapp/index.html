@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-
+<h1 style="color: #5e9ca0;"><span style="background-color: #2b2301; color: #fff; display: inline-block; padding: 3px 10px; font-weight: bold; border-radius: 5px;">Log In</span></h1>
 <form action="login" method="POST">
   <div class="form-group">
     <label for="username">Username:</label>
@@ -23,7 +23,11 @@
   <button type="submit" class="btn btn-primary">LOGIN</button>
 </form>
 <p th:text=" ${errorMsg}"></p>
-<a href="registration.html">register here</a>
+
+<form action="registration.html">
+  <input type="submit" value="REGISTER" />
+</form>
+
 <a href="home">home test</a>
 </body>
 </html>
