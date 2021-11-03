@@ -1,5 +1,6 @@
 package it.polimi.db2.controllers;
 
+import it.polimi.db2.exception.RegistrationFailed;
 import it.polimi.db2.services.UserServices;
 import it.polimi.db2.utils.TemplatePathManager;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -33,10 +34,11 @@ public class Registration extends BasicServerlet {
 
         try {
             this.userServices.createUser(username,password,email);
-            this.templateRenderer(request,response, TemplatePathManager.homePage);
+            this.templateRenderer(request,response, TemplatePathManager.loginPage);
+
+
             return;
-        }catch (GenericSignatureFormatError e){
-            e.printStackTrace();
+        }catch (GenericSignatureFormatError registrationFailed){
         }
     }
 
