@@ -8,7 +8,7 @@ import java.util.List;
 @Table(name = "Packages", schema = "test")
 public class Package {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     int     id;
     String  name;
 

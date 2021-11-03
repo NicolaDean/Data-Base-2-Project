@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Table(name = "services", schema = "test")
 public class Service {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     int id;
     int packageId;
     @Column(name = "DTYPE")

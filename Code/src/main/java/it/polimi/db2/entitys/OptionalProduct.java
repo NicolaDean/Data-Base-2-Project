@@ -1,16 +1,13 @@
 package it.polimi.db2.entitys;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "OptionalProducts", schema = "test")
 public class OptionalProduct{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     int     id;
     String  name;
     int     monthlyFee;
