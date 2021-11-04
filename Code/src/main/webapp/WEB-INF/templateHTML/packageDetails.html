@@ -3,21 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>FasaNico Telecom</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.4.1/cjs/popper.min.js" integrity="sha256-T3bYsIPyOLpEfeZOX4M7J59ZoDMzuYFUsPiSN3Xcc2M=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
-            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.4.1/cjs/popper.min.js"
-            integrity="sha256-T3bYsIPyOLpEfeZOX4M7J59ZoDMzuYFUsPiSN3Xcc2M=" crossorigin="anonymous"></script>
 
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
-            crossorigin="anonymous"></script>
 </head>
 <body>
-
+    <div th:replace="/WEB-INF/templateHTML/customTags/header::header"></div>
     <h1>Pacakge Details</h1>
 
     <h2 th:text="'Package : ' + ${package.getName()}"></h2>
@@ -28,10 +22,22 @@
     </td>
 
     <h3>Optional Products</h3>
-    <select class="form-select-lg mb-3" multiple aria-label="Optional Products">
-        <tr th:each="optionalProduct : ${optionalProducts}" >
-                <option value="${optionalProduct.getId().toString()}"><p th:text="${optionalProduct.getName()}"></p></option>
+    <select hidden class="form-select-lg mb-3" multiple aria-label="Optional Products">
+        <tr th:each="optionalProduct : ${package.getOptionalProducts()}" >
+                <option th:value="${optionalProduct.getId()}"
+                        th:id="'multiple-products-'+${optionalProduct.getId()}">
+                    <p th:text="${optionalProduct.getName()}"></p>
+                </option>
         </tr>
     </select>
+
+    <div  th:each="op : ${package.getOptionalProducts()}">
+        <div th:id="'choice'+${op.getId()}"
+             th:onclick="'multiple_custom(\'multiple-products\','+${op.getId()}+' )'">
+            <h1 th:text="${op.getName()}"> </h1>
+        </div>
+    </div>
+
+    <script src="scripts/multipleOptionCustom.js"></script>
 </body>
 </html>

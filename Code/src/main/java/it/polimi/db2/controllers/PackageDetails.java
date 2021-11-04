@@ -34,8 +34,6 @@ public class PackageDetails extends BasicServerlet{
         try {
             Package p = this.packageService.getPackageById(id);
             request.setAttribute("package",p);
-            List<OptionalProduct> optionalProducts= p.getOptionalProducts();
-            request.setAttribute("optionalProducts",optionalProducts);
             this.templateRenderer(request,response, TemplatePathManager.packageDetails);
 
         } catch (NoPackageFound e) {
