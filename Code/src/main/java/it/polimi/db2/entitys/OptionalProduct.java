@@ -15,4 +15,12 @@ public class OptionalProduct{
     public String getName() {
         return name;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getMonthlyFee() {
+        return monthlyFee;
+    }
 }
