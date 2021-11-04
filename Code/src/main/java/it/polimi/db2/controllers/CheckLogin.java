@@ -33,10 +33,10 @@ public class CheckLogin extends BasicServerlet {
 
         try {
             userServices.checkAuthentication(username,password);
+
             HttpSession session=request.getSession();
-            session.setAttribute("name",username);
+            session.setAttribute("username",username);
             response.sendRedirect("home");
-            this.templateRenderer(request,response,TemplatePathManager.homePage);
             return;
         } catch (WrongCredential wrongCredential) {
             this.setError(request,response,"Wrong credentials!", TemplatePathManager.loginPage);
