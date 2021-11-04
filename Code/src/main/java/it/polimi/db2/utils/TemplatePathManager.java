@@ -13,5 +13,5 @@ public class TemplatePathManager {
 
     //TEMPLATES
     public static String homePage       = root + "home";
-
+    public static String packageDetails = root + "packageDetails";
 }

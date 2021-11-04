@@ -1,6 +1,7 @@
 package it.polimi.db2.services;
 
 import it.polimi.db2.entitys.Package;
+import it.polimi.db2.exception.NoPackageFound;
 
 import javax.ejb.Stateless;
 import java.util.List;
@@ -17,6 +18,14 @@ public class PackageService extends BasicService{
     }
 
     /**
-     * //TODO ADD ALL POSSIBLE QUERIES FOR PACKAGE
+     * @param id id of the package to search
+     * @return a package with id
      */
+    public Package getPackageById(int id) throws NoPackageFound {
+        Package p = this.em.find(Package.class,id);
+
+        if(p == null) throw new NoPackageFound();
+
+        return p;
+    }
 }
