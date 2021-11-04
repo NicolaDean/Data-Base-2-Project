@@ -27,14 +27,11 @@
         <div th:replace="/WEB-INF/templateHTML/customTags/package::package(${package})"></div>
     </td>
 
+    <h3>Optional Products</h3>
     <select class="form-select-lg mb-3" multiple aria-label="Optional Products">
-        <tr th:each="optionalProduct : ${optionalProduct}" >
-            <td>
-            <div th:replace="/WEB-INF/templateHTML/customTags/optionalProductSelection::optionalProduct(${optionalProduct})"></div>
-            </td>
+        <tr th:each="optionalProduct : ${optionalProducts}" >
+                <option value="${optionalProduct.getId().toString()}"><p th:text="${optionalProduct.getName()}"></p></option>
         </tr>
     </select>
-    <p th:text="${optionalProduct.getId()} + '$'"></p>
-
 </body>
 </html>
