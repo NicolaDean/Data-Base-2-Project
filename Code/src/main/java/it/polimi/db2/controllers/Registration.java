@@ -1,6 +1,8 @@
 package it.polimi.db2.controllers;
 
+import it.polimi.db2.exception.RegistrationFailed;
 import it.polimi.db2.services.UserServices;
+import it.polimi.db2.utils.TemplatePathManager;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.ejb.EJB;
@@ -8,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.GenericSignatureFormatError;
 
 @WebServlet(name = "registration", value = "/registration")
 public class Registration extends BasicServerlet {
@@ -17,10 +20,29 @@ public class Registration extends BasicServerlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String username = null;
+        String password = null;
+        String email = null;
 
-        String username = StringEscapeUtils.escapeJava(request.getParameter("username"));
-        String password = StringEscapeUtils.escapeJava(request.getParameter("password"));
+        System.out.println("User Registration");
 
-        this.userServices.createUser(username,password,username+"@gmail.com");
+        username = StringEscapeUtils.escapeJava(request.getParameter("username"));
+        password = StringEscapeUtils.escapeJava(request.getParameter("password"));
+        email = StringEscapeUtils.escapeJava(request.getParameter("email"));
+
+        System.out.println(username+", "+password+", "+email+";");
+
+        try {
+            this.userServices.createUser(username,password,email);
+            this.templateRenderer(request,response, TemplatePathManager.loginPage);
+            return;
+
+        }catch (RegistrationFailed registrationFailed){
+            this.setError(request,response,"Registration failed. Check if all forms are filled! ", TemplatePathManager.registration);
+        }
+    }
+
+
+    public void destroy() {
     }
 }

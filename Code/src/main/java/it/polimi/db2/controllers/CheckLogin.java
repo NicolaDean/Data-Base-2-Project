@@ -10,6 +10,7 @@ import javax.ejb.EJB;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 import it.polimi.db2.utils.TemplatePathManager;
@@ -32,10 +33,13 @@ public class CheckLogin extends BasicServerlet {
 
         try {
             userServices.checkAuthentication(username,password);
+            HttpSession session=request.getSession();
+            session.setAttribute("name",username);
+            response.sendRedirect("home");
             this.templateRenderer(request,response,TemplatePathManager.homePage);
             return;
         } catch (WrongCredential wrongCredential) {
-            this.setError(request,response,"wrong credential bro", TemplatePathManager.loginPage);
+            this.setError(request,response,"Wrong credentials!", TemplatePathManager.loginPage);
         }catch (AuthenticationFailed e) {
             e.printStackTrace();
             this.setError(request,response,"Authentication failed", TemplatePathManager.loginPage);
@@ -43,7 +47,6 @@ public class CheckLogin extends BasicServerlet {
         } catch (NotUniqueUsername e) {
             e.printStackTrace();
         }
-
     }
     public void destroy() {
     }

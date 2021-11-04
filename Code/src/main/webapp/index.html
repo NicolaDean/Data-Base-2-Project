@@ -5,10 +5,10 @@
     <title>Title</title>
 </head>
 <body>
-
+<h1 style="color: #5e9ca0;"><span style="background-color: #2b2301; color: #fff; display: inline-block; padding: 3px 10px; font-weight: bold; border-radius: 5px;">Log In</span></h1>
 <form action="login" method="POST">
   <div class="form-group">
-    <label for="username">Email address:</label>
+    <label for="username">Username:</label>
     <input type="text" class="form-control" placeholder="Enter username" id="username" name="username">
   </div>
   <div class="form-group">
@@ -23,6 +23,11 @@
   <button type="submit" class="btn btn-primary">LOGIN</button>
 </form>
 <p th:text=" ${errorMsg}"></p>
+
+<form action="registration.html">
+  <input type="submit" value="REGISTER" />
+</form>
+
 <a href="home">home test</a>
 </body>
 </html>

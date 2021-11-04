@@ -7,9 +7,11 @@ public class TemplatePathManager {
 
     public static String root           = "/WEB-INF/templateHTML/";
 
-    //Login
+    //Login and Registration
     public static String loginPage      = "index";
+    public static String registration   = "registration";
 
     //TEMPLATES
-    public static String homePage       = root +"home";
+    public static String homePage       = root + "home";
+
 }

@@ -100,6 +100,14 @@ public class HelloServlet extends HttpServlet {
 
         System.out.println("babbani");
 
+
+
+        //SESSION
+        HttpSession session=request.getSession(false);
+        if(session!=null){
+            String name=(String)session.getAttribute("name");
+            out.print("Hello, "+name+" Welcome to Profile");
+        }
     }
 
 

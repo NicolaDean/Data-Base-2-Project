@@ -1,16 +1,13 @@
 package it.polimi.db2.entitys;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name="Rate_costs", schema = "test")
 public class RateCost {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     int id;
     int monthValidity;
     int cost;
