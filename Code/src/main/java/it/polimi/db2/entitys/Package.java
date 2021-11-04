@@ -29,6 +29,9 @@ public class Package {
     @ManyToMany
     List<OptionalProduct> products;
 
+    public int getId() {
+        return id;
+    }
 
     public String getName() {
         return this.name;

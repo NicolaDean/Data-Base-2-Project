@@ -4,23 +4,32 @@
   <title>Page Title</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
-<link rel="stylesheet" href="LoggedBannerStyle.css">
-<div th:fragment="header">
+  <div th:fragment="header">
 <div class="header">
+  <style>
+    body {
+      font-family: Arial;
+      margin: 0;
+    }
+
+    /* Header/Logo Title */
+    .header {
+      padding: 10px;
+      text-align: right;
+      background: #1abc9c;
+      color: black;
+      font-size: 30px;
+    }
+  </style>
   <!-- Image and text -->
-  <nav class="navbar navbar-light bg-light">
-    <a class="navbar-brand" href="#">
-      <img src="/docs/4.0/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="">
-      Bootstrap
+  <nav class="navbar navbar-light">
+    <a class="navbar-brand" th:size="30">
+      FasaNico Telecom
     </a>
 
-    <h3 th:if="${session.username}" th:text="'Welcome, '+ ${session.username}"></h3>
+    <h5 th:if="${session.username}" th:text="'Welcome, '+ ${session.username}"></h5>
   </nav>
 </div>
 </div>
-</body>
-
-</body>
+  </head>
 </html>
