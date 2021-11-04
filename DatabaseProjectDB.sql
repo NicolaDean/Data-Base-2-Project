@@ -139,3 +139,28 @@ insert into mobile_phone_services (id,minutes,sms,extraMinutesFee,extraSMSFee) v
 
 select * from services;
 select * from services natural join mobile_phone_services;
+
+select * from Users;
+drop table if exists Orders_OptionalProducts;
+drop table if exists Orders;
+create table Orders(
+                       id 				INT AUTO_INCREMENT,
+                       creationDate	datetime,
+                       userId			INT,
+                       packageId       INT,
+                       rateId			INT,
+                       startDate		date,
+                       totalPayment    FLOAT,
+                       PRIMARY KEY(id),
+                       FOREIGN KEY (rateId) REFERENCES Rate_costs (id),
+                       FOREIGN KEY (packageId) REFERENCES Rate_costs (id)
+
+);
+
+create table Orders_OptionalProducts(
+                                        orderId INT,
+                                        productId INT,
+
+                                        FOREIGN KEY (orderId) REFERENCES Orders (id),
+                                        FOREIGN KEY (productId) REFERENCES OptionalProducts(id)
+);

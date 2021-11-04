@@ -22,6 +22,8 @@
     </td>
 
     <h3>Optional Products</h3>
+
+    <!-- Multiple Selection Option input for optional products -->
     <select hidden class="form-select-lg mb-3" multiple aria-label="Optional Products">
         <tr th:each="optionalProduct : ${package.getOptionalProducts()}" >
                 <option th:value="${optionalProduct.getId()}"
@@ -31,6 +33,7 @@
         </tr>
     </select>
 
+    <!--Javascript based selection mapping DIV->OPTION-->
     <div  th:each="op : ${package.getOptionalProducts()}">
         <div th:id="'choice'+${op.getId()}"
              th:onclick="'multiple_custom(this,\'multiple-products\','+${op.getId()}+' )'"
