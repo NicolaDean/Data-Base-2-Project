@@ -22,6 +22,5 @@ public class Registration extends BasicServerlet {
         String password = StringEscapeUtils.escapeJava(request.getParameter("password"));
 
         this.userServices.createUser(username,password,username+"@gmail.com");
-
     }
 }
