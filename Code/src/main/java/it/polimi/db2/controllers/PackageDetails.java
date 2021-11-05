@@ -42,9 +42,6 @@ public class PackageDetails extends BasicServerlet{
             //TODO print error with "no package found"
         }
 
-       int packageID;
-        packageID = (int) request.getAttribute("rates");
-
     }
 
 }
