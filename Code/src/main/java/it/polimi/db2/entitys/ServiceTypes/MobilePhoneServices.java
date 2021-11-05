@@ -39,19 +39,19 @@ public class MobilePhoneServices extends Service {
         this.extraSMSFee = extraSMSFee;
     }
 
-    public double getExtraMinutesFee() {
-        return extraMinutesFee;
+    public String getExtraMinutesFee() {
+        return extraMinutesFee + " $/min extra usage";
     }
 
-    public int getMinutes() {
-        return minutes;
+    public String getMinutes() {
+        return minutes + " min";
     }
 
-    public int getSms() {
-        return sms;
+    public String getSms() {
+        return sms + " SMS";
     }
 
-    public double getExtraSMSFee() {
-        return extraSMSFee;
+    public String getExtraSMSFee() {
+        return extraSMSFee + " $/SMS extra usage";
     }
 }

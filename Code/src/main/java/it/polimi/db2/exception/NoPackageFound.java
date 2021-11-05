@@ -1,6 +1,6 @@
 package it.polimi.db2.exception;
 
-public class NoPackageFound extends Exception{
+public class NoPackageFound extends ElementNotFound{
 
     public NoPackageFound()
     {

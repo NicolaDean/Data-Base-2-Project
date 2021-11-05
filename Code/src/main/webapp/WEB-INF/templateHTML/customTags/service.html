@@ -8,41 +8,29 @@
 <div th:fragment="service (s)">
     <div th:switch="${s.getType()}" >
         <div th:case="'MIS'">
-            <p>Mobile internet services</p>
-            <div class="row">
-                <div class="col"><h6> Gigabyte:</h6></div>
-                <div class="col"><p th:text="${s.getGiga()}"></p></div>
-            </div>
-            <div class="row">
-                <div class="col"><h6> Extra GB Fee:</h6> </div>
-                <div class="col"> <p th:text="${s.getExtraFee()}"></p></div>
+            <div class="card" style="width: 18rem;">
+                <div class="card-header">
+                    Mobile internet services
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" th:text="${s.getGiga()}"></li>
+                    <li class="list-group-item" th:text="${s.getExtraFee()}"></li>
+                </ul>
             </div>
 
         </div>
         <div th:case="'MPS'">
-            <p>Mobile phone services:</p>
-
-            <div class="row">
-                <div class="col"><h6> Minutes:</h6> </div>
-                <div class="col"> <p th:text="${s.getMinutes()}"></p></div>
+            <div class="card" style="width: 18rem;">
+                <div class="card-header">
+                    Mobile phone services:
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" th:text="${s.getMinutes()}"></li>
+                    <li class="list-group-item" th:text="${s.getSms()}"></li>
+                    <li class="list-group-item" th:text="${s.getExtraSMSFee()}" ></li>
+                    <li class="list-group-item" th:text="${s.getExtraMinutesFee()}"></li>
+                </ul>
             </div>
-            <div class="row">
-                <div class="col"><h6> SMS:</h6>  </div>
-                <div class="col"> <p th:text="${s.getSms()}"></p></div>
-            </div>
-            <div class="row">
-                <div class="col"><h6> Extra SMS Fee:</h6> </div>
-                <div class="col"><p th:text="${s.getExtraSMSFee()}"></p></div>
-            </div>
-            <div class="row">
-                <div class="col"><h6> Extra Minutes Fee:</h6> </div>
-                <div class="col"><p th:text="${s.getExtraMinutesFee()}"></p></div>
-            </div>
-
-
-
-
-
         </div>
     </div>
 </div>

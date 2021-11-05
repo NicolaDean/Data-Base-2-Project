@@ -28,4 +28,9 @@ public class RateCost {
     public int getPackageId() {
         return packageId;
     }
+
+    public String getRatesString()
+    {
+        return this.cost + "$ for " + this.monthValidity + " month";
+    }
 }

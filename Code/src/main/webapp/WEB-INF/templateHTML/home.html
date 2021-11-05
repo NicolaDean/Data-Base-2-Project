@@ -25,28 +25,7 @@
         <td>
                 <!-- Used fragment parameters to pass packages info to our CUSTOM TAG -->
             <div th:replace="/WEB-INF/templateHTML/customTags/package::package(${package})"></div>
-            <style>
-                .button {
-                    border: none;
-                    color: white;
-                    padding: 15px 32px;
-                    text-align: center;
-                    text-decoration: none;
-                    display: inline-block;
-                    font-size: 16px;
-                    margin: 4px 2px;
-                    cursor: pointer;
-                }
 
-                .button {background-color: #1abc9c;} /* Blue */
-
-                /* Rounded border */
-                hr.rounded {
-                    border-top: 8px solid #bbb;
-                    border-radius: 5px;
-                }
-            </style>
-            <a th:href=" 'package-details?id=' + ${package.getId()}" class="button">PURCHASE</a>
 
         </td>
 

@@ -15,11 +15,11 @@ public class InternetServices extends Service {
     int   gigabyte;
     float extraFee;
 
-    public float getExtraFee() {
-        return extraFee;
+    public String getExtraFee() {
+        return extraFee + " $/GB Extra Traffic";
     }
 
-    public int getGiga() {
-        return gigabyte;
+    public String getGiga() {
+        return gigabyte + " GB";
     }
 }

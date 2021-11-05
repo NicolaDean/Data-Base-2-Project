@@ -27,7 +27,7 @@
       FasaNico Telecom
     </a>
 
-    <h5 th:if="${session.username}" th:text="'Welcome, '+ ${session.username}"></h5>
+    <h5 th:if="${session.username}" th:text="'Welcome, '+ ${session.user.getUsername()}"></h5>
   </nav>
 </div>
 </div>

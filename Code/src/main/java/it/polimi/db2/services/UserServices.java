@@ -3,10 +3,7 @@ package it.polimi.db2.services;
 import it.polimi.db2.entitys.Package;
 import it.polimi.db2.entitys.ServiceTypes.MobilePhoneServices;
 import it.polimi.db2.entitys.User;
-import it.polimi.db2.exception.AuthenticationFailed;
-import it.polimi.db2.exception.NotUniqueUsername;
-import it.polimi.db2.exception.RegistrationFailed;
-import it.polimi.db2.exception.WrongCredential;
+import it.polimi.db2.exception.*;
 
 import javax.ejb.Stateless;
 import java.util.List;
@@ -65,4 +62,11 @@ public class UserServices extends BasicService{
     }
 
 
+    public User getUserById(int id) throws ElementNotFound {
+        User user = this.em.find(User.class,id);
+
+        if(user==null)throw  new ElementNotFound("User not exist");
+
+        return user;
+    }
 }

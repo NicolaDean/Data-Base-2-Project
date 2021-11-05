@@ -23,45 +23,51 @@
     <form action="contract" method="POST">
         <span th:if="${!package.getOptionalProducts().isEmpty()}"><h3>Choose your Optional Products</h3></span>
 
-    <!-- Multiple Selection Option input for optional products -->
-    <select hidden class="form-select-lg mb-3" multiple aria-label="Optional Products">
-        <tr th:each="optionalProduct : ${package.getOptionalProducts()}" >
-                <option th:value="${optionalProduct.getId()}"
-                        th:id="'multiple-products-'+${optionalProduct.getId()}">
-                    <p th:text="${optionalProduct.getName()}"></p>
-                </option>
-        </tr>
-    </select>
 
-    <!--Javascript based selection mapping DIV->OPTION-->
-    <div  th:each="op : ${package.getOptionalProducts()}">
-        <div th:id="'choice'+${op.getId()}"
-             th:onclick="'multiple_custom(this,\'multiple-products\','+${op.getId()}+' )'"
-             class="card border-secondary mb-3" style="max-width: 18rem;">
-            <div class="card-header"><h1 th:text="${op.getName()}"> </h1></div>
+        <!--Javascript based selection mapping DIV->OPTION-->
+        <div  th:each="op : ${package.getOptionalProducts()}">
+            <div th:id="'choice'+${op.getId()}"
+                 th:onclick="'multiple_custom(this,\'multiple-products\','+${op.getId()}+' )'"
+                 class="card border-secondary mb-3" style="max-width: 18rem;">
+                <div class="card-header"><h1 th:text="${op.getName()}"> </h1></div>
+            </div>
         </div>
-    </div>
+
+        <form method="post" action="contract">
+            <input type="hidden" id="packId" name="packId" th:value="${package.getId()}">
+            <!-- Multiple Selection Option input for optional products -->
+            <select hidden class="form-select-lg mb-3" multiple aria-label="Optional Products" id="optionalProducts" name="optionalProducts">
+                <tr th:each="optionalProduct : ${package.getOptionalProducts()}" >
+                    <option th:value="${optionalProduct.getId()}"
+                            th:id="'multiple-products-'+${optionalProduct.getId()}">
+                        <p th:text="${optionalProduct.getName()}"></p>
+                    </option>
+                </tr>
+            </select>
+            <h3>Choose your Rate</h3>
+
+            <select id="rates" name="rates">
+                <tr  th:each="rates : ${package.getRates()}" >
+                    <option th:value="${rates.getId()}"
+                            th:id="'rates-' + ${rates.getId()}">
+                        <p th:text="${rates.getMonthValidity()} + ' months (at ' + ${rates.getPrice()} +',00$ per month)'"></p>
+                    </option>
+                </tr>
+            </select>
+            <button type="submit" class="btn btn-primary" >Create Contract</button>
+        </form>
 
     <script src="scripts/multipleOptionCustom.js"></script>
 
     <!--Rates selection-->
 
-    <h3>Choose your Rate</h3>
 
-    <select id="rates" name="rates">
-        <tr  th:each="rates : ${package.getRates()}" >
-            <option th:value="${rates.getId()}"
-                    th:id="'rates-' + ${rates.getId()}">
-                <p th:text="${rates.getMonthValidity()} + ' months (at ' + ${rates.getPrice()} +',00$ per month)'"></p>
-            </option>
-        </tr>
-    </select>
 
-        <input type="hidden" id="packId" name="packId" th:value="${package.getId()}">
+
 
     <hr class="rounded">
 
-    <button type="submit" class="btn btn-primary" >PURCHASE</button>
+
     </form>
 </body>
 </html>

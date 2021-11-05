@@ -1,6 +1,7 @@
 package it.polimi.db2.controllers;
 
 
+import it.polimi.db2.entitys.User;
 import it.polimi.db2.exception.AuthenticationFailed;
 import it.polimi.db2.exception.NotUniqueUsername;
 import it.polimi.db2.exception.WrongCredential;
@@ -32,10 +33,10 @@ public class CheckLogin extends BasicServerlet {
         password = StringEscapeUtils.escapeJava(request.getParameter("password"));
 
         try {
-            userServices.checkAuthentication(username,password);
+            User user = userServices.checkAuthentication(username,password);
 
             HttpSession session=request.getSession();
-            session.setAttribute("username",username);
+            session.setAttribute("user",user);
             response.sendRedirect("home");
             return;
         } catch (WrongCredential wrongCredential) {
