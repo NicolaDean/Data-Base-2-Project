@@ -2,6 +2,7 @@ package it.polimi.db2.controllers;
 
 
 import it.polimi.db2.entitys.Package;
+import it.polimi.db2.utils.TemplatePathManager;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.ejb.EJB;
@@ -24,6 +25,9 @@ public class Contract extends BasicServerlet{
 
        // rate = (int) request.StringEscapeUtils.escapeJava(getAttribute("rates"));
         System.out.println("puchasing");
+
+        this.templateRenderer(request,response, TemplatePathManager.contract);
+
 
     }
 }
