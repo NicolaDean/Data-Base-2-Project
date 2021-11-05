@@ -21,12 +21,13 @@ import java.io.IOException;
 import static javax.swing.text.html.CSS.getAttribute;
 
 @WebServlet(name = "contract", value = "/contract")
-public class Contract extends BasicServerlet{
+public class Contract extends BasicServerlet {
 
 
-    @EJB(name="it.polimi.db2.services/ContractServices")
+    @EJB(name = "it.polimi.db2.services/ContractServices")
     private ContractServices contractServices;
-
+    @EJB(name = "it.polimi.db2.services/PackageService")
+    private PackageService packageService;
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -35,27 +36,42 @@ public class Contract extends BasicServerlet{
 
         String rateId;
         rateId = StringEscapeUtils.escapeJava(request.getParameter("rates"));
-        String packageId ;
-        packageId= StringEscapeUtils.escapeJava(request.getParameter("packId"));
+        String packageId;
+        packageId = StringEscapeUtils.escapeJava(request.getParameter("packId"));
 
-        String [] optionalProducts = request.getParameterValues("optionalProducts");
+        String[] optionalProducts = request.getParameterValues("optionalProducts");
 
         //FIND LOGGED USER
         HttpSession session = request.getSession();
-        User u = (User)session.getAttribute("user");
+        User u = (User) session.getAttribute("user");
 
 
         try {
-            this.contractServices.createContract(u.getId(),Integer.parseInt(packageId),Integer.parseInt(rateId),optionalProducts);
+            this.contractServices.createContract(u.getId(), Integer.parseInt(packageId), Integer.parseInt(rateId), optionalProducts);
         } catch (ElementNotFound e) {
             e.printStackTrace();
             //TODO ERROR PAGE
         }
 
+        int id = 0;
 
-        this.templateRenderer(request,response, TemplatePathManager.contract);
 
+        Package p = null;
+        /*
+        try {
+            p = this.packageService.getPackageById(id);
+            request.setAttribute("package", p);
+            request.setAttribute("rate", rateId);
+            request.setAttribute("optionalProducts", optionalProducts);
+        } catch (NoPackageFound noPackageFound) {
+            noPackageFound.printStackTrace();
+        }
+
+         */
+
+
+            request.setAttribute("contract",contractServices);
+            this.templateRenderer(request, response, TemplatePathManager.contract);
 
     }
-
 }

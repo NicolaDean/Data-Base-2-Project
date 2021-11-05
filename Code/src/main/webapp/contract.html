@@ -17,6 +17,13 @@
           crossorigin="anonymous"></script>
 </head>
 <body>
+
 <div th:replace="/WEB-INF/templateHTML/customTags/header::header"></div>
+<td>
+  <!--Used fragment parameters to pass packages info to our CUSTOM TAG-->
+ <div th:replace="/WEB-INF/templateHTML/customTags/package::package(${package})"></div>
+
+
+</td>
 </body>
 </html>
