@@ -20,4 +20,12 @@ public class RateCost {
     public int getMonthValidity() {
         return monthValidity;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getPackageId() {
+        return packageId;
+    }
 }

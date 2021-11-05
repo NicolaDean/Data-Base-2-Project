@@ -6,6 +6,13 @@
 
 </head>
 <body>
+<style>
+/* Rounded border */
+hr.rounded {
+border-top: 8px solid #bbb;
+border-radius: 5px;
+}
+</style>
 <div th:fragment="package (p)">
     <div>
         <h1 th:text="${p.getName()}"></h1>
@@ -39,11 +46,12 @@
             </div>
         </div>
 
-        <h4>OPTIONAL PRODUCT:</h4>
+        <h4>OPTIONAL PRODUCTS:</h4>
         <div th:each="prod : ${p.getOptionalProducts()}">
             <h6 th:text="${prod.getName()}"></h6>
         </div>
     </div>
+    <hr class="rounded">
 </div>
 </body>
 </html>

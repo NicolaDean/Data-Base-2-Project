@@ -12,7 +12,7 @@
 </head>
 <body>
     <div th:replace="/WEB-INF/templateHTML/customTags/header::header"></div>
-    <h1>Pacakge Details</h1>
+    <h1>Package Purchase Details</h1>
 
     <h2 th:text="'Package : ' + ${package.getName()}"></h2>
 
@@ -21,7 +21,7 @@
         <div th:replace="/WEB-INF/templateHTML/customTags/package::package(${package})"></div>
     </td>
 
-    <h3>Optional Products</h3>
+    <h3>Choose your Optional Products</h3>
 
     <!-- Multiple Selection Option input for optional products -->
     <select hidden class="form-select-lg mb-3" multiple aria-label="Optional Products">
@@ -43,5 +43,18 @@
     </div>
 
     <script src="scripts/multipleOptionCustom.js"></script>
+
+    <!--Rates selection-->
+
+    <h3>Choose your Rate</h3>
+
+    <select name="rates">
+        <tr  th:each="rates : ${package.getRates()}" >
+            <option th:value="${rates.getId()}"
+                    th:id="'rates-' + ${rates.getId()}">
+                <p th:text="${rates.getMonthValidity()} + ' months (at ' + ${rates.getPrice()} +' per month)'"></p>
+            </option>
+        </tr>
+    </select>
 </body>
 </html>
