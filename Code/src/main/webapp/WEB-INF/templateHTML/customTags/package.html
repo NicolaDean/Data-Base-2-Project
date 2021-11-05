@@ -46,7 +46,8 @@ border-radius: 5px;
             </div>
         </div>
 
-        <h4>OPTIONAL PRODUCTS:</h4>
+        <span th:if="${!p.getOptionalProducts().isEmpty()}"><h4>OPTIONAL PRODUCTS:</h4></span>
+
         <div th:each="prod : ${p.getOptionalProducts()}">
             <h6 th:text="${prod.getName()}"></h6>
         </div>
