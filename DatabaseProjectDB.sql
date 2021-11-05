@@ -5,7 +5,8 @@ drop table if exists fixed_phone_services;
 drop table if exists mobile_internet_services;
 drop table if exists fixed_internet_services;
 drop table if exists services;
-
+drop table if exists Orders_OptionalProducts;
+drop table if exists Orders;
 drop table if exists Packages_OptionalProducts;
 create table Users(
                       id 			INT AUTO_INCREMENT,
@@ -89,6 +90,18 @@ insert into Rate_costs (monthValidity,cost,packageId) values (12,20,1);
 insert into Rate_costs (monthValidity,cost,packageId) values (24,18,1);
 insert into Rate_costs (monthValidity,cost,packageId) values (36,15,1);
 
+insert into Rate_costs (monthValidity,cost,packageId) values (12,25,2);
+insert into Rate_costs (monthValidity,cost,packageId) values (24,20,2);
+insert into Rate_costs (monthValidity,cost,packageId) values (36,16,2);
+
+insert into Rate_costs (monthValidity,cost,packageId) values (12,27,3);
+insert into Rate_costs (monthValidity,cost,packageId) values (24,22,3);
+insert into Rate_costs (monthValidity,cost,packageId) values (36,18,3);
+
+insert into Rate_costs (monthValidity,cost,packageId) values (12,30,4);
+insert into Rate_costs (monthValidity,cost,packageId) values (24,25,4);
+insert into Rate_costs (monthValidity,cost,packageId) values (36,20,4);
+
 select * from Rate_costs;
 
 -- Now We Should Create all the services Tables
@@ -141,8 +154,7 @@ select * from services;
 select * from services natural join mobile_phone_services;
 
 select * from Users;
-drop table if exists Orders_OptionalProducts;
-drop table if exists Orders;
+
 create table Orders(
                        id 				INT AUTO_INCREMENT,
                        creationDate	datetime,
