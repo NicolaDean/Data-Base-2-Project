@@ -20,6 +20,7 @@
         <!-- Used fragment parameters to pass packages info to our CUSTOM TAG -->
         <div th:replace="/WEB-INF/templateHTML/customTags/package::package(${package})"></div>
     </td>
+    <form action="contract" method="POST">
         <span th:if="${!package.getOptionalProducts().isEmpty()}"><h3>Choose your Optional Products</h3></span>
 
     <!-- Multiple Selection Option input for optional products -->
@@ -47,7 +48,7 @@
 
     <h3>Choose your Rate</h3>
 
-    <select name="rates">
+    <select id="rates" name="rates">
         <tr  th:each="rates : ${package.getRates()}" >
             <option th:value="${rates.getId()}"
                     th:id="'rates-' + ${rates.getId()}">
@@ -55,5 +56,12 @@
             </option>
         </tr>
     </select>
+
+        <input type="hidden" id="packId" name="packId" th:value="${package.getId()}">
+
+    <hr class="rounded">
+
+    <button type="submit" class="btn btn-primary" >PURCHASE</button>
+    </form>
 </body>
 </html>

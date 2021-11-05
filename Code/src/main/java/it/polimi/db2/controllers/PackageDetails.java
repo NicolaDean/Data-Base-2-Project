@@ -5,6 +5,7 @@ import it.polimi.db2.entitys.Package;
 import it.polimi.db2.exception.NoPackageFound;
 import it.polimi.db2.services.PackageService;
 import it.polimi.db2.utils.TemplatePathManager;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.ejb.EJB;
 import javax.servlet.annotation.WebServlet;
@@ -41,8 +42,9 @@ public class PackageDetails extends BasicServerlet{
             //TODO print error with "no package found"
         }
 
-
-
+       int packageID;
+        packageID = (int) request.getAttribute("rates");
 
     }
+
 }
