@@ -17,10 +17,14 @@
     <h2 th:text="'Package : ' + ${package.getName()}"></h2>
 
     <td>
-        <!-- Used fragment parameters to pass packages info to our CUSTOM TAG -->
-        <div th:replace="/WEB-INF/templateHTML/customTags/package::package(${package})"></div>
+        <h4>SERVICES:</h4>
+        <div class="card-columns">
+            <div th:each="s :${package.getServices()}">
+                <div th:replace="/WEB-INF/templateHTML/customTags/service::service(${s})"></div>
+            </div>
+        </div>
     </td>
-    <form action="contract" method="POST">
+    <form action="confirmation" method="POST">
         <span th:if="${!package.getOptionalProducts().isEmpty()}"><h3>Choose your Optional Products</h3></span>
 
 
@@ -33,7 +37,7 @@
             </div>
         </div>
 
-        <form method="post" action="contract">
+        <form method="post" action="confirmation">
             <input type="hidden" id="packId" name="packId" th:value="${package.getId()}">
             <!-- Multiple Selection Option input for optional products -->
             <select hidden class="form-select-lg mb-3" multiple aria-label="Optional Products" id="optionalProducts" name="optionalProducts">
@@ -54,7 +58,7 @@
                     </option>
                 </tr>
             </select>
-            <button type="submit" class="btn btn-primary" >Create Contract</button>
+            <button type="submit" class="btn btn-primary" >CONFIRM</button>
         </form>
 
     <script src="scripts/multipleOptionCustom.js"></script>

@@ -72,4 +72,16 @@ public class Order {
     public void addOptionalProducts(List<OptionalProduct> products) {
         this.products = products;
     }
+
+    public RateCost getRate() {
+        return rate;
+    }
+
+    public List<OptionalProduct> getProducts() {
+        return products;
+    }
+
+    public Package getPackage() {
+        return pack;
+    }
 }

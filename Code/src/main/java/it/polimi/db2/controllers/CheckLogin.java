@@ -1,6 +1,7 @@
 package it.polimi.db2.controllers;
 
 
+import it.polimi.db2.entitys.Order;
 import it.polimi.db2.entitys.User;
 import it.polimi.db2.exception.AuthenticationFailed;
 import it.polimi.db2.exception.NotUniqueUsername;
@@ -37,7 +38,15 @@ public class CheckLogin extends BasicServerlet {
 
             HttpSession session=request.getSession();
             session.setAttribute("user",user);
-            response.sendRedirect("home");
+
+            Order order = (Order) session.getAttribute("order");
+
+            if(order != null){
+                response.sendRedirect("package-details?id=" + order.getPackage().getId());
+            }else
+            {
+                response.sendRedirect("home");
+            }
             return;
         } catch (WrongCredential wrongCredential) {
             this.setError(request,response,"Wrong credentials!", TemplatePathManager.loginPage);

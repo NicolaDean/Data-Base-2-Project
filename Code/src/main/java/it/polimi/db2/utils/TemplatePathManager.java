@@ -14,7 +14,7 @@ public class TemplatePathManager {
     //TEMPLATES
     public static String homePage       = root + "home";
     public static String packageDetails = root + "packageDetails";
-    public static String contract = "contract";
-    public static String payment = "payment";
-    public static String error = "errorPage";
+    public static String contract       =   "contract";
+    public static String payment        =   "payment";
+    public static String error          =   "errorPage";
 }

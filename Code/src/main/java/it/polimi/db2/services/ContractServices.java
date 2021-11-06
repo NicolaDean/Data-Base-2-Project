@@ -58,16 +58,8 @@ public class ContractServices extends BasicService{
         return products;
     }
 
-    public void createContract(int userId, int packageId, int rateId, String[] optionalProducts) throws ElementNotFound {
+    public Order createContract( int packageId, int rateId, String[] optionalProducts) throws ElementNotFound {
         Order order = new Order();
-
-        //FIND LOGGED USER
-        try {
-            User user = userServices.getUserById(userId);
-            order.setUser(user);
-        } catch (ElementNotFound e) {
-            throw new ElementNotFound("No User Found");
-        }
 
         //FIND SELECTED PACKAGE
         try {
@@ -84,29 +76,17 @@ public class ContractServices extends BasicService{
             throw new ElementNotFound("No Rate Found");
         }
         //FIND SELECTED PRODUCTS
-        List<OptionalProduct> products = new ArrayList<OptionalProduct>();
-        for(String x : optionalProducts)
-        {
-            int productId = Integer.parseInt(x);
-
-            try {
-                //Add to the order all the selected optional products
-                OptionalProduct op = this.getProductById(productId);
-                products.add(op);
-
-            } catch (ElementNotFound e) {
-                throw new ElementNotFound("No Optional product");
-            }
-        }
+        List<OptionalProduct> products = this.convertOptionalProducts(optionalProducts);
 
         order.addOptionalProducts(products);
 
         order.calculateTotalSum();
 
-        //PERSIST ORDER
+        return order;
+    }
+
+    public void persist(Order order) throws ElementNotFound {
 
         this.em.persist(order);
-
-
     }
 }
