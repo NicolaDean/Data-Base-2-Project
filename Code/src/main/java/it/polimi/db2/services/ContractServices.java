@@ -40,6 +40,14 @@ public class ContractServices extends BasicService{
         return rate;
     }
 
+    /**
+     * Create optional Products
+     * @param userId
+     * @param packageId
+     * @param rateId
+     * @param optionalProducts
+     * @throws ElementNotFound
+     */
     public void createContract(int userId, int packageId, int rateId, String[] optionalProducts) throws ElementNotFound {
         Order order = new Order();
 
@@ -86,9 +94,6 @@ public class ContractServices extends BasicService{
         order.calculateTotalSum();
 
         //PERSIST ORDER
-
         this.em.persist(order);
-
-
     }
 }

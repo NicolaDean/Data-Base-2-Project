@@ -23,16 +23,14 @@ import static javax.swing.text.html.CSS.getAttribute;
 @WebServlet(name = "contract", value = "/contract")
 public class Contract extends BasicServerlet{
 
-
     @EJB(name="it.polimi.db2.services/ContractServices")
     private ContractServices contractServices;
-
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         Order order = new Order();
-
+//TODO add Start date to html and contract creation
         String rateId;
         rateId = StringEscapeUtils.escapeJava(request.getParameter("rates"));
         String packageId ;
