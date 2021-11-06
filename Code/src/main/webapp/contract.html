@@ -23,7 +23,15 @@
   <!--Used fragment parameters to pass packages info to our CUSTOM TAG-->
  <div th:replace="/WEB-INF/templateHTML/customTags/package::package(${package})"></div>
 
+  <span th:if="${!package.getOptionalProducts().isEmpty()}"><h4>OPTIONAL PRODUCTS IN YOUR ORDER:</h4></span>
 
+  <div th:each="prod : ${optionalProducts}">
+    <h6 th:text="${prod.getName()}"></h6>
+  </div>
 </td>
+
+<form action="payment" method="POST">
+  <button type="submit" class="btn btn-primary">CONFIRM</button>
+</form>
 </body>
 </html>

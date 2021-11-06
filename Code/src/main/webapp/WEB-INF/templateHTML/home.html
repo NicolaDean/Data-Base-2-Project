@@ -26,6 +26,7 @@
                 <!-- Used fragment parameters to pass packages info to our CUSTOM TAG -->
             <div th:replace="/WEB-INF/templateHTML/customTags/package::package(${package})"></div>
 
+            <a th:href=" 'package-details?id=' + ${package.getId()}" class="button">PURCHASE</a>
 
         </td>
 

@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.swing.text.html.CSS.getAttribute;
 
@@ -38,40 +40,50 @@ public class Contract extends BasicServerlet {
         rateId = StringEscapeUtils.escapeJava(request.getParameter("rates"));
         String packageId;
         packageId = StringEscapeUtils.escapeJava(request.getParameter("packId"));
-
-        String[] optionalProducts = request.getParameterValues("optionalProducts");
-
-        //FIND LOGGED USER
-        HttpSession session = request.getSession();
-        User u = (User) session.getAttribute("user");
-
-
-        try {
-            this.contractServices.createContract(u.getId(), Integer.parseInt(packageId), Integer.parseInt(rateId), optionalProducts);
-        } catch (ElementNotFound e) {
-            e.printStackTrace();
-            //TODO ERROR PAGE
-        }
-
-        int id = 0;
-
-
         Package p = null;
-        /*
+        request.setAttribute("rate", rateId);
         try {
-            p = this.packageService.getPackageById(id);
+            p = this.packageService.getPackageById(Integer.parseInt(packageId));
             request.setAttribute("package", p);
-            request.setAttribute("rate", rateId);
-            request.setAttribute("optionalProducts", optionalProducts);
         } catch (NoPackageFound noPackageFound) {
             noPackageFound.printStackTrace();
         }
 
-         */
 
 
-            request.setAttribute("contract",contractServices);
-            this.templateRenderer(request, response, TemplatePathManager.contract);
+
+
+        //Adding Optional Product
+        try {
+            String[]  optionalProducts;
+            if(request.getParameterValues("optionalProducts")!=null){
+                  optionalProducts = request.getParameterValues("optionalProducts");
+                request.setAttribute("optionalProducts", this.contractServices.convertOptionalProducts(optionalProducts) );
+            }
+            else{
+                //TODO check if putting one for no optional product is OK
+
+                 optionalProducts = new String[1];
+                 optionalProducts[0]="1";
+
+            }
+            //FIND LOGGED USER
+            HttpSession session = request.getSession();
+            if(session.getAttribute("user")!=null){
+                User u = (User) session.getAttribute("user");
+                this.contractServices.createContract(u.getId(), Integer.parseInt(packageId), Integer.parseInt(rateId), optionalProducts);
+                this.templateRenderer(request, response, TemplatePathManager.contract);
+
+            }
+            else {
+                this.setError(request,response,"To continue the purchase you need to log in!", TemplatePathManager.loginPage);
+            }
+
+        } catch (ElementNotFound e) {
+            e.printStackTrace();
+            this.setError(request,response,"Offers not found", TemplatePathManager.error);
+        }
 
     }
 }
+
