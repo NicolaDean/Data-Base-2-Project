@@ -17,6 +17,24 @@
           crossorigin="anonymous"></script>
 </head>
 <body>
+
 <div th:replace="/WEB-INF/templateHTML/customTags/header::header"></div>
+<td>
+  <!--TODO put only package info-->
+ <div th:replace="/WEB-INF/templateHTML/customTags/package::package(${package})"></div>
+
+  <span th:if="${!package.getOptionalProducts().isEmpty()}"><h4>OPTIONAL PRODUCTS IN YOUR ORDER:</h4></span>
+
+  <div th:each="prod : ${optionalProducts}">
+    <h5 th:text="${prod.getName()}"></h5>
+  </div>
+    <h4>RATE:</h4>
+    <h5 th:text="${rate}"></h5>
+
+</td>
+
+<form action="payment" method="POST">
+  <button type="submit" class="btn btn-primary">CONFIRM</button>
+</form>
 </body>
 </html>

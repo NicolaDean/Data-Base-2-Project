@@ -40,14 +40,24 @@ public class ContractServices extends BasicService{
         return rate;
     }
 
-    /**
-     * Create optional Products
-     * @param userId
-     * @param packageId
-     * @param rateId
-     * @param optionalProducts
-     * @throws ElementNotFound
-     */
+    public List<OptionalProduct> convertOptionalProducts(String[] optionalProducts) throws ElementNotFound {
+        //FIND SELECTED PRODUCTS
+        List<OptionalProduct> products = new ArrayList<OptionalProduct>();
+        for (String x : optionalProducts) {
+            int productId = Integer.parseInt(x);
+
+            try {
+                //Add to the order all the selected optional products
+                OptionalProduct op = this.getProductById(productId);
+                products.add(op);
+
+            } catch (ElementNotFound e) {
+                throw new ElementNotFound("No Optional product");
+            }
+        }
+        return products;
+    }
+
     public void createContract(int userId, int packageId, int rateId, String[] optionalProducts) throws ElementNotFound {
         Order order = new Order();
 
@@ -94,6 +104,9 @@ public class ContractServices extends BasicService{
         order.calculateTotalSum();
 
         //PERSIST ORDER
+
         this.em.persist(order);
+
+
     }
 }

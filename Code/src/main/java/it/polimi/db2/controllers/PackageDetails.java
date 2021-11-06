@@ -3,6 +3,7 @@ package it.polimi.db2.controllers;
 import it.polimi.db2.entitys.OptionalProduct;
 import it.polimi.db2.entitys.Package;
 import it.polimi.db2.exception.NoPackageFound;
+import it.polimi.db2.services.ContractServices;
 import it.polimi.db2.services.PackageService;
 import it.polimi.db2.utils.TemplatePathManager;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -18,6 +19,8 @@ import java.util.List;
 public class PackageDetails extends BasicServerlet{
     @EJB(name="it.polimi.db2.services/PackageService")
     private PackageService packageService;
+    @EJB(name = "it.polimi.db2.services/ContractServices")
+    private ContractServices contractServices;
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -29,7 +32,7 @@ public class PackageDetails extends BasicServerlet{
             id = Integer.parseInt(input);
         }catch (Exception e)
         {
-            //TODO print error or redirect to Home with error (not valid id)
+            this.setError(request,response,"Offers not found", TemplatePathManager.error);
         }
 
         try {
@@ -39,7 +42,7 @@ public class PackageDetails extends BasicServerlet{
 
         } catch (NoPackageFound e) {
             e.printStackTrace();
-            //TODO print error with "no package found"
+            this.setError(request,response,"Offers not found", TemplatePathManager.error);
         }
 
     }

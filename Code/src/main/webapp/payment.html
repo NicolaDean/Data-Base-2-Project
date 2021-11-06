@@ -17,20 +17,12 @@
             crossorigin="anonymous"></script>
 </head>
 <body>
+<td>
 <div th:replace="/WEB-INF/templateHTML/customTags/header::header"></div>
-<h1>HOME PAGE</h1>
 
-<table>
-    <tr th:each="package : ${packages}" >
-        <td>
-                <!-- Used fragment parameters to pass packages info to our CUSTOM TAG -->
-            <div th:replace="/WEB-INF/templateHTML/customTags/package::package(${package})"></div>
+<h2>Response from Bank</h2>
 
-            <a th:href=" 'package-details?id=' + ${package.getId()}" class="button">PURCHASE</a>
-
-        </td>
-
-    </tr>
-</table>
+   <h6 th:text="${paymentConfirmation}"></h6>
+</td>
 </body>
 </html>
