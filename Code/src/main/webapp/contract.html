@@ -35,15 +35,15 @@
   <div th:each="prod : ${order.getProducts()}">
     <h5 th:text="${prod.getName()}"></h5>
   </div>
-    <h4>RATE:</h4>
+
+    <h4>FINAL RATE:</h4>
 
     <div class="card bg-light mb-3 selection" style="max-width: 18rem;" >
         <div class="card-header " th:text="${order.getRate().getMonthValidity()} + ' month'"></div>
         <div class="card-body text-centered">
-            <h5 class="card-title" th:text="${order.getRate().getPrice()} + '$'"></h5>
+            <h5 class="card-title" th:text="${order.getTotalMonthlyPayment()} + '$'"></h5>
         </div>
     </div>
-
 </td>
 
 <form action="payment" method="POST">

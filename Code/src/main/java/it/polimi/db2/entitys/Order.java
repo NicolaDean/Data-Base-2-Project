@@ -84,4 +84,20 @@ public class Order {
     public Package getPackage() {
         return pack;
     }
+
+    public float getTotalPayment() {
+        return totalPayment;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public float getTotalMonthlyPayment() {
+        return (totalPayment/rate.monthValidity);
+    }
 }
