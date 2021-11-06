@@ -41,7 +41,13 @@ public class Contract extends BasicServerlet {
         String packageId;
         packageId = StringEscapeUtils.escapeJava(request.getParameter("packId"));
         Package p = null;
-        request.setAttribute("rate", rateId);
+        try {
+            RateCost rate = this.contractServices.getRateById(Integer.parseInt(rateId));
+            request.setAttribute("rate", rate.getRatesString());
+        } catch (ElementNotFound elementNotFound) {
+            elementNotFound.printStackTrace();
+        }
+
         try {
             p = this.packageService.getPackageById(Integer.parseInt(packageId));
             request.setAttribute("package", p);
@@ -58,7 +64,7 @@ public class Contract extends BasicServerlet {
             String[]  optionalProducts;
             if(request.getParameterValues("optionalProducts")!=null){
                   optionalProducts = request.getParameterValues("optionalProducts");
-                request.setAttribute("optionalProducts", this.contractServices.convertOptionalProducts(optionalProducts) );
+                   request.setAttribute("optionalProducts", this.contractServices.convertOptionalProducts(optionalProducts) );
             }
             else{
                 //TODO check if putting one for no optional product is OK
