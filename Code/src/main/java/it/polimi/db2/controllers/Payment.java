@@ -1,6 +1,7 @@
 package it.polimi.db2.controllers;
 
 import it.polimi.db2.entitys.Order;
+import it.polimi.db2.entitys.User;
 import it.polimi.db2.exception.ElementNotFound;
 import it.polimi.db2.services.ContractServices;
 import it.polimi.db2.utils.TemplatePathManager;
@@ -30,6 +31,19 @@ public class Payment extends BasicServerlet {
         HttpSession session = request.getSession();
 
         Order order = (Order) session.getAttribute("order");
+        User  user  = (User) session.getAttribute("user") ;
+
+
+        String paymentConfirmation;
+          if(getRandomBoolean()){
+
+              order.setStatus(true);
+              paymentConfirmation= "CONGRATULATIONS, PAYMENT ACCEPTED!";
+          }
+          else{
+              order.setStatus(false);
+              paymentConfirmation="PAYMENT DECLINED, PLEASE RETRY THE TRANSACTION";
+          }
 
         try {
             this.contractServices.persist(order);
@@ -37,15 +51,6 @@ public class Payment extends BasicServerlet {
             e.printStackTrace();
         }
 
-        String paymentConfirmation;
-          if(getRandomBoolean()){
-              paymentConfirmation= "CONGRATULATIONS, PAYMENT ACCEPTED!";
-              //TODO PUT ORDER UPDATE WITH "ok" mark
-          }
-          else{
-              //TODO PUT ORDER UPDATE WITH "failed" mark (also to update table)
-              paymentConfirmation="PAYMENT DECLINED, PLEASE RETRY THE TRANSACTION";
-          }
         request.setAttribute("paymentConfirmation", paymentConfirmation);
         this.templateRenderer(request, response, TemplatePathManager.payment);
 

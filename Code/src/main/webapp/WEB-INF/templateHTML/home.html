@@ -20,12 +20,22 @@
 <div th:replace="/WEB-INF/templateHTML/customTags/header::header"></div>
 <h1>HOME PAGE</h1>
 
+<h2>Insolvent Orders:</h2>
+<!--th:if="${insolventOrder}"-->
+<div class="card-columns" style="margin:8px 0 15px 0;" >
+    <div class="card bg-light mb-3 selection" style="max-width: 18rem;" th:each="order : ${insolventOrder}">
+        <div class="card-header " th:text="${order.getPackage().getName()} "></div>
+            <div class="card-body">
+                <a type="button" class="btn btn-danger" th:href="'solve-payment?id='+${order.getId()}">Solve payment</a>
+            </div>
+        </div>
+    </div>
+</div>
 <table>
     <tr th:each="package : ${packages}" >
         <td>
                 <!-- Used fragment parameters to pass packages info to our CUSTOM TAG -->
             <div th:replace="/WEB-INF/templateHTML/customTags/package::package(${package})"></div>
-
             <a th:href=" 'package-details?id=' + ${package.getId()}" class="button">PURCHASE</a>
 
         </td>

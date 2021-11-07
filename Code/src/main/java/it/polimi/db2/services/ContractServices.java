@@ -93,4 +93,13 @@ public class ContractServices extends BasicService{
 
         this.em.persist(order);
     }
+
+    public Order getOrderById(int id) throws ElementNotFound {
+        List<Order> orders = this.em.createNamedQuery("Orders.Id",Order.class).setParameter("orderId",id).getResultList();
+
+        if(orders != null) return orders.get(0);
+        else throw new ElementNotFound("Order not found");
+    }
+
+
 }

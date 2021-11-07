@@ -6,8 +6,13 @@ import java.util.List;
 
 @Entity
 @Table(name = "Orders", schema = "test")
-@NamedQuery(name="Orders.All",query="select o from Order o") //TODO adjust query for only accepted orders
-@NamedQuery(name="Order.Size", query = "select count (o) from Order o")
+@NamedQuery(name="Orders.Id"             ,  query="select o from Order o where o.Id = :orderId")
+@NamedQuery(name="Orders.All"             , query="select o from Order o") //TODO adjust query for only accepted orders
+@NamedQuery(name="Orders.Suspended"       , query="select o from Order o where o.status=false")
+@NamedQuery(name="PurchasesByPackages"    , query = "select count (distinct o) from Order o group by o.pack")
+@NamedQuery(name="Orders.UserInsolvances" , query = "select o from Order o where o.status=false and o.user.id = :userId")
+//TODO think a new entity for statistical pourpose should be created to store pair "package-> quantity"
+
 public class Order {
 
     @Id
@@ -16,6 +21,7 @@ public class Order {
     Date startDate;
     Date creationDate;
     float totalPayment;
+    boolean status;
 
     @OneToOne
     @JoinColumn(name = "userId")
@@ -101,5 +107,13 @@ public class Order {
 
     public float getTotalMonthlyPayment() {
         return (totalPayment/rate.monthValidity);
+    }
+
+    public void setStatus(boolean b) {
+        this.status = b;
+    }
+
+    public int getId() {
+        return Id;
     }
 }

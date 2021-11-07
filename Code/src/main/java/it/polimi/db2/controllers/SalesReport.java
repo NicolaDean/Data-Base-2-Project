@@ -20,12 +20,24 @@ public class SalesReport extends BasicServerlet{
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        List<ReportServices> reportServices = this.reportServices.getTotalPurchases();
 
-                checkLogIn(request);
+        try {
+            List<Integer> reportServices = this.reportServices.getNumberOfPurchase();
+            for(Integer i : reportServices)
+            {
+                System.out.println("package : " + i);
+            }
+            checkLogIn(request);
 
-        request.setAttribute("orders", reportServices);
-        request.setAttribute("number_of_orders",reportServices.size());
+
+            request.setAttribute("orders", reportServices);
+            request.setAttribute("number_of_orders",reportServices.size());
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
 
         this.templateRenderer(request,response, TemplatePathManager.report);
 

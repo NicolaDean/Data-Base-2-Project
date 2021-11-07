@@ -1,5 +1,7 @@
 package it.polimi.db2.services;
 
+import it.polimi.db2.entitys.Order;
+
 import javax.ejb.Stateless;
 import javax.persistence.Table;
 import java.util.List;
@@ -7,14 +9,17 @@ import java.util.List;
 @Stateless
 public class ReportServices extends BasicService{
 
-    public List<ReportServices> getTotalPurchases(){
-        return this.em.createQuery(
-                "select count (distinct o)" +
-                        "from Order o" +
-                        " group by o.pack", ReportServices.class).getResultList();
+    public List<Integer>  getNumberOfPurchase(){
+        return this.em.createNamedQuery("PurchasesByPackages",Integer.class).getResultList();
     }
 
-    public int getTotalNumberOfPurchases(){
-        return getTotalPurchases().size();
+    /**
+     *
+     * @return all suspended Orders waiting for payment
+     */
+    public List<Order> findPendingOrder()
+    {
+       return this.em.createNamedQuery("Orders.Suspended",Order.class).getResultList();
     }
+
 }

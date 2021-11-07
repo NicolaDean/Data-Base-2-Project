@@ -1,5 +1,6 @@
 package it.polimi.db2.services;
 
+import it.polimi.db2.entitys.Order;
 import it.polimi.db2.entitys.Package;
 import it.polimi.db2.entitys.ServiceTypes.MobilePhoneServices;
 import it.polimi.db2.entitys.User;
@@ -68,5 +69,15 @@ public class UserServices extends BasicService{
         if(user==null)throw  new ElementNotFound("User not exist");
 
         return user;
+    }
+
+    /**
+     *
+     * @param user user to use for search
+     * @return list of insolvances of user
+     */
+    public List<Order> getUserSuspendedOrders(User user)
+    {
+        return this.em.createNamedQuery("Orders.UserInsolvances",Order.class).setParameter("userId",user.getId()).getResultList();
     }
 }

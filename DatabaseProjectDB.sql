@@ -14,10 +14,11 @@ create table Users(
                       password	VARCHAR(30) not null,
                       email		VARCHAR(30) not null,
                       type      varchar(30) not null,
+                      insolvent boolean,
                       PRIMARY KEY(id)
 );
 
-insert into Users (username,password,email,type) values ("nico","1234","nico@gmail.com","user");
+insert into Users (username,password,email,type,insolvent) values ("nico","1234","nico@gmail.com","user",true);
 insert into Users (username,password,email,type) values ("fasa","1234","fasa@gmail.com","user");
 insert into Users (username,password,email,type) values ("babbano","1234","babbano@gmail.com","user");
 insert into Users (username,password,email,type) values ("admin","1234","fasa@gmail.com","admin");
@@ -160,12 +161,13 @@ select * from Users;
 
 create table Orders(
                        id 				INT AUTO_INCREMENT,
-                       creationDate	datetime,
+                       creationDate	    datetime,
                        userId			INT,
-                       packageId       INT,
+                       packageId        INT,
                        rateId			INT,
                        startDate		date,
-                       totalPayment    FLOAT,
+                       totalPayment     FLOAT,
+                       status		    bool,
                        PRIMARY KEY(id),
                        FOREIGN KEY (rateId) REFERENCES Rate_costs (id),
                        FOREIGN KEY (packageId) REFERENCES Rate_costs (id)
@@ -179,3 +181,32 @@ create table Orders_OptionalProducts(
                                         FOREIGN KEY (orderId) REFERENCES Orders (id),
                                         FOREIGN KEY (productId) REFERENCES OptionalProducts(id)
 );
+select * from Orders;
+
+select * from Orders where status = false;
+
+-- ELENCO POSSIBILI TRIGGER
+-- quando si aggiorna un ordine si controlla se per quell'utente sono spariti tutti i "pending payment" in tal caso rimuove il flag "insolvenza"
+-- creare un trigger che in automatico cerca il numero di pagamenti falliti e in caso marchia lutente come insolvente
+-- possiamo creare un trigger per aggiornare in automatico questa tabella
+-- create table Activation_Schedule(
+-- 	orderId 	INT,
+--    DeactivationDate
+-- );
+
+drop view if exists Purchase_By_Packages;
+create view Purchase_By_Packages as
+select packageId,count(packageId) from Orders group by packageId;
+;
+/*
+create trigger INSOLVENT_USER after
+	insert on Orders
+    for each row
+    when( new.status = false)
+    begin
+		update Users set User.insolvent = true where id = new.userId
+	end;
+
+    */
+select * from Purchase_By_Packages;
+

@@ -82,7 +82,7 @@ public class BasicServerlet extends HttpServlet {
     }
 
     public void checkLogIn(HttpServletRequest request){
-        HttpSession session=request.getSession(false);
+        HttpSession session=request.getSession();
         if(session!=null){
             User user= (User) session.getAttribute("user");
             request.setAttribute("name",user.getUsername());
