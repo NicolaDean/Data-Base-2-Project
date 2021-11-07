@@ -27,7 +27,10 @@
       FasaNico Telecom
     </a>
 
-    <h5 th:text="'Welcome '+ ${name} + '!'"></h5>
+    <h4 th:if="${name}" th:text="'Welcome '+ ${name} + '!'"></h4>
+    <form th:if="${name}" action="login" method="GET">
+      <input type="submit" value="Log out" />
+    </form>
   </nav>
 </div>
 </div>
