@@ -2,6 +2,7 @@ package it.polimi.db2.controllers;
 
 import it.polimi.db2.entitys.Order;
 
+import it.polimi.db2.entitys.custom.ReportData;
 import it.polimi.db2.services.ReportServices;
 import it.polimi.db2.utils.TemplatePathManager;
 
@@ -22,10 +23,10 @@ public class SalesReport extends BasicServerlet{
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
-            List<Integer> reportServices = this.reportServices.getNumberOfPurchase();
-            for(Integer i : reportServices)
+            List<ReportData> reportServices = this.reportServices.getNumberOfPurchaseByID();
+            for(int i = 0; i < reportServices.size(); i++)
             {
-                System.out.println("package : " + i);
+                System.out.println("package : " + reportServices.get(i).getId() + "number of purchases:" + reportServices.get(i).getCount());
             }
             checkLogIn(request);
 
