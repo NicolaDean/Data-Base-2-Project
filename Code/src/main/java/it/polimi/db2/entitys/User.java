@@ -14,6 +14,7 @@ public class User {
     String username;
     String password;
     String email;
+    String type;
 
     public String getUsername() {
         return this.username;
@@ -33,5 +34,9 @@ public class User {
 
     public int getId() {
         return this.id;
+    }
+
+    public String getType() {
+        return type;
     }
 }

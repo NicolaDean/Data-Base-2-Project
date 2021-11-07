@@ -13,12 +13,13 @@ create table Users(
                       username    VARCHAR(30) not null,
                       password	VARCHAR(30) not null,
                       email		VARCHAR(30) not null,
+
                       PRIMARY KEY(id)
 );
 
 insert into Users (username,password,email) values ("nico","1234","nico@gmail.com");
 insert into Users (username,password,email) values ("fasa","1234","fasa@gmail.com");
-insert into Users (username,password,email) values ("babbano","1234","babbano@gmail.com");
+insert into Users (username,password,email) values ("babbonatale","1234","babbano@gmail.com");
 select * from Users;
 -- Now create the optionals products
 drop table if exists OptionalProducts;

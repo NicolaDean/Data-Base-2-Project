@@ -40,14 +40,17 @@ public class CheckLogin extends BasicServerlet {
             session.setAttribute("user",user);
 
             Order order = (Order) session.getAttribute("order");
-
-            if(order != null){
-                response.sendRedirect("package-details?id=" + order.getPackage().getId());
-            }else
-            {
-                response.sendRedirect("home");
-            }
-            return;
+          if(user.getType().equals("user")) {
+              if (order != null) {
+                  response.sendRedirect("package-details?id=" + order.getPackage().getId());
+              } else {
+                  response.sendRedirect("home");
+              }
+              return;
+          }
+          else if(user.getType().equals("admin")){
+              response.sendRedirect("admin");
+          }
         } catch (WrongCredential wrongCredential) {
             this.setError(request,response,"Wrong credentials!", TemplatePathManager.loginPage);
         }catch (AuthenticationFailed e) {
