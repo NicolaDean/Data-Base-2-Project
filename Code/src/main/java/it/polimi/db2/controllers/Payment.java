@@ -33,12 +33,20 @@ public class Payment extends BasicServerlet {
         Order order = (Order) session.getAttribute("order");
         User  user  = (User) session.getAttribute("user") ;
 
-
+        boolean flag = false;
+        if(order.toUpdate())
+        {
+            System.out.println("ORDERRRRR IN SESSION");
+            flag = true;
+        }
         String paymentConfirmation;
           if(getRandomBoolean()){
 
-              order.setStatus(true);
               paymentConfirmation= "CONGRATULATIONS, PAYMENT ACCEPTED!";
+
+              order.setStatus(true);
+
+
           }
           else{
               order.setStatus(false);
@@ -46,7 +54,10 @@ public class Payment extends BasicServerlet {
           }
 
         try {
-            this.contractServices.persist(order);
+            if(flag) this.contractServices.removeSuspendFromOrder(order.getId());
+            else this.contractServices.persist(order);
+
+
         } catch (ElementNotFound e) {
             e.printStackTrace();
         }

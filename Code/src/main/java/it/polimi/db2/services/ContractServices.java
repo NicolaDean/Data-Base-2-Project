@@ -102,4 +102,7 @@ public class ContractServices extends BasicService{
     }
 
 
+    public void removeSuspendFromOrder(int id) {
+        this.em.createNamedQuery("Orders.RemoveSuspend",Order.class).setParameter("orderId",id).executeUpdate();
+    }
 }

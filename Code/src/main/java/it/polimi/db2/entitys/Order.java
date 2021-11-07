@@ -9,6 +9,7 @@ import java.util.List;
 @NamedQuery(name="Orders.Id"             ,  query="select o from Order o where o.Id = :orderId")
 @NamedQuery(name="Orders.All"             , query="select o from Order o") //TODO adjust query for only accepted orders
 @NamedQuery(name="Orders.Suspended"       , query="select o from Order o where o.status=false")
+@NamedQuery(name="Orders.RemoveSuspend"   , query="update Order o set o.status = true where o.Id=:orderId")
 @NamedQuery(name="PurchasesByPackages"    , query = "select count (distinct o) from Order o group by o.pack")
 @NamedQuery(name="PurchasesByPackagesID"    , query = "select  o.pack, count(o.pack) from Order o group by o.pack")
 @NamedQuery(name="Orders.UserInsolvances" , query = "select o from Order o where o.status=false and o.user.id = :userId")
@@ -22,7 +23,7 @@ public class Order {
     Date startDate;
     Date creationDate;
     float totalPayment;
-    boolean status;
+    Boolean status =null;
 
     @OneToOne
     @JoinColumn(name = "userId")
@@ -116,5 +117,9 @@ public class Order {
 
     public int getId() {
         return Id;
+    }
+
+    public boolean toUpdate() {
+        return this.status != null;
     }
 }
