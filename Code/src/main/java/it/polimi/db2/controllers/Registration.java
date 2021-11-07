@@ -23,6 +23,7 @@ public class Registration extends BasicServerlet {
         String username = null;
         String password = null;
         String email = null;
+        checkLogIn(request);
 
         System.out.println("User Registration");
 

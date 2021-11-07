@@ -18,4 +18,5 @@ public class TemplatePathManager {
     public static String payment        =   "payment";
     public static String error          =   "errorPage";
     public static String admin          =   "admin";
+    public static String report         =   "report";
 }

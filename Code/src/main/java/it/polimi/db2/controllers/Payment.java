@@ -24,6 +24,7 @@ public class Payment extends BasicServerlet {
     private Random random= new Random();
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        checkLogIn(request);
 
         //TODO WHEN CREATE FILTER PUT A "divieto" ON PAYMENT WITH EMPTY SESSION
         HttpSession session = request.getSession();

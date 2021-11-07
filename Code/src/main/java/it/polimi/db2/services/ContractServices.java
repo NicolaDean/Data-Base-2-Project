@@ -85,6 +85,10 @@ public class ContractServices extends BasicService{
         return order;
     }
 
+    public List<Order> getAllOrders(){
+        return this.em.createNamedQuery("Orders.All",Order.class).getResultList();
+    }
+
     public void persist(Order order) throws ElementNotFound {
 
         this.em.persist(order);

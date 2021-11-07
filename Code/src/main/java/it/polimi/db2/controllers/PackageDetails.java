@@ -24,6 +24,7 @@ public class PackageDetails extends BasicServerlet{
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        checkLogIn(request);
 
         String input =  request.getParameter("id");
         int id = 0;

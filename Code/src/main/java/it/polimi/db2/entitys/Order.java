@@ -6,6 +6,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "Orders", schema = "test")
+@NamedQuery(name="Orders.All",query="select o from Order o") //TODO adjust query for only accepted orders
+@NamedQuery(name="Order.Size", query = "select count (o) from Order o")
 public class Order {
 
     @Id

@@ -24,13 +24,9 @@ public class HomePage extends BasicServerlet {
         List<Package> packages = this.packageService.getAllPackages();
 
         request.setAttribute("packages",packages);
-        
-      //Setting Name if logged
-        HttpSession session=request.getSession(false);
-        if(session!=null){
-            User user= (User) session.getAttribute("user");
-            request.setAttribute("name",user.getUsername());
-        }
+
+        checkLogIn(request);
+
 
         this.templateRenderer(request,response, TemplatePathManager.homePage);
     }

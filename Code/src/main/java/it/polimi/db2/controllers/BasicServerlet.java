@@ -1,5 +1,6 @@
 package it.polimi.db2.controllers;
 
+import it.polimi.db2.entitys.User;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -10,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class BasicServerlet extends HttpServlet {
@@ -77,5 +79,13 @@ public class BasicServerlet extends HttpServlet {
     public static void genericTemplateRenderer(ServletContext context,TemplateEngine engine,HttpServletRequest request, HttpServletResponse response,String path) throws IOException {
         WebContext ctx = new WebContext(request, response, context, request.getLocale());
         engine.process(path,ctx,response.getWriter());
+    }
+
+    public void checkLogIn(HttpServletRequest request){
+        HttpSession session=request.getSession(false);
+        if(session!=null){
+            User user= (User) session.getAttribute("user");
+            request.setAttribute("name",user.getUsername());
+        }
     }
 }

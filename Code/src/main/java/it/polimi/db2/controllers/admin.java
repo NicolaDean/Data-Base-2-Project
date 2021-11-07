@@ -28,12 +28,7 @@ public class admin extends BasicServerlet{
 
         request.setAttribute("packages",packages);
 
-        //Setting Name if logged
-        HttpSession session=request.getSession(false);
-        if(session!=null){
-            User user= (User) session.getAttribute("user");
-            request.setAttribute("name",user.getUsername());
-        }
+        checkLogIn(request);
 
         this.templateRenderer(request,response, TemplatePathManager.admin);
     }
