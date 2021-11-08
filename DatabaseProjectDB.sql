@@ -227,7 +227,6 @@ begin
     update Users set Users.insolvent = false where Users.id = new.userId;
 end if;
 END $$
-elseif
 DELIMITER ;
 select * from Users;
 select * from Orders;
