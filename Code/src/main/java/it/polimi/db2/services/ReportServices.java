@@ -6,6 +6,7 @@ import it.polimi.db2.entitys.custom.ReportData;
 import javax.ejb.Stateless;
 import javax.persistence.Table;
 import java.util.List;
+import java.util.Vector;
 
 @Stateless
 public class ReportServices extends BasicService{
@@ -15,8 +16,8 @@ public class ReportServices extends BasicService{
         return this.em.createNamedQuery("PurchasesByPackages",Integer.class).getResultList();
     }
 
-    public List<ReportData> getNumberOfPurchaseByID(){
-        return this.em.createNamedQuery("PurchasesByPackagesID",ReportData.class).getResultList();
+    public Vector<Object[]> getNumberOfPurchaseByID(){
+        return (Vector)this.em.createNamedQuery("PurchasesByPackagesID",Object.class).getResultList();
     }
     /**
      *

@@ -1,19 +1,24 @@
 package it.polimi.db2.entitys.custom;
 
-public class ReportData {
-    private Integer id;
-    private Integer count;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-    public ReportData(Integer id, Integer count) {
-        this.id=id;
+public class ReportData {
+
+    private String pack;
+    private Long count;
+
+    public ReportData(String pack, Long count) {
+        this.pack=pack;
         this.count=count;
     }
 
-    public Integer getCount() {
+
+    public Long getCount() {
         return count;
     }
 
-    public Integer getId() {
-        return id;
+    public String getPack() {
+        return pack;
     }
 }

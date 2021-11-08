@@ -22,7 +22,9 @@
 <div th:replace="/WEB-INF/templateHTML/customTags/header::header"></div>
 <h1>SALES REPORT</h1>
 <title>Title</title>
-<a th:text="${orders.size()}"></a>
+<a th:text="'Distinct packs ' + ${reports.size()}"></a>
+
+<a th:text="'total purch '+ ${totalPurchases}"></a>
 
 <div>
   <div class="card-header" th:text=>
@@ -32,17 +34,17 @@
     <h5 class="card-title">Total Purchases</h5>
 
     <div class="card-columns" style="margin:8px 0 15px 0;">
-      <div class="card-header " th:text="'Total orders' + ${orders.size()} + ' month'"></div>
+      <div class="card-header " th:text="'Total orders' + ${reports.size()} + ' month'"></div>
 
-      <div class="card bg-light mb-3 selection" style="max-width: 18rem;" th:each="rate : ${p.getRates()}">
-        <div class="card-header " th:text="${rate.getMonthValidity()} + ' month'"></div>
+      <div class="card bg-light mb-3 selection" style="max-width: 18rem;" th:each="report : ${reports}">
+        <div class="card-header " th:text="${report.getPack()}"></div>
         <div class="card-body">
-          <h5 class="card-title" th:text="${rate.getPrice()} + '$'"></h5>
+          <h5 class="card-title" th:text="${report.getCount()}"></h5>
         </div>
       </div>
     </div>
   </div>
-
+</div>
 </body>
 </html>
 
