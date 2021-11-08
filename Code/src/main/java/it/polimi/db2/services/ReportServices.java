@@ -1,10 +1,9 @@
 package it.polimi.db2.services;
 
 import it.polimi.db2.entitys.Order;
-import it.polimi.db2.entitys.custom.ReportData;
+import it.polimi.db2.entitys.custom.OptionalProductsAverage;
 
 import javax.ejb.Stateless;
-import javax.persistence.Table;
 import java.util.List;
 import java.util.Vector;
 
@@ -26,6 +25,10 @@ public class ReportServices extends BasicService{
     public List<Order> findPendingOrder()
     {
        return this.em.createNamedQuery("Orders.Suspended",Order.class).getResultList();
+    }
+
+    public List<OptionalProductsAverage> optionalProductsAverages(){
+      return   this.em.createNamedQuery("Report.OptionalProductAverage",OptionalProductsAverage.class).getResultList();
     }
 
 }
