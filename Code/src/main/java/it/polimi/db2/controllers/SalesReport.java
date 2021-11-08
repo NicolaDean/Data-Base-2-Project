@@ -26,25 +26,14 @@ public class SalesReport extends BasicServerlet{
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
-            List<Object[]> data = (List<Object[]>)this.reportServices.getNumberOfPurchaseByID();
-            List<ReportData> reportData = new LinkedList<>();
-            for(int i = 0; i < data.size(); i++)
-            {
-                System.out.println("--");
-                Object[] pack = data.get(i);
-                reportData.add(new ReportData((String) pack[0],(Long) pack[1]));
-                System.out.println("--");
-            }
-
-
-          //  checkLogIn(request);
+            checkLogIn(request);
+            List<Object[]> dataNumberOfPurchaseByID = (List<Object[]>)this.reportServices.getNumberOfPurchaseByID();
+            List<ReportData> reportData = reportDataLinkedList(dataNumberOfPurchaseByID);
 
 
             request.setAttribute("reports", reportData);
             request.setAttribute("totalPurchases", this.totalPurchases(reportData));
-           // request.setAttribute("number_of_orders",reportServices.size());
             this.templateRenderer(request,response, TemplatePathManager.report);
-
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -57,5 +46,15 @@ public class SalesReport extends BasicServerlet{
             counter= (int) (counter+reportData.get(i).getCount());
         }
         return counter;
+    }
+
+    public List<ReportData> reportDataLinkedList(List<Object[]> data){
+        List<ReportData> reportData = new LinkedList<>();
+        for(int i = 0; i < data.size(); i++)
+        {
+            Object[] pack = data.get(i);
+            reportData.add(new ReportData((String) pack[0],(Long) pack[1]));
+        }
+        return reportData;
     }
 }
