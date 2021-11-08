@@ -248,7 +248,6 @@ create view PurchasesCount as (
                               group by o.packageId, Rate_costs.id
                                   );
 
-select * from Purchases;
 
 select distinct o.id,o.packageId from Orders_OptionalProducts as opt join Orders as o where opt.orderId=o.id;
 drop view if exists OptionalProductsAverage;
