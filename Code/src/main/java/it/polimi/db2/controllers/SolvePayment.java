@@ -38,8 +38,6 @@ public class SolvePayment extends BasicServerlet {
             this.setError(request, response, "Order not found", TemplatePathManager.error);
         }
 
-
-
     }
 
 

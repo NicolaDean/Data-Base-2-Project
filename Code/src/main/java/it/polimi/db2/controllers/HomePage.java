@@ -28,12 +28,10 @@ public class HomePage extends BasicServerlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 
-
-        checkLogIn(request);
-
         HttpSession session = request.getSession();
-
+        checkLogIn(request);
         User user = (User) session.getAttribute("user");
+
 
         if(user!=null && user.isInsolvent())
         {

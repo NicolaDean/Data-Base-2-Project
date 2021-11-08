@@ -43,15 +43,12 @@ public class SalesReport extends BasicServerlet{
             request.setAttribute("reports", reportData);
             request.setAttribute("totalPurchases", this.totalPurchases(reportData));
            // request.setAttribute("number_of_orders",reportServices.size());
+            this.templateRenderer(request,response, TemplatePathManager.report);
+
         }catch (Exception e)
         {
             e.printStackTrace();
         }
-
-
-
-        this.templateRenderer(request,response, TemplatePathManager.report);
-
 
     }
     public int totalPurchases(List<ReportData> reportData){

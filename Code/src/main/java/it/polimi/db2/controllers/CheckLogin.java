@@ -67,7 +67,6 @@ public class CheckLogin extends BasicServerlet {
         HttpSession session=request.getSession();
         session.invalidate();
         this.setError(request,response,"You are successfully logged out!", TemplatePathManager.loginPage);
-
     }
 
     public void destroy() {
