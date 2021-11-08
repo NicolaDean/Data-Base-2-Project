@@ -18,7 +18,7 @@ create table Users(
                       PRIMARY KEY(id)
 );
 
-insert into Users (username,password,email,type,insolvent) values ("nico","1234","nico@gmail.com","user",true);
+insert into Users (username,password,email,type) values ("nico","1234","nico@gmail.com","user");
 insert into Users (username,password,email,type) values ("fasa","1234","fasa@gmail.com","user");
 insert into Users (username,password,email,type) values ("babbano","1234","babbano@gmail.com","user");
 insert into Users (username,password,email,type) values ("admin","1234","fasa@gmail.com","admin");
@@ -181,6 +181,7 @@ create table Orders_OptionalProducts(
                                         FOREIGN KEY (orderId) REFERENCES Orders (id),
                                         FOREIGN KEY (productId) REFERENCES OptionalProducts(id)
 );
+
 select * from Orders;
 
 select * from Orders where status = false;
@@ -198,15 +199,44 @@ drop view if exists Purchase_By_Packages;
 create view Purchase_By_Packages as
 select packageId,count(packageId) from Orders group by packageId;
 ;
+
+drop trigger if exists INSOLVENT_USER;
+DELIMITER $$
+create trigger INSOLVENT_USER
+    after insert on Orders
+    for each row
+begin
+    if ( new.status = false) then
+    update Users set Users.insolvent = true where Users.id = new.userId;
+    /*if (select count(*) from Orders as o where o.userId=new.userId and o.status = false) >= 3
+        -- If the user is insolvent AND has more than 3
+    then
+        update Users set Users.insolvent = true where Users.id = new.userId;
+    end if;*/
+end if;
+
+END $$
+
+create trigger INSOLVENT_USER_REMOVAL
+    after update on Orders
+    for each row
+begin
+    if (new.status = true) AND -- user payed a suspended order i check if all his pending order are payed (if yes remove flag)
+	    (select count(*) from Orders as o where o.userId=new.userId and o.status = false) = 0
+	then
+    update Users set Users.insolvent = false where Users.id = new.userId;
+end if;
+END $$
+elseif
+DELIMITER ;
+select * from Users;
+select * from Orders;
 /*
 create trigger INSOLVENT_USER after
 	insert on Orders
     for each row
-    when( new.status = false)
-    begin
-		update Users set User.insolvent = true where id = new.userId
-	end;
 
-    */
-select * from Purchase_By_Packages;
-
+		if new.status = false then
+			update Users set User.insolvent = true where id = new.userId;
+		end if;
+*/
