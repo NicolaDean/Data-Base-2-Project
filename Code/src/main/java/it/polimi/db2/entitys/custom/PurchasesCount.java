@@ -2,13 +2,15 @@ package it.polimi.db2.entitys.custom;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
-public class ReportData {
+
+public class PurchasesCount {
 
     private String pack;
     private Long count;
 
-    public ReportData(String pack, Long count) {
+    public PurchasesCount(String pack, Long count) {
         this.pack=pack;
         this.count=count;
     }
