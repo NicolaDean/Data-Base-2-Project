@@ -1,4 +1,4 @@
-
+drop table if exists FailedPayments;
 drop table if exists Users;
 drop table if exists mobile_phone_services;
 drop table if exists fixed_phone_services;
@@ -196,85 +196,13 @@ select * from Orders where status = false;
 -- );
 
 drop view if exists Purchase_By_Packages;
-create view Purchase_By_Packages as
-select packageId,count(packageId) from Orders group by packageId;
-;
 
-drop trigger if exists INSOLVENT_USER;
-DELIMITER $$
-create trigger INSOLVENT_USER
-    after insert on Orders
-    for each row
-begin
-    if ( new.status = false) then
-    update Users set Users.insolvent = true where Users.id = new.userId;
-    /*if (select count(*) from Orders as o where o.userId=new.userId and o.status = false) >= 3
-        -- If the user is insolvent AND has more than 3
-    then
-        update Users set Users.insolvent = true where Users.id = new.userId;
-    end if;*/
-end if;
+-- populate with trigger
 
-END $$
-
-create trigger INSOLVENT_USER_REMOVAL
-    after update on Orders
-    for each row
-begin
-    if (new.status = true) AND -- user payed a suspended order i check if all his pending order are payed (if yes remove flag)
-	    (select count(*) from Orders as o where o.userId=new.userId and o.status = false) = 0
-	then
-    update Users set Users.insolvent = false where Users.id = new.userId;
-end if;
-END $$
-elseif
-DELIMITER ;
-select * from Users;
-select * from Orders;
-/*
-create trigger INSOLVENT_USER after
-	insert on Orders
-    for each row
-
-		if new.status = false then
-			update Users set User.insolvent = true where id = new.userId;
-		end if;
-*/
-
-drop view if exists PurchasesCount;
-drop view if exists PurchasesCountGrouped;
-
-create view PurchasesCount as (
-                              Select Packages.name as name,Rate_costs.monthValidity as validity,count(*) as count
-                              from Orders as o join Packages  join Rate_costs
-                              on o.packageId=Packages.id and Rate_costs.packageId=o.packageId and o.rateId=Rate_costs.id
-                              group by o.packageId, Rate_costs.id
-                                  );
-
-create view PurchasesCountGrouped as (
-                                     select p.name as name,sum(p.count) as count
-                                     from PurchasesCount as p
-                                     group by p.name
-                                         );
-
-select * from PurchasesCount;
-select * from PurchasesCountGrouped;
-
-select distinct o.id,o.packageId from Orders_OptionalProducts as opt join Orders as o where opt.orderId=o.id;
-drop view if exists OptionalProductsAverage;
-drop view if exists OptionalProductsCount;
-
-create view OptionalProductsCount as(
-                                    select p.name as name,p.id as id,count(*) as optcount
-                                    from Orders_OptionalProducts as opt join Orders as o join Packages as p
-                                    where opt.orderId=o.id and p.id=o.packageId
-                                    group by o.packageId,o.id
-                                        );
-
-create view OptionalProductsAverage as(
-                                      select name,avg(OptionalProductsCount.optcount) as avg
-                                      from OptionalProductsCount
-                                      group by id
-                                          );
-
-select * from OptionalProductsAverage;
+create table FailedPayments(
+                               userId 		INT,
+                               orderId     INT,
+                               faildate    datetime DEFAULT CURRENT_TIMESTAMP,
+                               FOREIGN KEY (userId) REFERENCES Users (id),
+                               FOREIGN KEY (orderId) REFERENCES Orders (id)
+);
