@@ -2,25 +2,27 @@ package it.polimi.db2.entitys.custom;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-
+@Entity
+@NamedQuery(name = "Report.PurchasesCount", query = "select p from PurchasesCount p")
+@Table(name="PurchasesCount", schema="test")
 public class PurchasesCount {
+@Id
+    private String name;
+    private String validity;
+    private int count;
 
-    private String pack;
-    private Long count;
-
-    public PurchasesCount(String pack, Long count) {
-        this.pack=pack;
-        this.count=count;
-    }
-
-
-    public Long getCount() {
+    public int getCount() {
         return count;
     }
 
-    public String getPack() {
-        return pack;
+    public String getName() {
+        return name;
+    }
+
+    public String getValidity() {
+        return validity;
     }
 }
