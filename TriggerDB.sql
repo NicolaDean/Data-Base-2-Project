@@ -18,9 +18,14 @@ create trigger INSOLVENT_USER_REMOVAL
     for each row
 begin
     if (new.status = true) AND -- user payed a suspended order i check if all his pending order are payed (if yes remove flag)
-	    (select count(*) from Orders as o where o.userId=new.userId and o.status = false) = 0
-	then
+			(select count(*) from Orders as o where o.userId=new.userId and o.status = false) = 0
+		then
     update Users set Users.insolvent = false where Users.id = new.userId;
+    elseif (new.status = false)  then
+			insert into FailedPayments (userId,orderId,faildate) values (new.userId,new.id,CURRENT_TIMESTAMP);
 end if;
 END $$
 DELIMITER ;
+select * from FailedPayments;
+
+select * from Orders;
