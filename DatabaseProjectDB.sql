@@ -227,6 +227,7 @@ begin
     update Users set Users.insolvent = false where Users.id = new.userId;
 end if;
 END $$
+elseif
 DELIMITER ;
 select * from Users;
 select * from Orders;
@@ -242,12 +243,13 @@ create trigger INSOLVENT_USER after
 
 drop view if exists PurchasesCount;
 create view PurchasesCount as (
-                              Select count(*),Packages.name,Rate_costs.monthValidity
+                              Select Packages.name as name,Rate_costs.monthValidity as validity,count(*) as count
                               from Orders as o join Packages  join Rate_costs
-                                                                   on o.packageId=Packages.id and Rate_costs.packageId=o.packageId and o.rateId=Rate_costs.id
+                              on o.packageId=Packages.id and Rate_costs.packageId=o.packageId and o.rateId=Rate_costs.id
                               group by o.packageId, Rate_costs.id
                                   );
 
+select * from PurchasesCount;
 
 select distinct o.id,o.packageId from Orders_OptionalProducts as opt join Orders as o where opt.orderId=o.id;
 drop view if exists OptionalProductsAverage;
