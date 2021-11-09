@@ -28,8 +28,6 @@ public class admin extends BasicServerlet{
 
         request.setAttribute("packages",packages);
 
-        checkLogIn(request);
-
         this.templateRenderer(request,response, TemplatePathManager.admin);
     }
 }

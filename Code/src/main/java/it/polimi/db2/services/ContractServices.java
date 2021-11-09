@@ -10,6 +10,7 @@ import javax.ejb.Stateless;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO VERIFICARE CHE NON POSSA ESSERE STATEFULL
 @Stateless
 public class ContractServices extends BasicService{
 
@@ -105,4 +106,5 @@ public class ContractServices extends BasicService{
     public void removeSuspendFromOrder(int id) {
         this.em.createNamedQuery("Orders.RemoveSuspend",Order.class).setParameter("orderId",id).executeUpdate();
     }
+
 }

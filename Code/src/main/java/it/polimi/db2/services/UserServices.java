@@ -6,11 +6,18 @@ import it.polimi.db2.entitys.ServiceTypes.MobilePhoneServices;
 import it.polimi.db2.entitys.User;
 import it.polimi.db2.exception.*;
 
+import javax.ejb.Stateful;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import java.util.List;
 
-@Stateless
-public class UserServices extends BasicService{
+@Stateful
+public class UserServices{
+
+    @PersistenceContext(unitName = "default" , type = PersistenceContextType.EXTENDED)
+    protected EntityManager em;
 
     public UserServices()
     {
@@ -63,12 +70,17 @@ public class UserServices extends BasicService{
     }
 
 
+
     public User getUserById(int id) throws ElementNotFound {
         User user = this.em.find(User.class,id);
 
         if(user==null)throw  new ElementNotFound("User not exist");
 
         return user;
+    }
+
+    public User refresh(User user) throws ElementNotFound {
+        return this.getUserById(user.getId());
     }
 
     /**

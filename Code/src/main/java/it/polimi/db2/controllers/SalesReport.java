@@ -27,7 +27,6 @@ public class SalesReport extends BasicServerlet{
             request.setAttribute("purchasesCounts",purchasesCounts);
             request.setAttribute("totalPurchases",this.reportServices.purchasesTotalSum(purchasesCounts));
             List<OptionalProductsAverage> optionalProductsAverages= this.reportServices.optionalProductsAverages();
-            checkLogIn(request);
             this.templateRenderer(request,response, TemplatePathManager.report);
         }catch (Exception e)
         {

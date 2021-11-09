@@ -31,7 +31,6 @@ public class ConfirmationPage extends BasicServerlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        checkLogIn(request);
 
         String rateId;
         rateId = StringEscapeUtils.escapeJava(request.getParameter("rates"));

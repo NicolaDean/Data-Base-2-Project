@@ -29,7 +29,6 @@ public class HomePage extends BasicServerlet {
 
 
         HttpSession session = request.getSession();
-        checkLogIn(request);
         User user = (User) session.getAttribute("user");
 
 

@@ -80,12 +80,4 @@ public class BasicServerlet extends HttpServlet {
         WebContext ctx = new WebContext(request, response, context, request.getLocale());
         engine.process(path,ctx,response.getWriter());
     }
-
-    public void checkLogIn(HttpServletRequest request){
-        HttpSession session=request.getSession();
-        User user= (User) session.getAttribute("user");
-        if(user!=null){
-            request.setAttribute("name",user.getUsername());
-        }
-    }
 }

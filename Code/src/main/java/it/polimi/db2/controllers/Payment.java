@@ -4,6 +4,7 @@ import it.polimi.db2.entitys.Order;
 import it.polimi.db2.entitys.User;
 import it.polimi.db2.exception.ElementNotFound;
 import it.polimi.db2.services.ContractServices;
+import it.polimi.db2.services.UserServices;
 import it.polimi.db2.utils.TemplatePathManager;
 
 import javax.ejb.EJB;
@@ -20,12 +21,13 @@ public class Payment extends BasicServerlet {
 
     @EJB(name = "it.polimi.db2.services/ContractServices")
     private ContractServices contractServices;
+    @EJB(name = "it.polimi.db2.services/User")
+    private UserServices userServices;
 
 
     private Random random= new Random();
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        checkLogIn(request);
 
         //TODO WHEN CREATE FILTER PUT A "divieto" ON PAYMENT WITH EMPTY SESSION
         HttpSession session = request.getSession();
@@ -45,18 +47,16 @@ public class Payment extends BasicServerlet {
               paymentConfirmation= "CONGRATULATIONS, PAYMENT ACCEPTED!";
 
               order.setStatus(true);
-
-
           }
           else{
               order.setStatus(false);
               paymentConfirmation="PAYMENT DECLINED, PLEASE RETRY THE TRANSACTION";
+              user.setInsolvent(true);
           }
 
         try {
             if(flag) this.contractServices.removeSuspendFromOrder(order.getId());
             else this.contractServices.persist(order);
-
 
         } catch (ElementNotFound e) {
             e.printStackTrace();

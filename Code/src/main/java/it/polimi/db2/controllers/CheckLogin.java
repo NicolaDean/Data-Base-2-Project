@@ -39,8 +39,12 @@ public class CheckLogin extends BasicServerlet {
             HttpSession session=request.getSession();
             session.setAttribute("user",user);
 
+            //Check presence of pending order in session
             Order order = (Order) session.getAttribute("order");
-          if(user.getType().equals("user")) {
+
+            //Check user priviledge
+          if(user.getType().equals("user"))
+          {
               if (order != null) {
                   response.sendRedirect("package-details?id=" + order.getPackage().getId());
               } else {
@@ -48,17 +52,16 @@ public class CheckLogin extends BasicServerlet {
               }
               return;
           }
-          else if(user.getType().equals("admin")){
+          else if(user.getType().equals("admin"))
+          {
               response.sendRedirect("admin");
           }
         } catch (WrongCredential wrongCredential) {
             this.setError(request,response,"Wrong credentials!", TemplatePathManager.loginPage);
         }catch (AuthenticationFailed e) {
-            e.printStackTrace();
             this.setError(request,response,"Authentication failed", TemplatePathManager.loginPage);
-            return;
         } catch (NotUniqueUsername e) {
-            e.printStackTrace();
+            this.setError(request,response,"Internal error occurred, please try again", TemplatePathManager.loginPage);
         }
     }
 

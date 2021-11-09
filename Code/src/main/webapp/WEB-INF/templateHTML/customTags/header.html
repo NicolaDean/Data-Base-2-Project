@@ -23,12 +23,12 @@
   </style>
   <!-- Image and text -->
   <nav class="navbar navbar-light">
-    <a class="navbar-brand" th:size="30">
+    <a class="navbar-brand" th:size="30" href="home">
       FasaNico Telecom
     </a>
 
-    <h4 th:if="${name}" th:text="'Welcome '+ ${name} + '!'"></h4>
-    <form th:if="${name}" action="logout" method="GET">
+    <h4 th:if="${session.user}" th:text="'Welcome '+ ${session.user.getUsername()} + '!'"></h4>
+    <form th:if="${session.user}" action="logout" method="GET">
       <input type="submit" value="Log out" />
     </form>
   </nav>
