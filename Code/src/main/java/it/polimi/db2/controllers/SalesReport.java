@@ -23,6 +23,8 @@ public class SalesReport extends BasicServerlet{
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
+            List<PurchasesCount> purchasesCounts= this.reportServices.purchasesCounts();
+            int totalPurchases= this.reportServices.purchasesTotalSum(purchasesCounts);
             List<OptionalProductsAverage> optionalProductsAverages= this.reportServices.optionalProductsAverages();
             checkLogIn(request);
             this.templateRenderer(request,response, TemplatePathManager.report);
@@ -40,13 +42,5 @@ public class SalesReport extends BasicServerlet{
         return counter;
     }
 
-    public List<PurchasesCount> reportDataLinkedList(List<Object[]> data){
-        List<PurchasesCount> reportData = new LinkedList<>();
-        for(int i = 0; i < data.size(); i++)
-        {
-            Object[] pack = data.get(i);
-            reportData.add(new PurchasesCount((String) pack[0],(Long) pack[1]));
-        }
-        return reportData;
-    }
+
 }
