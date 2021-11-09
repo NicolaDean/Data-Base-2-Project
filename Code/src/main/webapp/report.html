@@ -24,22 +24,59 @@
 <title>Title</title>
 
 
+
+
 <div class="card-columns" style="margin:10px 0 35px 0;">
   <div class="card bg-light mb-3 selection" style="max-width: none;">
-  <div class="card-header " th:text="'Total purchases: '+ ${totalPurchases} + ' (made in '+ ${purchasesCounts.size()}+ ' different packages)'"></div>
-<div class="card-body">
-  <h5 class="card-title" th:text="Details"></h5>
-    <div class="card-columns" style="margin:10px 0 35px 0;">
-      <div class="card bg-light mb-3 selection" style="max-width: 18rem;" th:each="purchasesCount : ${purchasesCounts}">
-        <div class="card-header " th:text="${purchasesCount.getName() + '('+purchasesCount.getValidity()+' months rate)'}"></div>
-        <div class="card-body">
-          <h5 class="card-title" th:text="${purchasesCount.getCount()}"></h5>
+    <div class="card-header " th:text="'Total purchases: '+ ${totalPurchases} + ' (made in '+ ${purchasesCountsGrouped.size()}+ ' different packages)'"></div>
+    <div class="card-body">
+      <h5 class="card-title" th:text="Details"></h5>
+      <div class="card-columns" style="margin:10px 0 35px 0;">
+        <div class="card bg-light mb-3 selection" style="max-width: 18rem;" th:each="purchasesCountGrouped : ${purchasesCountsGrouped}">
+          <div class="card-header " th:text="${purchasesCountGrouped.getName()}"}></div>
+          <div class="card-body">
+            <h5 class="card-title" th:text="${purchasesCountGrouped.getCount()}"></h5>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+
+<div class="card-columns" style="margin:10px 0 35px 0;">
+  <div class="card bg-light mb-3 selection" style="max-width: none;">
+    <div class="card-header " th:text="'Total purchases: '+ ${totalPurchases} + ' (made in '+ ${purchasesCounts.size()}+ ' different rate packages)'"></div>
+    <div class="card-body">
+      <h5 class="card-title" th:text="Details"></h5>
+      <div class="card-columns" style="margin:10px 0 35px 0;">
+        <div class="card bg-light mb-3 selection" style="max-width: 18rem;" th:each="purchasesCount : ${purchasesCounts}">
+          <div class="card-header " th:text="${purchasesCount.getName() + ' ('+purchasesCount.getValidity()+' months rate)'}"></div>
+          <div class="card-body">
+            <h5 class="card-title" th:text="${purchasesCount.getCount()}"></h5>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
+
+<div class="card-columns" style="margin:10px 0 35px 0;">
+  <div class="card bg-light mb-3 selection" style="max-width: none;">
+    <div class="card-header " th:text="'Total purchases: '+ ${totalPurchases} + ' (made in '+ ${purchasesCounts.size()}+ ' different rate packages)'"></div>
+    <div class="card-body">
+      <h5 class="card-title" th:text="Details"></h5>
+      <div class="card-columns" style="margin:10px 0 35px 0;">
+        <div class="card bg-light mb-3 selection" style="max-width: 18rem;" th:each="purchasesCount : ${purchasesCounts}">
+          <div class="card-header " th:text="${purchasesCount.getName() + ' ('+purchasesCount.getValidity()+' months rate)'}"></div>
+          <div class="card-body">
+            <h5 class="card-title" th:text="${purchasesCount.getCount()}"></h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 </body>
 </html>
