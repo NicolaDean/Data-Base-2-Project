@@ -4,6 +4,7 @@ import it.polimi.db2.entitys.Order;
 import it.polimi.db2.entitys.custom.OptionalProductsAverage;
 import it.polimi.db2.entitys.custom.PurchasesCount;
 import it.polimi.db2.entitys.custom.PurchasesCountGrouped;
+import it.polimi.db2.entitys.custom.ValueOfSalesDetailed;
 
 import javax.ejb.Stateless;
 import java.util.List;
@@ -39,6 +40,10 @@ public class ReportServices extends BasicService{
 
     public List<PurchasesCountGrouped> purchasesCountsGrouped(){
         return this.em.createNamedQuery("Report.PurchasesCountGrouped",PurchasesCountGrouped.class).getResultList();
+    }
+
+    public List<ValueOfSalesDetailed> valueOfSalesDetailed(){
+        return this.em.createNamedQuery("Report.SalesDetailed",ValueOfSalesDetailed.class).getResultList();
     }
 
 

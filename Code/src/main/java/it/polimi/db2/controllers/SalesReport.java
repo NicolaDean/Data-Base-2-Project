@@ -3,6 +3,7 @@ package it.polimi.db2.controllers;
 import it.polimi.db2.entitys.custom.OptionalProductsAverage;
 import it.polimi.db2.entitys.custom.PurchasesCount;
 import it.polimi.db2.entitys.custom.PurchasesCountGrouped;
+import it.polimi.db2.entitys.custom.ValueOfSalesDetailed;
 import it.polimi.db2.services.ReportServices;
 import it.polimi.db2.utils.TemplatePathManager;
 
@@ -26,10 +27,16 @@ public class SalesReport extends BasicServerlet{
         try {
             List<PurchasesCount> purchasesCounts= this.reportServices.purchasesCounts();
             List<PurchasesCountGrouped> purchasesCountsGrouped= this.reportServices.purchasesCountsGrouped();
+            //TODO if you purchase without a optional product is not counted in the avg
+            List<OptionalProductsAverage> optionalProductsAverages= this.reportServices.optionalProductsAverages();
+            //TODO value not well calculated if an order han no optional product
+            List<ValueOfSalesDetailed> valueOfSalesDetailed= this.reportServices.valueOfSalesDetailed();
+            request.setAttribute("valueOfSalesDetailed",valueOfSalesDetailed);
             request.setAttribute("purchasesCounts",purchasesCounts);
             request.setAttribute("purchasesCountsGrouped",purchasesCountsGrouped);
             request.setAttribute("totalPurchases",this.reportServices.purchasesTotalSum(purchasesCountsGrouped));
-            List<OptionalProductsAverage> optionalProductsAverages= this.reportServices.optionalProductsAverages();
+            request.setAttribute("optionalProductsAverages",optionalProductsAverages);
+
             this.templateRenderer(request,response, TemplatePathManager.report);
         }catch (Exception e)
         {

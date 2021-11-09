@@ -36,3 +36,35 @@ create view OptionalProductsAverage as(
                                           );
 
 select * from OptionalProductsAverage;
+
+drop view if exists ValueOfTotalSales;
+
+create view ValueOfTotalSales as(
+                                select p.name,sum(o.totalPayment)
+                                from Orders as o join Packages as p
+                                where p.id=o.packageId
+                                group by o.packageId
+                                    );
+
+select * from ValueOfTotalSales;
+
+
+drop view if exists OptionalProductsSales;
+
+create view OptionalProductsSales as(
+                                    select p.name as name,sum(op.monthlyFee*r.monthValidity) as totalOptionalProductsSales
+                                    from Orders_OptionalProducts as orderop join Orders as o join OptionalProducts as op join Packages as p join Rate_costs as r
+                                    where o.id=orderop.orderId and orderop.productId=op.id and o.packageId=p.id and o.rateId=r.id
+                                    group by p.id
+                                        );
+
+select * from OptionalProductsSales;
+
+drop view if exists ValueOfSalesDetailed ;
+
+create view ValueOfSalesDetailed as(
+                                   select vot.name as name,vot.totalPayment as totalPayment, (vot.totalPayment-ops.totalOptionalProductsSales) as totalPaymentWithoutOP
+                                   from ValueOfTotalSales as vot join OptionalProductsSales as ops
+                                       );
+
+select * from ValueOfSalesDetailed;
