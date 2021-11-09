@@ -242,6 +242,8 @@ create trigger INSOLVENT_USER after
 */
 
 drop view if exists PurchasesCount;
+drop view if exists PurchasesCountGrouped;
+
 create view PurchasesCount as (
                               Select Packages.name as name,Rate_costs.monthValidity as validity,count(*) as count
                               from Orders as o join Packages  join Rate_costs
@@ -249,7 +251,14 @@ create view PurchasesCount as (
                               group by o.packageId, Rate_costs.id
                                   );
 
+create view PurchasesCountGrouped as (
+                                     select p.name as name,sum(p.count) as count
+                                     from PurchasesCount as p
+                                     group by p.name
+                                         );
+
 select * from PurchasesCount;
+select * from PurchasesCountGrouped;
 
 select distinct o.id,o.packageId from Orders_OptionalProducts as opt join Orders as o where opt.orderId=o.id;
 drop view if exists OptionalProductsAverage;

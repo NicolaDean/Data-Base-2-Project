@@ -3,6 +3,7 @@ package it.polimi.db2.services;
 import it.polimi.db2.entitys.Order;
 import it.polimi.db2.entitys.custom.OptionalProductsAverage;
 import it.polimi.db2.entitys.custom.PurchasesCount;
+import it.polimi.db2.entitys.custom.PurchasesCountGrouped;
 
 import javax.ejb.Stateless;
 import java.util.List;
@@ -36,7 +37,12 @@ public class ReportServices extends BasicService{
         return this.em.createNamedQuery("Report.PurchasesCount",PurchasesCount.class).getResultList();
     }
 
-    public int purchasesTotalSum(List<PurchasesCount> purchasesCounts){
+    public List<PurchasesCountGrouped> purchasesCountsGrouped(){
+        return this.em.createNamedQuery("Report.PurchasesCountGrouped",PurchasesCountGrouped.class).getResultList();
+    }
+
+
+    public int purchasesTotalSum(List<PurchasesCountGrouped> purchasesCounts){
         int counter=0;
         for(int i=0;i<purchasesCounts.size();i++){
            counter= (int) (counter + purchasesCounts.get(i).getCount());

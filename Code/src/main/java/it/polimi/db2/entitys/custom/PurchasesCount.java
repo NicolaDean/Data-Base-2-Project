@@ -6,6 +6,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
+//All packages with counts per rate
 @NamedQuery(name = "Report.PurchasesCount", query = "select p from PurchasesCount p")
 @Table(name="PurchasesCount", schema="test")
 public class PurchasesCount {

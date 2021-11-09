@@ -2,6 +2,7 @@ package it.polimi.db2.controllers;
 
 import it.polimi.db2.entitys.custom.OptionalProductsAverage;
 import it.polimi.db2.entitys.custom.PurchasesCount;
+import it.polimi.db2.entitys.custom.PurchasesCountGrouped;
 import it.polimi.db2.services.ReportServices;
 import it.polimi.db2.utils.TemplatePathManager;
 
@@ -24,8 +25,10 @@ public class SalesReport extends BasicServerlet{
 
         try {
             List<PurchasesCount> purchasesCounts= this.reportServices.purchasesCounts();
+            List<PurchasesCountGrouped> purchasesCountsGrouped= this.reportServices.purchasesCountsGrouped();
             request.setAttribute("purchasesCounts",purchasesCounts);
-            request.setAttribute("totalPurchases",this.reportServices.purchasesTotalSum(purchasesCounts));
+            request.setAttribute("purchasesCountsGrouped",purchasesCountsGrouped);
+            request.setAttribute("totalPurchases",this.reportServices.purchasesTotalSum(purchasesCountsGrouped));
             List<OptionalProductsAverage> optionalProductsAverages= this.reportServices.optionalProductsAverages();
             this.templateRenderer(request,response, TemplatePathManager.report);
         }catch (Exception e)
