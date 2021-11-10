@@ -95,7 +95,7 @@
             <h5 class="card-title" th:text="${valueOfSale.getTotalPayment()}"></h5>
           </div>
           </div>
-          <div class="card-body">
+          <div th:if="${valueOfSale.getTotalPaymentWithoutOP()}" class="card-body">
             <div class="card-header " th:text="'Without Optional Products'"></div>
             <div class="card-body">
               <h5 class="card-title" th:text="${valueOfSale.getTotalPaymentWithoutOP()}"></h5>

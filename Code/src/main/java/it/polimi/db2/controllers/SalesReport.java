@@ -27,7 +27,6 @@ public class SalesReport extends BasicServerlet{
         try {
             List<PurchasesCount> purchasesCounts= this.reportServices.purchasesCounts();
             List<PurchasesCountGrouped> purchasesCountsGrouped= this.reportServices.purchasesCountsGrouped();
-            //TODO if you purchase without a optional product is not counted in the avg
             List<OptionalProductsAverage> optionalProductsAverages= this.reportServices.optionalProductsAverages();
             //TODO value not well calculated if an order han no optional product
             List<ValueOfSalesDetailed> valueOfSalesDetailed= this.reportServices.valueOfSalesDetailed();
