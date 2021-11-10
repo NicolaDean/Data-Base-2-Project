@@ -24,6 +24,7 @@ public class SalesReport extends BasicServerlet{
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
+            //Getting Data
             List<PurchasesCount> purchasesCounts= this.reportServices.purchasesCounts();
             List<PurchasesCountGrouped> purchasesCountsGrouped= this.reportServices.purchasesCountsGrouped();
             List<OptionalProductsAverage> optionalProductsAverages= this.reportServices.optionalProductsAverages();
@@ -31,20 +32,19 @@ public class SalesReport extends BasicServerlet{
             List<InsolventReport> insolventReports=this.reportServices.insolventReports();
             List<User> usersInsolvent= this.reportServices.usersInsolvent();
             List<Order> ordersSuspended= this.reportServices.ordersSuspended();
-            List<OptionalProductBestSeller> optionalProductBestSellers=this.reportServices.optionalProductBestSellers();
             List<OptionalProductBestSeller> optionalProductBestSellersForValue=this.reportServices.optionalProductBestSellersForValue();
             List<OptionalProductBestSeller> optionalProductBestSellersForAmount=this.reportServices.optionalProductBestSellersForAmount();
 
-            request.setAttribute("optionalProductBestSellers",optionalProductBestSellers);
+            //Setting Attributes
             request.setAttribute("optionalProductBestSellersForValue",optionalProductBestSellersForValue);
             request.setAttribute("optionalProductBestSellersForAmount",optionalProductBestSellersForAmount);
-
             request.setAttribute("insolventReports",insolventReports);
             request.setAttribute("usersInsolvent",usersInsolvent);
             request.setAttribute("ordersSuspended",ordersSuspended);
             request.setAttribute("valueOfSalesDetailed",valueOfSalesDetailed);
             request.setAttribute("purchasesCounts",purchasesCounts);
             request.setAttribute("purchasesCountsGrouped",purchasesCountsGrouped);
+            //TODO Check if using a query can do it
             request.setAttribute("totalPurchases",this.reportServices.purchasesTotalSum(purchasesCountsGrouped));
             request.setAttribute("optionalProductsAverages",optionalProductsAverages);
 

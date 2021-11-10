@@ -93,13 +93,11 @@
       <div class="card-columns">
         <div class="card bg-light mb-3 selection" th:each="valueOfSale : ${valueOfSalesDetailed}">
           <div class="card-header " th:text="${valueOfSale.getName()}"></div>
-          <div class="card-body">
             <div class="card-header row" th:text="'Total revenue'"></div>
-            <div class="card-body">
+          <div class="card-body">
             <h5 class="card-title" th:text="${valueOfSale.getTotalPayment()}"></h5>
           </div>
-          </div>
-          <div th:if="${valueOfSale.getTotalPaymentWithoutOP()}" class="card-body">
+          <div th:if="${valueOfSale.getTotalPaymentWithoutOP()}">
             <div class="card-header row" th:text="'Without Optional Products'"></div>
             <div class="card-body">
               <h5 class="card-title" th:text="${valueOfSale.getTotalPaymentWithoutOP()}"></h5>
@@ -116,40 +114,42 @@
   <div class="card bg-light mb-3 selection">
     <div class="card-header head">Insolvent Reports</div>
     <div class="card-body">
-      <h5 class="card-title row" th:text="'Insolvent Users'"></h5>
-      <div class="card-columns" >
-        <div class="card bg-light mb-3 selection" th:each="user : ${usersInsolvent}">
+        <div class="card bg-light mb-3 selection">
+          <div class="card-header head">Insolvent Users</div>
+            <div class="card bg-light mb-3 selection" th:each="user : ${usersInsolvent}">
           <div class="card-header " th:text="'id :'+${user.getId()}"></div>
           <div class="card-body">
             <h5 class="card-title" th:text="${user.getUsername()}"></h5>
           </div>
-        </div>
       </div>
-    </div>
-    <div class="card-body">
-      <h5 class="card-title row" th:text="'Suspended Orders'"></h5>
-      <div class="card-columns">
+        </div>
+
+
+
+        <div class="card bg-light mb-3 selection">
+          <div class="card-header head">Suspended Orders</div>
         <div class="card bg-light mb-3 selection" th:each="order : ${ordersSuspended}">
           <div class="card-header " th:text="'id :'+${order.getId()}"></div>
           <div class="card-body">
             <h5 class="card-title" th:text="${order.getTotalPayment()}+'$'"></h5>
           </div>
-        </div>
       </div>
-    </div>
-    <div class="card-body">
+        </div>
+
+        <div class="card bg-light mb-3 selection">
+          <div class="card-header head">Alerts</div>
       <div class="card-columns" >
         <div class="card bg-light mb-3 selection" th:each="alert : ${insolventReports}">
-          <div class="card-header " th:text="'Alert id:'+${alert.getId()}"></div>
+          <div class="card-header " th:text="'id:'+${alert.getId()}"></div>
           <div class="card-body">
             <h5 class="card-title row" th:text="${alert.getUsername()} +', '+ ${alert.getEmail()} +', '+ ${alert.getLastDate()}+', '+ ${alert.getAmount()} +'$'"></h5>
           </div>
-        </div>
+  </div>
       </div>
     </div>
   </div>
 </div>
-
+</div>
 
 <div class="card-column" >
   <div class="card bg-light mb-3 selection" >
