@@ -21,11 +21,12 @@ begin
 			(select count(*) from Orders as o where o.userId=new.userId and o.status = false) = 0
 		then
     update Users set Users.insolvent = false where Users.id = new.userId;
-    elseif (new.status = false)  then
+end if;
+if (new.status = false AND old.status = new.status)  then
 			insert into FailedPayments (userId,orderId,faildate) values (new.userId,new.id,CURRENT_TIMESTAMP);
 end if;
 END $$
 DELIMITER ;
 select * from FailedPayments;
-
+update Orders set status = false where id = 2;
 select * from Orders;
