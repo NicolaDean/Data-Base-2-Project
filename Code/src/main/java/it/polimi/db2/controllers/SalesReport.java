@@ -1,9 +1,8 @@
 package it.polimi.db2.controllers;
 
-import it.polimi.db2.entitys.custom.OptionalProductsAverage;
-import it.polimi.db2.entitys.custom.PurchasesCount;
-import it.polimi.db2.entitys.custom.PurchasesCountGrouped;
-import it.polimi.db2.entitys.custom.ValueOfSalesDetailed;
+import it.polimi.db2.entitys.Order;
+import it.polimi.db2.entitys.User;
+import it.polimi.db2.entitys.custom.*;
 import it.polimi.db2.services.ReportServices;
 import it.polimi.db2.utils.TemplatePathManager;
 
@@ -28,8 +27,14 @@ public class SalesReport extends BasicServerlet{
             List<PurchasesCount> purchasesCounts= this.reportServices.purchasesCounts();
             List<PurchasesCountGrouped> purchasesCountsGrouped= this.reportServices.purchasesCountsGrouped();
             List<OptionalProductsAverage> optionalProductsAverages= this.reportServices.optionalProductsAverages();
-            //TODO value not well calculated if an order han no optional product
             List<ValueOfSalesDetailed> valueOfSalesDetailed= this.reportServices.valueOfSalesDetailed();
+            List<InsolventReport> insolventReports=this.reportServices.insolventReports();
+            List<User> usersInsolvent= this.reportServices.usersInsolvent();
+            List<Order> ordersSuspended= this.reportServices.ordersSuspended();
+
+            request.setAttribute("insolventReports",insolventReports);
+            request.setAttribute("usersInsolvent",usersInsolvent);
+            request.setAttribute("ordersSuspended",ordersSuspended);
             request.setAttribute("valueOfSalesDetailed",valueOfSalesDetailed);
             request.setAttribute("purchasesCounts",purchasesCounts);
             request.setAttribute("purchasesCountsGrouped",purchasesCountsGrouped);
