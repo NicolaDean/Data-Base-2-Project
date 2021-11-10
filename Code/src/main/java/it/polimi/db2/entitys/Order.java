@@ -76,7 +76,7 @@ public class Order {
         this.totalPayment = tot;
 
         startDate = new Date();
-        creationDate = new Date();
+        creationDate = new Date();//TODO add date in creation form
     }
 
     public void addOptionalProducts(List<OptionalProduct> products) {
@@ -121,5 +121,13 @@ public class Order {
 
     public boolean toUpdate() {
         return this.status != null;
+    }
+
+    public Package getPack() {
+        return pack;
+    }
+
+    public User getUser() {
+        return user;
     }
 }

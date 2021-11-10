@@ -36,8 +36,8 @@ public class SalesReport extends BasicServerlet{
             List<OptionalProductBestSeller> optionalProductBestSellersForAmount=this.reportServices.optionalProductBestSellersForAmount();
 
             //Setting Attributes
-            request.setAttribute("optionalProductBestSellersForValue",optionalProductBestSellersForValue);
-            request.setAttribute("optionalProductBestSellersForAmount",optionalProductBestSellersForAmount);
+            request.setAttribute("optionalProductBestSellersForValue",optionalProductBestSellersForValue.get(0));
+            request.setAttribute("optionalProductBestSellersForAmount",optionalProductBestSellersForAmount.get(0));
             request.setAttribute("insolventReports",insolventReports);
             request.setAttribute("usersInsolvent",usersInsolvent);
             request.setAttribute("ordersSuspended",ordersSuspended);

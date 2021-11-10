@@ -34,146 +34,201 @@
 </style>
 
 
-<div class="card-column" >
-  <div class="card bg-light mb-3 selection" >
-    <div class="card-header head" th:text="'Total purchases: '+ ${totalPurchases} + ' (made in '+ ${purchasesCountsGrouped.size()}+ ' different packages)'"></div>
-    <div class="card-body">
-      <div class="card-columns" >
-        <div class="card bg-light mb-3 selection" th:each="purchasesCountGrouped : ${purchasesCountsGrouped}">
-          <div class="card-header row" th:text="${purchasesCountGrouped.getName()}"}></div>
-          <div class="card-body">
-            <h5 class="card-title" th:text="${purchasesCountGrouped.getCount()}"></h5>
-          </div>
-        </div>
-      </div>
-    </div>
+
+
+<h3 th:text="'Total purchases: '+ ${totalPurchases} + ' (made in '+ ${purchasesCountsGrouped.size()}+ ' different packages)'"></h3>
+
+<div class="row">
+  <!-- FIRST STATISTIC totalPurchases-->
+  <div class="col">
+  <table class="table">
+    <caption>Total Purchases of packages</caption>
+    <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Package</th>
+      <th scope="col">Number of purchases</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="totPurchase : ${purchasesCountsGrouped}">
+      <th scope="row" th:text="${index}" ></th>
+      <td th:text="${totPurchase.getName()}"></td>
+      <td th:text="${totPurchase.getCount()}"></td>
+    </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="col">
+    <!-- THIRD STATISTIC Optional Product average Per package-->
+    <table class="table">
+      <caption>Optional Product averages</caption>
+      <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Package</th>
+        <th scope="col">Average of Optional Product</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="optionalProductsAverage : ${optionalProductsAverages}">
+        <th scope="row" th:text="${index}" ></th>
+        <td th:text="${optionalProductsAverage.getName()}"></td>
+        <td th:text="${optionalProductsAverage.getAvg()}"></td>
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="col">
+
+    <!-- FOURTH STATISTIC Sales with/without optional product-->
+    <table class="table">
+      <caption>Packages sales statistic</caption>
+      <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Package</th>
+        <th scope="col">Total Revenue</th>
+        <th scope="col">Revenue Optional Excluded</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="valueOfSale : ${valueOfSalesDetailed}">
+        <th scope="row" th:text="${index}" ></th>
+        <td th:text="${valueOfSale.getName()}"></td>
+        <td th:text="${valueOfSale.getTotalPayment()}"></td>
+        <td th:if="${valueOfSale.getTotalPaymentWithoutOP()}" th:text="${valueOfSale.getTotalPaymentWithoutOP()}"></td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 
-
-<div class="card-columns" >
-  <div class="card bg-light mb-3 selection" >
-    <div class="card-header head" th:text="'Total purchases: '+ ${totalPurchases} + ' (made in '+ ${purchasesCounts.size()}+ ' different rate packages)'"></div>
-    <div class="card-body">
-      <div class="card-columns" >
-        <div class="card bg-light mb-3 selection" th:each="purchasesCount : ${purchasesCounts}">
-          <div class="card-header row" th:text="${purchasesCount.getName() + ' ('+purchasesCount.getValidity()+' months rate)'}"></div>
-          <div class="card-body">
-            <h5 class="card-title" th:text="${purchasesCount.getCount()}"></h5>
-          </div>
-        </div>
-      </div>
-    </div>
+<div class="row">
+  <div class="col">
+    <!-- SECOND STATISTIC totalPurchases by rate id-->
+    <table class="table">
+      <caption>Total Purchases of packages by rate id</caption>
+      <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Package</th>
+        <th scope="col">Validity Period [Month]</th>
+        <th scope="col">Number of purchases</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="purchasesCount : ${purchasesCounts}">
+        <th scope="row" th:text="${index}" ></th>
+        <td th:text="${purchasesCount.getName()}"></td>
+        <td th:text="${purchasesCount.getValidity()}"></td>
+        <td th:text="${purchasesCount.getCount()}"></td>
+      </tr>
+      </tbody>
+    </table>
   </div>
+
+  <div class="col">
+      <table class="table">
+        <caption>BEST SELLERS OPTIONAL PRODUCT</caption>
+        <thead class="thead-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Package Name</th>
+          <th scope="col">Record of  sales</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th scope="row">Best For Quantity</th>
+          <td th:text="${optionalProductBestSellersForValue.getName()}"></td>
+          <td th:text="${optionalProductBestSellersForValue.getAmountSold()} + ' unit '"></td>
+        </tr>
+        <tr>
+          <th scope="row">Best For Ammount</th>
+          <td th:text="${optionalProductBestSellersForAmount.getName()}"></td>
+          <td th:text="${optionalProductBestSellersForAmount.getValue()} + ' $'"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
 </div>
 
+<!-- FIFTH STATISTIC Insolvent user-->
+<table class="table">
+  <caption>Insolvent users</caption>
+  <thead class="thead-dark">
+  <tr>
+    <th scope="col">#ID</th>
+    <th scope="col">Username</th>
+    <th scope="col">Email</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="user : ${usersInsolvent}">
+    <th scope="row" th:text="'id :'+${user.getId()}" ></th>
+    <td th:text="${user.getUsername()}"></td>
+    <td  th:text="${user.getEmail()}"></td>
+   </tr>
+  </tbody>
+</table>
+
+<!-- FIFTH STATISTIC Insolvent user-->
+<table class="table">
+  <caption>Suspended Order</caption>
+  <thead class="thead-dark">
+  <tr>
+    <th scope="col">#Order id</th>
+    <th scope="col">Package Name</th>
+    <th scope="col">Validity Period</th>
+    <th scope="col">Username</th>
+    <th scope="col">Email</th>
+    <th scope="col">Total Cost</th>
+    <th scope="col">Creation Date</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="order : ${ordersSuspended}">
+    <th scope="row" th:text="'id :'+${order.getId()}" ></th>
+    <td th:text="${order.getPack().getName()}"></td>
+    <td th:text="${order.getRate().getMonthValidity()}"></td>
+    <td  th:text="${order.getUser().getUsername()}"></td>
+    <td  th:text="${order.getUser().getEmail()}"></td>
+    <td  th:text="${order.getTotalPayment()}"></td>
+    <td  th:text="${order.getCreationDate()}"></td>
+  </tr>
+  </tbody>
+</table>
+
+<!-- FIFTH STATISTIC Alert recidive insolvent user-->
+<table class="table">
+  <caption>Recidive Insolvent user</caption>
+  <thead class="thead-dark">
+  <tr>
+    <th scope="col">#Order id</th>
+    <th scope="col">Username</th>
+    <th scope="col">Email</th>
+    <th scope="col">Last Failed Payment</th>
+    <th scope="col">Ammount</th>
+    <th scope="col">Date</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="alert : ${insolventReports}">
+    <th scope="row" th:text="'id :'+${alert.getId()}" ></th>
+    <td th:text="${alert.getUsername()}"></td>
+    <td th:text="${alert.getEmail()}"></td>
+    <td th:text="${alert.getLastDate()}"></td>
+    <td th:text="${alert.getAmount()}"></td>
+  </tr>
+  </tbody>
+</table>
 
 
-<div class="card-columns">
-  <div class="card bg-light mb-3 selection" >
-    <div class="card-header  head" th:text="'Average purchases per package'"></div>
-    <div class="card-body">
-      <div class="card-columns" >
-        <div class="card bg-light mb-3 selection" th:each="optionalProductsAverage : ${optionalProductsAverages}">
-          <div class="card-header row" th:text="${optionalProductsAverage.getName()}"></div>
-          <div class="card-body">
-            <h5 class="card-title" th:text="${optionalProductsAverage.getAvg()}"></h5>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-
-<div class="card-columns ">
-  <div class="card bg-light mb-3 selection">
-    <div class="card-header head" th:text="'Value of Sales'"></div>
-    <div class="card-body">
-      <div class="card-columns">
-        <div class="card bg-light mb-3 selection" th:each="valueOfSale : ${valueOfSalesDetailed}">
-          <div class="card-header " th:text="${valueOfSale.getName()}"></div>
-            <div class="card-header row" th:text="'Total revenue'"></div>
-          <div class="card-body">
-            <h5 class="card-title" th:text="${valueOfSale.getTotalPayment()}"></h5>
-          </div>
-          <div th:if="${valueOfSale.getTotalPaymentWithoutOP()}">
-            <div class="card-header row" th:text="'Without Optional Products'"></div>
-            <div class="card-body">
-              <h5 class="card-title" th:text="${valueOfSale.getTotalPaymentWithoutOP()}"></h5>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div class="card-columns ">
-  <div class="card bg-light mb-3 selection">
-    <div class="card-header head">Insolvent Reports</div>
-    <div class="card-body">
-        <div class="card bg-light mb-3 selection">
-          <div class="card-header head">Insolvent Users</div>
-            <div class="card bg-light mb-3 selection" th:each="user : ${usersInsolvent}">
-          <div class="card-header " th:text="'id :'+${user.getId()}"></div>
-          <div class="card-body">
-            <h5 class="card-title" th:text="${user.getUsername()}"></h5>
-          </div>
-      </div>
-        </div>
-
-
-
-        <div class="card bg-light mb-3 selection">
-          <div class="card-header head">Suspended Orders</div>
-        <div class="card bg-light mb-3 selection" th:each="order : ${ordersSuspended}">
-          <div class="card-header " th:text="'id :'+${order.getId()}"></div>
-          <div class="card-body">
-            <h5 class="card-title" th:text="${order.getTotalPayment()}+'$'"></h5>
-          </div>
-      </div>
-        </div>
-
-        <div class="card bg-light mb-3 selection">
-          <div class="card-header head">Alerts</div>
-      <div class="card-columns" >
-        <div class="card bg-light mb-3 selection" th:each="alert : ${insolventReports}">
-          <div class="card-header " th:text="'id:'+${alert.getId()}"></div>
-          <div class="card-body">
-            <h5 class="card-title row" th:text="${alert.getUsername()} +', '+ ${alert.getEmail()} +', '+ ${alert.getLastDate()}+', '+ ${alert.getAmount()} +'$'"></h5>
-          </div>
-  </div>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-
-<div class="card-column" >
-  <div class="card bg-light mb-3 selection" >
-    <div class="card-header head" th:text="'Optional Product Best Sellers'"></div>
-    <div class="card-body">
-      <div class="card-columns" >
-        <div class="card bg-light mb-3 selection" th:each="BestSellersForValue : ${optionalProductBestSellersForValue}">
-          <div class="card-header " th:text="${BestSellersForValue.getName()} +' (for Value)'"}></div>
-          <div class="card-body">
-            <h5 class="card-title" th:text="${BestSellersForValue.getAmountSold()} + ' sold for '+${BestSellersForValue.getValue()}+'$'"></h5>
-          </div>
-        </div>
-      </div>
-    <div class="card-columns" >
-      <div class="card bg-light mb-3 selection" th:each="BestSellersForAmount : ${optionalProductBestSellersForAmount}">
-      <div class="card-header " th:text="${BestSellersForAmount.getName()}+' (for Amount)'"}></div>
-      <div class="card-body">
-        <h5 class="card-title" th:text="${BestSellersForAmount.getAmountSold()} + ' sold for '+${BestSellersForAmount.getValue()}+'$'"></h5>
-      </div>
-    </div>
-  </div>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>

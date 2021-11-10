@@ -54,4 +54,8 @@ public class User {
     public void setInsolvent(boolean b) {
         this.insolvent = true;
     }
+
+    public String getEmail() {
+        return email;
+    }
 }
