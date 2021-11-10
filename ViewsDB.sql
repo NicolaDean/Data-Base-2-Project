@@ -66,3 +66,14 @@ create view ValueOfSalesDetailed as(
                                        );
 
 select * from ValueOfSalesDetailed;
+
+
+drop view if exists InsolventReport;
+create view InsolventReport as(
+                              select u.id as id,u.username as username,u.email as email,(select max(fp1.faildate) from FailedPayments as fp1 where fp1.userId=u.id) as lastdate,(select o.totalPayment from Orders as o join FailedPayments as fp2 where o.id=fp2.orderId and lastdate=fp2.faildate) as amount
+                              from FailedPayments as fp join Users as u
+                              where fp.userId=u.id
+                              group by u.id
+                              having count(*)>=3
+                                  );
+select * from InsolventReport;

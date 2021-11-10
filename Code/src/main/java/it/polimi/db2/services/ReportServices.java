@@ -1,6 +1,7 @@
 package it.polimi.db2.services;
 
 import it.polimi.db2.entitys.Order;
+import it.polimi.db2.entitys.User;
 import it.polimi.db2.entitys.custom.OptionalProductsAverage;
 import it.polimi.db2.entitys.custom.PurchasesCount;
 import it.polimi.db2.entitys.custom.PurchasesCountGrouped;
@@ -44,6 +45,15 @@ public class ReportServices extends BasicService{
 
     public List<ValueOfSalesDetailed> valueOfSalesDetailed(){
         return this.em.createNamedQuery("Report.SalesDetailed",ValueOfSalesDetailed.class).getResultList();
+    }
+
+    //TODO
+    public List<Order> ordersSuspended(){
+        return this.em.createNamedQuery("Orders.Suspended",Order.class).getResultList();
+    }
+
+    public List<User> usersInsolvent(){
+        return this.em.createNamedQuery("User.insolvent", User.class).getResultList();
     }
 
 
