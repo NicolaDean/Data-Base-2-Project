@@ -77,3 +77,12 @@ create view InsolventReport as(
                               having count(*)>=3
                                   );
 select * from InsolventReport;
+
+drop view if exists OptionalProductBestSeller;
+create view OptionalProductBestSeller as(
+                                        select op.name as name,count(op.id) as amountSold,sum(op.monthlyFee*r.monthValidity) as value
+                                        from Orders_OptionalProducts as ordop join OptionalProducts as op join Rate_costs as r join Orders as o
+                                        where ordop.productId=op.id and o.rateId=r.id and o.id=ordop.orderId
+                                        group by op.id
+                                            );
+select * from OptionalProductBestSeller;

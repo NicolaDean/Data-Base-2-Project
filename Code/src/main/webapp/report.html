@@ -40,7 +40,7 @@
     <div class="card-body">
       <div class="card-columns" >
         <div class="card bg-light mb-3 selection" th:each="purchasesCountGrouped : ${purchasesCountsGrouped}">
-          <div class="card-header " th:text="${purchasesCountGrouped.getName()}"}></div>
+          <div class="card-header row" th:text="${purchasesCountGrouped.getName()}"}></div>
           <div class="card-body">
             <h5 class="card-title" th:text="${purchasesCountGrouped.getCount()}"></h5>
           </div>
@@ -138,15 +138,39 @@
       </div>
     </div>
     <div class="card-body">
-      <h5 class="card-title row" th:text="'Alerts'"></h5>
       <div class="card-columns" >
         <div class="card bg-light mb-3 selection" th:each="alert : ${insolventReports}">
-          <div class="card-header " th:text="${alert.getId()}"></div>
+          <div class="card-header " th:text="'Alert id:'+${alert.getId()}"></div>
           <div class="card-body">
             <h5 class="card-title row" th:text="${alert.getUsername()} +', '+ ${alert.getEmail()} +', '+ ${alert.getLastDate()}+', '+ ${alert.getAmount()} +'$'"></h5>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="card-column" >
+  <div class="card bg-light mb-3 selection" >
+    <div class="card-header head" th:text="'Optional Product Best Sellers'"></div>
+    <div class="card-body">
+      <div class="card-columns" >
+        <div class="card bg-light mb-3 selection" th:each="BestSellersForValue : ${optionalProductBestSellersForValue}">
+          <div class="card-header " th:text="${BestSellersForValue.getName()} +' (for Value)'"}></div>
+          <div class="card-body">
+            <h5 class="card-title" th:text="${BestSellersForValue.getAmountSold()} + ' sold for '+${BestSellersForValue.getValue()}+'$'"></h5>
+          </div>
+        </div>
+      </div>
+    <div class="card-columns" >
+      <div class="card bg-light mb-3 selection" th:each="BestSellersForAmount : ${optionalProductBestSellersForAmount}">
+      <div class="card-header " th:text="${BestSellersForAmount.getName()}+' (for Amount)'"}></div>
+      <div class="card-body">
+        <h5 class="card-title" th:text="${BestSellersForAmount.getAmountSold()} + ' sold for '+${BestSellersForAmount.getValue()}+'$'"></h5>
+      </div>
+    </div>
+  </div>
     </div>
   </div>
 </div>

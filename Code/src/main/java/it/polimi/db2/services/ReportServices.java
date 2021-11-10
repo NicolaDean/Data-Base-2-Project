@@ -64,4 +64,13 @@ public class ReportServices extends BasicService{
         return counter;
     }
 
+    public List<OptionalProductBestSeller> optionalProductBestSellers(){
+        return this.em.createNamedQuery("Report.OptionalProductBestSeller",OptionalProductBestSeller.class).getResultList();
+    }
+    public List<OptionalProductBestSeller> optionalProductBestSellersForValue(){
+        return this.em.createNamedQuery("Report.OptionalProductBestSellerForValue",OptionalProductBestSeller.class).getResultList();
+    }
+    public List<OptionalProductBestSeller> optionalProductBestSellersForAmount(){
+        return this.em.createNamedQuery("Report.OptionalProductBestSellerForAmount",OptionalProductBestSeller.class).getResultList();
+    }
 }
