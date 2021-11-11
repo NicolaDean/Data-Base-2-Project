@@ -6,6 +6,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 @Entity
 @NamedQuery(name = "Report.SalesDetailed", query = "select v from ValueOfSalesDetailed v")
+@NamedQuery(name = "Report.SalesTotal", query = "select sum(v.totalPayment) from ValueOfSalesDetailed v")
+
 @Table(name="ValueOfSalesDetailed", schema="test")
 public class ValueOfSalesDetailed {
     @Id

@@ -7,6 +7,7 @@ import it.polimi.db2.services.ReportServices;
 import it.polimi.db2.utils.TemplatePathManager;
 
 import javax.ejb.EJB;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +26,7 @@ public class SalesReport extends BasicServerlet{
 
         try {
             //Getting Data
+            List<Integer> totalSales= this.reportServices.purchasesTotalSales();
             List<PurchasesCount> purchasesCounts= this.reportServices.purchasesCounts();
             List<PurchasesCountGrouped> purchasesCountsGrouped= this.reportServices.purchasesCountsGrouped();
             List<OptionalProductsAverage> optionalProductsAverages= this.reportServices.optionalProductsAverages();
@@ -35,17 +37,16 @@ public class SalesReport extends BasicServerlet{
             List<OptionalProductBestSeller> optionalProductBestSellersForValue=this.reportServices.optionalProductBestSellersForValue();
             List<OptionalProductBestSeller> optionalProductBestSellersForAmount=this.reportServices.optionalProductBestSellersForAmount();
 
+
             //Setting Attributes
-            request.setAttribute("optionalProductBestSellersForValue",optionalProductBestSellersForValue.get(0));
-            request.setAttribute("optionalProductBestSellersForAmount",optionalProductBestSellersForAmount.get(0));
+            request.setAttribute("optionalProductBestSellersForValue", optionalProductBestSellersForValue.get(0));request.setAttribute("optionalProductBestSellersForAmount", optionalProductBestSellersForAmount.get(0));
             request.setAttribute("insolventReports",insolventReports);
             request.setAttribute("usersInsolvent",usersInsolvent);
             request.setAttribute("ordersSuspended",ordersSuspended);
             request.setAttribute("valueOfSalesDetailed",valueOfSalesDetailed);
             request.setAttribute("purchasesCounts",purchasesCounts);
             request.setAttribute("purchasesCountsGrouped",purchasesCountsGrouped);
-            //TODO Check if using a query can do it
-            request.setAttribute("totalPurchases",this.reportServices.purchasesTotalSum(purchasesCountsGrouped));
+            request.setAttribute("totalPurchases",totalSales.get(0));
             request.setAttribute("optionalProductsAverages",optionalProductsAverages);
 
             this.templateRenderer(request,response, TemplatePathManager.report);

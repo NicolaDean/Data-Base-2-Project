@@ -73,4 +73,7 @@ public class ReportServices extends BasicService{
     public List<OptionalProductBestSeller> optionalProductBestSellersForAmount(){
         return this.em.createNamedQuery("Report.OptionalProductBestSellerForAmount",OptionalProductBestSeller.class).getResultList();
     }
+    public List<Integer> purchasesTotalSales(){
+        return this.em.createNamedQuery("Report.SalesTotal",Integer.class).getResultList();
+    }
 }

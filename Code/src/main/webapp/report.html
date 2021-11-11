@@ -144,13 +144,13 @@
         <tbody>
         <tr>
           <th scope="row">Best For Quantity</th>
-          <td th:text="${optionalProductBestSellersForValue.getName()}"></td>
-          <td th:text="${optionalProductBestSellersForValue.getAmountSold()} + ' unit '"></td>
+          <td th:if="${optionalProductBestSellersForValue}" th:text="${optionalProductBestSellersForValue.getName()}"></td>
+          <td th:if="${optionalProductBestSellersForValue}" th:text="${optionalProductBestSellersForValue.getAmountSold()} + ' unit '"></td>
         </tr>
         <tr>
-          <th scope="row">Best For Ammount</th>
-          <td th:text="${optionalProductBestSellersForAmount.getName()}"></td>
-          <td th:text="${optionalProductBestSellersForAmount.getValue()} + ' $'"></td>
+          <th scope="row">Best For Amount</th>
+          <td th:if="${optionalProductBestSellersForAmount}" th:text="${optionalProductBestSellersForAmount.getName()}"></td>
+          <td th:if="${optionalProductBestSellersForAmount}" th:text="${optionalProductBestSellersForAmount.getValue()} + ' $'"></td>
         </tr>
         </tbody>
       </table>
