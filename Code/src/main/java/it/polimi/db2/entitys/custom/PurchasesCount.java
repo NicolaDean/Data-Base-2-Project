@@ -10,8 +10,9 @@ import javax.persistence.Table;
 @NamedQuery(name = "Report.PurchasesCount", query = "select p from PurchasesCount p")
 @Table(name="PurchasesCount", schema="test")
 public class PurchasesCount {
-@Id
+    @Id
     private String name;
+    @Id
     private String validity;
     private int count;
 

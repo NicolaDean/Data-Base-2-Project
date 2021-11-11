@@ -14,10 +14,7 @@ import javax.persistence.PersistenceContextType;
 import java.util.List;
 
 @Stateful
-public class UserServices{
-
-    @PersistenceContext(unitName = "default" , type = PersistenceContextType.EXTENDED)
-    protected EntityManager em;
+public class UserServices extends BasicService{
 
     public UserServices()
     {
