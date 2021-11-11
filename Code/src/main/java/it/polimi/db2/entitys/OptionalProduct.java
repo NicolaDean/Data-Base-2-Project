@@ -23,4 +23,12 @@ public class OptionalProduct{
     public int getMonthlyFee() {
         return monthlyFee;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setMonthlyFee(int monthlyFee) {
+        this.monthlyFee = monthlyFee;
+    }
 }

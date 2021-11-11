@@ -1,5 +1,6 @@
 package it.polimi.db2.services;
 
+import it.polimi.db2.entitys.OptionalProduct;
 import it.polimi.db2.entitys.Package;
 import it.polimi.db2.exception.NoPackageFound;
 
@@ -27,5 +28,16 @@ public class PackageService extends BasicService{
         if(p == null) throw new NoPackageFound();
 
         return p;
+    }
+
+    public void createProduct(String name,int monthFee)
+    {
+        OptionalProduct product = new OptionalProduct();
+
+        product.setName(name);
+        product.setMonthlyFee(monthFee);
+
+        this.em.persist(product);
+
     }
 }
