@@ -39,15 +39,21 @@ public class SalesReport extends BasicServerlet{
 
 
             //Setting Attributes
-            request.setAttribute("optionalProductBestSellersForValue", optionalProductBestSellersForValue.get(0));request.setAttribute("optionalProductBestSellersForAmount", optionalProductBestSellersForAmount.get(0));
-            request.setAttribute("insolventReports",insolventReports);
-            request.setAttribute("usersInsolvent",usersInsolvent);
-            request.setAttribute("ordersSuspended",ordersSuspended);
-            request.setAttribute("valueOfSalesDetailed",valueOfSalesDetailed);
-            request.setAttribute("purchasesCounts",purchasesCounts);
-            request.setAttribute("purchasesCountsGrouped",purchasesCountsGrouped);
-            request.setAttribute("totalPurchases",totalSales.get(0));
-            request.setAttribute("optionalProductsAverages",optionalProductsAverages);
+            if(purchasesCounts.size()>0) {
+                request.setAttribute("insolventReports", insolventReports);
+                request.setAttribute("usersInsolvent", usersInsolvent);
+                request.setAttribute("ordersSuspended", ordersSuspended);
+                request.setAttribute("valueOfSalesDetailed", valueOfSalesDetailed);
+                request.setAttribute("purchasesCounts", purchasesCounts);
+                request.setAttribute("purchasesCountsGrouped", purchasesCountsGrouped);
+                request.setAttribute("totalPurchases", this.reportServices.purchasesTotalSum(purchasesCountsGrouped));
+                request.setAttribute("totalSales", totalSales.get(0));
+                request.setAttribute("optionalProductsAverages", optionalProductsAverages);
+                if (optionalProductBestSellersForValue.size() > 0) {
+                    request.setAttribute("optionalProductBestSellersForValue", optionalProductBestSellersForValue.get(0));
+                    request.setAttribute("optionalProductBestSellersForAmount", optionalProductBestSellersForAmount.get(0));
+                }
+            }
 
             this.templateRenderer(request,response, TemplatePathManager.report);
         }catch (Exception e)

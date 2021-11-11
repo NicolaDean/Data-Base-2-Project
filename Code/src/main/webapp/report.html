@@ -35,8 +35,9 @@
 
 
 
+<div th:if="${totalPurchases}">
+  <h3 th:text="'Total purchases: '+ ${totalPurchases} + ' (made in '+ ${purchasesCountsGrouped.size()}+ ' different packages) for a total revenue of '+${totalSales}+'$'"></h3>
 
-<h3 th:text="'Total purchases: '+ ${totalPurchases} + ' (made in '+ ${purchasesCountsGrouped.size()}+ ' different packages)'"></h3>
 
 <div class="row">
   <!-- FIRST STATISTIC totalPurchases-->
@@ -226,7 +227,10 @@
   </tr>
   </tbody>
 </table>
-
+</div>
+<div th:unless="${totalPurchases}">
+  <h3 th:text="'No Data available (No purchases made yet)'"></h3>
+</div>
 
 
 
