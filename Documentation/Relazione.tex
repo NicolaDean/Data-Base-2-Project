@@ -68,16 +68,6 @@ This document describes design
 % \label is a hyperlink target for cross-referencing to this section using \ref{intro} (optional).
 Il circuito descritto si occupa di leggere e rielaborare i dati da RAM producendo un'immagine con nitidezza più alta e quindi più leggibile. 
 
-Quando il segnale start è fornito al circuito, viene attivata la prima macchina a stati ed in base al bias tra la saturazione dei pixel e l'offset, ovvero il valore minimo di saturazione, viene restituita nei valori di memoria immediatamente successivi un'immagine con pixel che meglio ricoprono i valori rappresentabili.
-\begin{figure}[hbt!]
-\centering
-%\includegraphics[width=0.86\textwidth]{--Image here--}
-\caption{Esempio di Equalizzazione (con algoritmo completo)}
-\end{figure}
-
-Quando l'elaborazione è terminata, viene restituito un segnale di done ed il circuito è pronto per una nuova immagine a partire dall'indirizzo 0. L'algoritmo usato nel progetto è solo una semplificazione di quello che realmente sarebbe possibile con questa tecnica. 
-
-Questo per sottolineare il potenziale dell'equalizzazione dell'istogramma e di come riesca a migliorare in modo veramente apprezzabile la qualità di una immagine digitale.
 
 Nel circuito è stato scelto di dividere in 3 la computazione con moduli in cascata.
 \subsection{Specifica}
@@ -87,10 +77,57 @@ Nel circuito è stato scelto di dividere in 3 la computazione con moduli in casc
 \end{figure}
 I segnali da considerare sono i seguenti:
 \newline
+\section{Triggers}
+\subsection{Insolvent Users}
+\begin{verbatim}
+create trigger INSOLVENT_USER
+    after insert on Orders
+    for each row
+begin
+    if ( new.status = false) then
+    update Users set Users.insolvent = true where Users.id = new.userId;
+    insert into FailedPayments (userId,orderId,faildate) 
+    values (new.userId,new.id,CURRENT_TIMESTAMP);
+end if;
+\end{verbatim}
+
+
+
+\begin{verbatim}
+create trigger INSOLVENT_USER_REMOVAL
+    after update on Orders
+    for each row
+begin
+    if (new.status = true) AND -- user payed a suspended order i check if all his pending order are payed (if yes remove flag)
+			(select count(*) from Orders as o where o.userId=new.userId and o.status = false) = 0
+		then
+    update Users set Users.insolvent = false where Users.id = new.userId;
+end if;
+if (new.status = false AND old.status = new.status)  then
+			insert into FailedPayments (userId,orderId,faildate) values (new.userId,new.id,CURRENT_TIMESTAMP);
+end if;
+\end{verbatim}
+
+\begin{verbatim}
+
+\end{verbatim}
+
+\begin{verbatim}
+
+\end{verbatim}
+
 
 \section{SQL Description}
 \section{Extra hypotesis}
 \section{ER Diagram}
+
+\begin{figure}[hbt!]
+\centering
+\includegraphics[width=0.86\textwidth]{er.png}
+\caption{ER Diagram}
+\end{figure}
+
+
 \section{Relation Model}
 \section{ORM Description}
 \section{Application Components}
