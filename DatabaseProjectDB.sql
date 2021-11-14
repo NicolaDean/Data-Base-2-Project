@@ -154,16 +154,14 @@ insert into services (packageID,DTYPE) values (1,"MIS");-- 1
 insert into services (packageID,DTYPE) values (2,"MIS");-- 2
 insert into services (packageID,DTYPE) values (2,"MPS");-- 3
 insert into services (packageID,DTYPE) values (3,"MPS");-- 4
-insert into services (packageID,DTYPE) values (4,"FIS");-- 4
-insert into services (packageID,DTYPE) values (1,"FPS");-- 4
+insert into services (packageID,DTYPE) values (4,"FIS");-- 5
+insert into services (packageID,DTYPE) values (1,"FPS");-- 6
 
 insert into mobile_internet_services (id,gigabyte,extraFee) values (1,5,0.5);
 insert into mobile_internet_services (id,gigabyte,extraFee) values (2,10,0.3);
-
-insert into mobile_internet_services (id,gigabyte,extraFee) values (2,10,0.3);
-insert into fixed_internet_services  (id,gigabyte,extraFee) values (3,300,0.3);
-insert into mobile_phone_services (id,minutes,sms,extraMinutesFee,extraSMSFee) values (4,500,100,0.1,0.1);
-insert into mobile_phone_services (id,minutes,sms,extraMinutesFee,extraSMSFee) values (5,1000,300,0.07,0.1);
+insert into mobile_phone_services (id,minutes,sms,extraMinutesFee,extraSMSFee) values (3,500,100,0.1,0.1);
+insert into mobile_phone_services (id,minutes,sms,extraMinutesFee,extraSMSFee) values (4,1000,300,0.07,0.1);
+insert into fixed_internet_services  (id,gigabyte,extraFee) values (5,300,0.3);
 
 select * from services;
 select * from services natural join mobile_phone_services;
