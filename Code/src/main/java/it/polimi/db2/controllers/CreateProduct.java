@@ -16,6 +16,8 @@ public class CreateProduct extends BasicServerlet{
 
     @EJB(name="it.polimi.db2.services/PackageService")
     private PackageService packageService;
+
+
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         super.doPost(request, response);

@@ -142,17 +142,28 @@ create table mobile_internet_services(
                                          FOREIGN KEY (id) REFERENCES services (id)
 );
 
+create table fixed_internet_services(
+                                         id 			INT AUTO_INCREMENT,
+                                         gigabyte		INT not null,
+                                         extraFee       FLOAT not null,
+                                         PRIMARY KEY(id),
+                                         FOREIGN KEY (id) REFERENCES services (id)
+);
 
 insert into services (packageID,DTYPE) values (1,"MIS");-- 1
 insert into services (packageID,DTYPE) values (2,"MIS");-- 2
 insert into services (packageID,DTYPE) values (2,"MPS");-- 3
 insert into services (packageID,DTYPE) values (3,"MPS");-- 4
+insert into services (packageID,DTYPE) values (4,"FIS");-- 4
+insert into services (packageID,DTYPE) values (1,"FPS");-- 4
 
 insert into mobile_internet_services (id,gigabyte,extraFee) values (1,5,0.5);
 insert into mobile_internet_services (id,gigabyte,extraFee) values (2,10,0.3);
 
-insert into mobile_phone_services (id,minutes,sms,extraMinutesFee,extraSMSFee) values (3,500,100,0.1,0.1);
-insert into mobile_phone_services (id,minutes,sms,extraMinutesFee,extraSMSFee) values (4,1000,300,0.07,0.1);
+insert into mobile_internet_services (id,gigabyte,extraFee) values (2,10,0.3);
+insert into fixed_internet_services  (id,gigabyte,extraFee) values (3,300,0.3);
+insert into mobile_phone_services (id,minutes,sms,extraMinutesFee,extraSMSFee) values (4,500,100,0.1,0.1);
+insert into mobile_phone_services (id,minutes,sms,extraMinutesFee,extraSMSFee) values (5,1000,300,0.07,0.1);
 
 select * from services;
 select * from services natural join mobile_phone_services;
@@ -200,7 +211,7 @@ drop view if exists Purchase_By_Packages;
 -- populate with trigger
 
 create table FailedPayments(
-                               userId 		INT,
+                               userId 	   INT,
                                orderId     INT,
                                faildate    datetime DEFAULT CURRENT_TIMESTAMP,
                                FOREIGN KEY (userId) REFERENCES Users (id),

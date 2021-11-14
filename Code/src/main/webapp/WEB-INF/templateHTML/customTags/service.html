@@ -17,7 +17,6 @@
                     <li class="list-group-item" th:text="${s.getExtraFee()}"></li>
                 </ul>
             </div>
-
         </div>
         <div th:case="'MPS'">
             <div class="card" style="width: 18rem;">
@@ -29,6 +28,27 @@
                     <li class="list-group-item" th:text="${s.getSms()}"></li>
                     <li class="list-group-item" th:text="${s.getExtraSMSFee()}" ></li>
                     <li class="list-group-item" th:text="${s.getExtraMinutesFee()}"></li>
+                </ul>
+            </div>
+        </div>
+        <div th:case="'FIS'">
+            <div class="card" style="width: 18rem;">
+                <div class="card-header">
+                    Fixed Internet Service
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" th:text="${s.getGiga()}"></li>
+                    <li class="list-group-item" th:text="${s.getExtraFee()}"></li>
+                </ul>
+            </div>
+        </div>
+        <div th:case="'FPS'">
+            <div class="card" style="width: 18rem;">
+                <div class="card-header">
+                    Fixed Phone Services:
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" > Infinite Minutes</li>
                 </ul>
             </div>
         </div>
