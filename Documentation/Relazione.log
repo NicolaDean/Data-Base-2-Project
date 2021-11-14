@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.3.6)  14 NOV 2021 10:33
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.3.6)  14 NOV 2021 12:02
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -785,13 +785,13 @@ Package rerunfilecheck Info: File `Relazione.out' has not changed.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 363.
  ) 
 Here is how much of TeX's memory you used:
- 18971 strings out of 480608
- 366242 string characters out of 5903631
- 822640 words of memory out of 5000000
+ 18969 strings out of 480608
+ 366212 string characters out of 5903631
+ 821640 words of memory out of 5000000
  34407 multiletter control sequences out of 15000+600000
  542305 words of font info for 61 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 60i,7n,66p,411b,1828s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,8n,66p,411b,1828s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></
@@ -804,10 +804,10 @@ l/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmti7.pfb></usr/local/
 texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/te
 xlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/tex
 live/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on Relazione.pdf (7 pages, 278202 bytes).
+Output written on Relazione.pdf (7 pages, 277573 bytes).
 PDF statistics:
- 202 PDF objects out of 1000 (max. 8388607)
- 177 compressed objects within 2 object streams
- 93 named destinations out of 1000 (max. 500000)
+ 200 PDF objects out of 1000 (max. 8388607)
+ 175 compressed objects within 2 object streams
+ 91 named destinations out of 1000 (max. 500000)
  26 words of extra memory for PDF output out of 10000 (max. 10000000)
 
