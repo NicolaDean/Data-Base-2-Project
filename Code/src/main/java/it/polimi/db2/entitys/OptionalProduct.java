@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "OptionalProducts", schema = "test")
+@NamedQuery(name= "OptionalProd.findAll",query = "select o from OptionalProduct o")
 public class OptionalProduct{
 
     @Id

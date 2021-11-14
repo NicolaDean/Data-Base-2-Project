@@ -30,14 +30,5 @@ public class PackageService extends BasicService{
         return p;
     }
 
-    public void createProduct(String name,int monthFee)
-    {
-        OptionalProduct product = new OptionalProduct();
 
-        product.setName(name);
-        product.setMonthlyFee(monthFee);
-
-        this.em.persist(product);
-
-    }
 }

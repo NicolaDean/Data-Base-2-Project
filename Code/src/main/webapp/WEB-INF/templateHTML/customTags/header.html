@@ -20,17 +20,37 @@
       color: black;
       font-size: 30px;
     }
+
+    text.centre{
+      text-align: center;
+    }
   </style>
   <!-- Image and text -->
   <nav class="navbar navbar-light">
     <a class="navbar-brand" th:size="30" href="home">
       FasaNico Telecom
     </a>
+    <div th:if="${session.user}">
+    <h4 class="centre" th:text="'Welcome '+ ${session.user.getUsername()} + '!'"></h4>
+    </div>
+    <div th:unless="${session.user}">
+      <h4  class="centre" th:text="'Welcome!'"></h4>
+    </div>
 
-    <h4 th:if="${session.user}" th:text="'Welcome '+ ${session.user.getUsername()} + '!'"></h4>
-    <form th:if="${session.user}" action="logout" method="GET">
+
+    <div th:if="${session.user}">
+    <form action="profile">
+      <input type="submit" value="Profile" />
+    </form>
+    <form action="logout" method="GET">
       <input type="submit" value="Log out" />
     </form>
+    </div>
+    <div th:unless="${session.user}">
+      <form action="index.html" >
+        <input type="submit" value="Log in" />
+      </form>
+    </div>
   </nav>
 </div>
 </div>

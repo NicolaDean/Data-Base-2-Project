@@ -20,19 +20,9 @@ public class ContractServices extends BasicService{
     @EJB(name="it.polimi.db2.services/UserService")
     private UserServices userServices;
 
-    /**
-     *
-     * @param id id of product
-     * @return optional product with id from db
-     * @throws ElementNotFound if db dosnt find product
-     */
-    public OptionalProduct getProductById(int id) throws ElementNotFound {
-        OptionalProduct op = this.em.find(OptionalProduct.class,id);
+    @EJB(name="it.polimi.db2.services/OptionalProductService")
+    private OptionalProductService optionalProductService;
 
-        if(op == null) throw new ElementNotFound("OptionalProduct Not Founded");
-
-        return op;
-    }
 
     public RateCost getRateById(int id) throws ElementNotFound {
         RateCost rate = this.em.find(RateCost.class,id);
@@ -41,23 +31,7 @@ public class ContractServices extends BasicService{
         return rate;
     }
 
-    public List<OptionalProduct> convertOptionalProducts(String[] optionalProducts) throws ElementNotFound {
-        //FIND SELECTED PRODUCTS
-        List<OptionalProduct> products = new ArrayList<OptionalProduct>();
-        for (String x : optionalProducts) {
-            int productId = Integer.parseInt(x);
 
-            try {
-                //Add to the order all the selected optional products
-                OptionalProduct op = this.getProductById(productId);
-                products.add(op);
-
-            } catch (ElementNotFound e) {
-                throw new ElementNotFound("No Optional product");
-            }
-        }
-        return products;
-    }
 
     public Order createContract( int packageId, int rateId, String[] optionalProducts) throws ElementNotFound {
         Order order = new Order();
@@ -77,7 +51,7 @@ public class ContractServices extends BasicService{
             throw new ElementNotFound("No Rate Found");
         }
         //FIND SELECTED PRODUCTS
-        List<OptionalProduct> products = this.convertOptionalProducts(optionalProducts);
+        List<OptionalProduct> products = optionalProductService.convertOptionalProducts(optionalProducts);
 
         order.addOptionalProducts(products);
 

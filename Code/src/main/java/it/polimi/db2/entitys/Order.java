@@ -7,7 +7,7 @@ import java.util.List;
 @Entity
 @Table(name = "Orders", schema = "test")
 @NamedQuery(name="Orders.Id"             ,  query="select o from Order o where o.Id = :orderId")
-@NamedQuery(name="Orders.All"             , query="select o from Order o") //TODO adjust query for only accepted orders
+@NamedQuery(name="Orders.All"             , query="select o from Order o")
 @NamedQuery(name="Orders.Suspended"       , query="select o from Order o where o.status=false")
 @NamedQuery(name="Orders.RemoveSuspend"   , query="update Order o set o.status = true where o.Id=:orderId")
 @NamedQuery(name="PurchasesByPackages"    , query = "select count (distinct o) from Order o group by o.pack")

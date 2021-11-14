@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.3.6)  13 NOV 2021 13:00
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.3.6)  14 NOV 2021 12:02
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -670,16 +670,12 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 80.
 (/usr/local/texlive/2020/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-<./images/er.png, id=11, 904.1278pt x 520.94624pt>
+<./images/er.png, id=11, 728.7225pt x 563.10374pt>
 File: ./images/er.png Graphic file (type png)
 <use ./images/er.png>
 Package pdftex.def Info: ./images/er.png  used on input line 100.
-(pdftex.def)             Requested size: 288.9602pt x 166.49158pt.
-Missing character: There is no ý in font cmsy7!
- [1
+(pdftex.def)             Requested size: 288.9602pt x 223.28706pt.
 
-{/usr/local/texlive/2020/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./image
-s/er.png>]
 Overfull \hbox (141.74583pt too wide) in paragraph at lines 123--123
 []       \OT1/cmtt/m/n/10 Select Packages.name as name,Rate_costs.monthValidity
  as validity, count(*) as count[] 
@@ -691,13 +687,16 @@ Overfull \hbox (31.4968pt too wide) in paragraph at lines 123--123
 .packageId[] 
  []
 
+Missing character: There is no ý in font cmsy7!
+[1
 
+{/usr/local/texlive/2020/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 Overfull \hbox (41.9967pt too wide) in paragraph at lines 142--142
 []       \OT1/cmtt/m/n/10 select o.packageId as packageId, count(opt.productId)
  as optcount[] 
  []
 
-[2]
+[2 <./images/er.png>]
 Overfull \hbox (5.24702pt too wide) in paragraph at lines 162--162
 []       \OT1/cmtt/m/n/10 select p.name as name, sum(o.totalPayment) as totalPa
 yment[] 
@@ -786,8 +785,8 @@ Package rerunfilecheck Info: File `Relazione.out' has not changed.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 363.
  ) 
 Here is how much of TeX's memory you used:
- 18971 strings out of 480608
- 366242 string characters out of 5903631
+ 18969 strings out of 480608
+ 366212 string characters out of 5903631
  821640 words of memory out of 5000000
  34407 multiletter control sequences out of 15000+600000
  542305 words of font info for 61 fonts, out of 8000000 for 9000
@@ -805,10 +804,10 @@ l/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmti7.pfb></usr/local/
 texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/te
 xlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/tex
 live/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on Relazione.pdf (7 pages, 240390 bytes).
+Output written on Relazione.pdf (7 pages, 277573 bytes).
 PDF statistics:
- 202 PDF objects out of 1000 (max. 8388607)
- 177 compressed objects within 2 object streams
- 93 named destinations out of 1000 (max. 500000)
+ 200 PDF objects out of 1000 (max. 8388607)
+ 175 compressed objects within 2 object streams
+ 91 named destinations out of 1000 (max. 500000)
  26 words of extra memory for PDF output out of 10000 (max. 10000000)
 
