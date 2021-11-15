@@ -33,4 +33,16 @@ public class RateCost {
     {
         return this.cost + "$ for " + this.monthValidity + " month";
     }
+
+    public void setPackageId(int packageId) {
+        this.packageId = packageId;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
+    public void setMonthValidity(int monthValidity) {
+        this.monthValidity = monthValidity;
+    }
 }

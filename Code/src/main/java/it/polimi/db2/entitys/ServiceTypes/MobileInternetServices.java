@@ -24,4 +24,12 @@ public class MobileInternetServices extends Service {
     public String getGiga() {
         return gigabyte + " GB";
     }
+
+    public void setGigabyte(int gigabyte) {
+        this.gigabyte = gigabyte;
+    }
+
+    public void setExtraFee(float extraFee) {
+        this.extraFee = extraFee;
+    }
 }

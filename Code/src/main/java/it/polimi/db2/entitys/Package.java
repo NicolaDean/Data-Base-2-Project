@@ -51,4 +51,20 @@ public class Package {
     {
         return this.services;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setRates(List<RateCost> rates) {
+        this.rates = rates;
+    }
+
+    public void setProducts(List<OptionalProduct> products) {
+        this.products = products;
+    }
+
+    public void setServices(List<Service> services) {
+        this.services = services;
+    }
 }

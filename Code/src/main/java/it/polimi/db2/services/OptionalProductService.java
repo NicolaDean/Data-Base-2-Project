@@ -40,6 +40,8 @@ public class OptionalProductService extends BasicService{
         return op;
     }
     public List<OptionalProduct> convertOptionalProducts(String[] optionalProducts) throws ElementNotFound {
+
+        if(optionalProducts.length == 0) return null;
         //FIND SELECTED PRODUCTS
         List<OptionalProduct> products = new ArrayList<OptionalProduct>();
         for (String x : optionalProducts) {
