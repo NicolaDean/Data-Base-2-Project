@@ -34,13 +34,24 @@ public class PackageService extends BasicService{
 
     public void persistPackage(String name, List<OptionalProduct> optionals , List<RateCost> rates, List<Service> services)
     {
+        //TODO Controlli (Internet package), fixed phone e distinzione mobile/fixed internet
         Package p = new Package();
-
+        p.setName(name);
         p.setProducts(optionals);
+        this.em.persist(p);
+        this.em.flush();
+        for(int i=0;i<services.size();i++){
+            services.get(i).setPackageId(p.getId());
+            this.em.persist(services.get(i));
+        }
+        for(int i=0;i<rates.size();i++){
+            rates.get(i).setPackageId(p.getId());
+            this.em.persist(rates.get(i));
+        }
         p.setServices(services);
         p.setRates(rates);
-
-        this.em.persist(p);
+        this.em.flush();
+        //this.em.persist(p);
     }
 
 

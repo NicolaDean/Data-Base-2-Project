@@ -179,7 +179,8 @@ create table Orders(
                        status		    bool,
                        PRIMARY KEY(id),
                        FOREIGN KEY (rateId) REFERENCES Rate_costs (id),
-                       FOREIGN KEY (packageId) REFERENCES Rate_costs (id)
+                       FOREIGN KEY (packageId) REFERENCES Packages (id),
+                       FOREIGN KEY (userId) REFERENCES Users (id)
 
 );
 

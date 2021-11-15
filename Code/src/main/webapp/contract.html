@@ -30,12 +30,13 @@
         </div>
     </div>
 
-  <span th:if="${!order.getProducts().isEmpty()}"><h4>OPTIONAL PRODUCTS IN YOUR ORDER:</h4></span>
+    <div th:if="${order.getProducts()}">
+  <span><h4>OPTIONAL PRODUCTS IN YOUR ORDER:</h4></span>
 
   <div th:each="prod : ${order.getProducts()}">
     <h5 th:text="${prod.getName()}"></h5>
   </div>
-
+    </div>
     <h4>FINAL RATE:</h4>
 
     <div class="card bg-light mb-3 selection" style="max-width: 18rem;" >

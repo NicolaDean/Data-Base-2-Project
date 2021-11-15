@@ -92,7 +92,7 @@ This document describes design and implementation of Data Base 2 Project
 % \label is a hyperlink target for cross-referencing to this section using \ref{intro} (optional).
 A telco company offers pre-paid online services to web users. Two client applications using the same database have been developed: a costumer application and an employee application.
 \subsection{Extra hypotesis}
-
+A Service Package can have more than one Services of the same type (i.e. two fixed phones or different kind of mobile phones).
 \section{ER Diagram}
 
 \begin{figure}[hbt!]
@@ -360,4 +360,34 @@ public class User {
 \section{Application Components}
 \section{UML sequence diagrams}
 
+\begin{figure}[hbt!]
+\centering
+\includegraphics[width=0.99\textwidth]{Registration.png}
+\caption{Registration}
+\end{figure}
+
+\begin{figure}[hbt!]
+\centering
+\includegraphics[width=0.99\textwidth]{LogIn.png}
+\caption{Log In}
+\end{figure}
+
+\begin{figure}[hbt!]
+\centering
+\includegraphics[width=0.99\textwidth]{PackDetails.png}
+\caption{Package Details}
+\end{figure}
+
+\begin{figure}[hbt!]
+\centering
+\includegraphics[width=0.99\textwidth]{Buy.png}
+\caption{Purchase}
+\end{figure}
+
+
+\begin{figure}[hbt!]
+\centering
+\includegraphics[width=0.99\textwidth]{Insolvent.png}
+\caption{Insolvent User}
+\end{figure}
 \end{document}

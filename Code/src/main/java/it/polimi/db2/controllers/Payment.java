@@ -34,15 +34,15 @@ public class Payment extends BasicServerlet {
 
         Order order = (Order) session.getAttribute("order");
         User  user  = (User) session.getAttribute("user") ;
-
         boolean flag = false;
         if(order.toUpdate())
         {
-            System.out.println("ORDERRRRR IN SESSION");
+            //If user tries to solve a payment then payment will be successful (flag=true), else will be random
             flag = true;
         }
         String paymentConfirmation;
-          if(getRandomBoolean()){
+
+          if(getRandomBoolean(flag)){
 
               paymentConfirmation= "CONGRATULATIONS, PAYMENT ACCEPTED!";
 
@@ -67,7 +67,10 @@ public class Payment extends BasicServerlet {
 
     }
 
-    public boolean getRandomBoolean() {
-        return random.nextBoolean();
+    public boolean getRandomBoolean(boolean flag) {
+        if (flag==false){
+            return random.nextBoolean();
+        }
+        else return true;
     }
 }

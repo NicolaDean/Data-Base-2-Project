@@ -68,11 +68,11 @@ public class Order {
 
         tot = rate.cost * rate.monthValidity;
 
-        for(OptionalProduct p : products)
-        {
-            tot += p.getMonthlyFee()*rate.monthValidity;
+        if(products!=null) {
+            for (OptionalProduct p : products) {
+                tot += p.getMonthlyFee() * rate.monthValidity;
+            }
         }
-
         this.totalPayment = tot;
 
         startDate = new Date();
