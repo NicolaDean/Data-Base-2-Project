@@ -80,4 +80,11 @@ public class BasicServerlet extends HttpServlet {
         WebContext ctx = new WebContext(request, response, context, request.getLocale());
         engine.process(path,ctx,response.getWriter());
     }
+
+
+    protected void errorRedirect(HttpServletRequest request, HttpServletResponse response, String page, String error) throws IOException {
+
+        request.setAttribute("errorMsg",error);
+        response.sendRedirect(page);
+    }
 }

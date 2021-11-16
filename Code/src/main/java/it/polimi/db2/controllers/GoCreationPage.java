@@ -20,8 +20,11 @@ public class GoCreationPage extends BasicServerlet{
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+        String error = request.getParameter("error");
+
        List<OptionalProduct> products = optionalProductService.getOptionalProducts();
 
+       request.setAttribute("errorMsg",error);
        request.setAttribute("optionals",products);
        this.templateRenderer(request,response, TemplatePathManager.creation);
     }

@@ -42,6 +42,8 @@
     </form>
 </div>
 
+<div th:replace="/WEB-INF/templateHTML/errorTemplate::errorTemplate"></div>
+
 <div class="card" style="width: 50rem;">
     <div class="card-header">
         Create Package
@@ -49,7 +51,7 @@
     <form id="packageForm"action="create-package" method="post">
         <div class="form-group">
             <label for="name">Product Name</label>
-            <input type="text" class="form-control" name="name" id="name" aria-describedby="emailHelp" placeholder="Enter email">
+            <input type="text" class="form-control" name="name" id="name" aria-describedby="emailHelp" placeholder="Enter Package name">
         </div>
 
         <div class="card border-secondary mb-3" style="max-width: 35rem;">

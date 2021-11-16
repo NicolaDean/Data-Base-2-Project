@@ -41,20 +41,24 @@ public class OptionalProductService extends BasicService{
     }
     public List<OptionalProduct> convertOptionalProducts(String[] optionalProducts) throws ElementNotFound {
 
-        if(optionalProducts.length == 0) return null;
+        if(optionalProducts == null) return null;
         //FIND SELECTED PRODUCTS
         List<OptionalProduct> products = new ArrayList<OptionalProduct>();
         for (String x : optionalProducts) {
-            int productId = Integer.parseInt(x);
+            if(x!=null)
+            {
+                int productId = Integer.parseInt(x);
 
-            try {
-                //Add to the order all the selected optional products
-                OptionalProduct op = this.getProductById(productId);
-                products.add(op);
+                try {
+                    //Add to the order all the selected optional products
+                    OptionalProduct op = this.getProductById(productId);
+                    products.add(op);
 
-            } catch (ElementNotFound e) {
-                throw new ElementNotFound("No Optional product");
+                } catch (ElementNotFound e) {
+                    throw new ElementNotFound("No Optional product");
+                }
             }
+
         }
         return products;
     }

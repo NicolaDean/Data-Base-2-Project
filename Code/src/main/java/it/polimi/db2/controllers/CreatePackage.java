@@ -3,11 +3,14 @@ package it.polimi.db2.controllers;
 import it.polimi.db2.entitys.OptionalProduct;
 import it.polimi.db2.entitys.RateCost;
 import it.polimi.db2.entitys.Service;
+import it.polimi.db2.entitys.ServiceTypes.FixedInternetService;
 import it.polimi.db2.entitys.ServiceTypes.MobileInternetServices;
 import it.polimi.db2.entitys.ServiceTypes.MobilePhoneServices;
 import it.polimi.db2.exception.ElementNotFound;
+import it.polimi.db2.exception.MissingFormData;
 import it.polimi.db2.services.OptionalProductService;
 import it.polimi.db2.services.PackageService;
+import org.thymeleaf.TemplateEngine;
 
 import javax.ejb.EJB;
 import javax.servlet.annotation.WebServlet;
@@ -15,7 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @WebServlet(name = "create-package", value = "/create-package")
@@ -36,6 +41,12 @@ public class CreatePackage extends BasicServerlet {
         //Optional Product data
         String[] optionalData = request.getParameterValues("optionals");
 
+        if(optionalData != null)
+        {
+            //Delete duplicates from products
+            Arrays.stream(optionalData).distinct().collect(Collectors.toList()).toArray(optionalData);
+        }
+
         //Rates Data
         String[] rate_validity = request.getParameterValues("validity");
         String[] rate_price    = request.getParameterValues("price");
@@ -47,14 +58,15 @@ public class CreatePackage extends BasicServerlet {
         String[] MPS_extraMin   = request.getParameterValues("ExtraMin");
         String[] MPS_extraSms   = request.getParameterValues("ExtraSms");
 
-        //Mobile Internet Serivces Data
+        // Internet Serivces Data
 
+        String[] MIS_type = request.getParameterValues("internet-type");
         String[] MIS_Gb  = request.getParameterValues("Gb");
         String[] MIS_extraGb   = request.getParameterValues("extraGb");
 
         //Fixed Phone Services Data
 
-        //Fixed Internet Service Data
+        String[] FPS     = request.getParameterValues("FPS");
 
 
         //NOW CONVERT STRINGS ARRAYS INTO ACTUAL OBJ LISTS
@@ -68,22 +80,39 @@ public class CreatePackage extends BasicServerlet {
             //TODO add error
         }
 
-        //Rate Costs
-        List<RateCost> rateCosts = this.createRatesFromForms(rate_validity,rate_price);
 
+        try {
+            //Rate Costs
+            List<RateCost> rateCosts = this.createRatesFromForms(rate_validity,rate_price);
 
-        List<Service> services = new ArrayList<>();
+            //Services
+            List<Service> services = new ArrayList<>();
+            services = this.createMobilePhoneServicesFromForm(services,MPS_minutes,MPS_sms,MPS_extraMin,MPS_extraSms);
+            services = this.createMobileInternetServicesFromForm(services,MIS_Gb,MIS_extraGb,MIS_type);
+            services = this.createFixedPhoneServiceFromForm(services,FPS);
 
-        services = this.createMobilePhoneServicesFromForm(services,MPS_minutes,MPS_sms,MPS_extraMin,MPS_extraSms);
-        services = this.createMobileInternetServicesFromForm(services,MIS_Gb,MIS_extraGb);
+            //Persist
+            packageService.persistPackage(name,optionals,rateCosts,services);
+        }catch (MissingFormData e)
+        {
+            response.sendRedirect("go-creation?error=\"Missing some Fields, check if all data inserted\"");
+        }
 
-
-
-        packageService.persistPackage("Test",optionals,rateCosts,services);
         System.out.println("");
         //Services
     }
 
+    private List<Service> createFixedPhoneServiceFromForm(List<Service> services, String[] FPS) {
+
+        if(FPS==null) return services;
+
+        for(int i=0;i<FPS.length;i++)
+        {
+            services.add(new Service());
+        }
+
+        return services;
+    }
 
 
     /**
@@ -93,18 +122,34 @@ public class CreatePackage extends BasicServerlet {
      * @param rate_price
      * @return list of rates from form
      */
-    public List<RateCost> createRatesFromForms(String[] rate_validity, String[] rate_price)
-    {
-        if(rate_price.length != rate_validity.length) return null;
+    public List<RateCost> createRatesFromForms(String[] rate_validity, String[] rate_price) throws MissingFormData {
+        boolean flag = false;
+
+        if(rate_price == null) flag = true;
+        if(rate_validity == null) flag = true;
+
+        if(flag) throw new MissingFormData("Rate cost Form Error");
+
+        if(rate_price.length != rate_validity.length) flag = true;
+
+        if(flag) throw new MissingFormData("Rate cost Form Error");
+
 
 
         List<RateCost> rates = new ArrayList<>();
         for(int i=0;i<rate_price.length;i++)
         {
             RateCost tmp = new RateCost();
-            tmp.setCost(Integer.parseInt(rate_price[i]));
-            tmp.setMonthValidity(Integer.parseInt(rate_validity[i]));
-            rates.add(tmp);
+
+            try {
+                tmp.setCost(Integer.parseInt(rate_price[i]));
+                tmp.setMonthValidity(Integer.parseInt(rate_validity[i]));
+                rates.add(tmp);
+            }catch (Exception e)
+            {
+                throw new MissingFormData("Rate cost Form Error");
+            }
+
         }
 
         return rates;
@@ -120,39 +165,79 @@ public class CreatePackage extends BasicServerlet {
      * @param MPS_extraSms
      * @return
      */
-    public List<Service> createMobilePhoneServicesFromForm(List<Service> services,String[] MPS_minutes,String[] MPS_sms,String[] MPS_extraMin,String[] MPS_extraSms)
-    {
+    public List<Service> createMobilePhoneServicesFromForm(List<Service> services,String[] MPS_minutes,String[] MPS_sms,String[] MPS_extraMin,String[] MPS_extraSms) throws MissingFormData {
 
-        if((MPS_extraMin.length!=MPS_extraSms.length) ||
-                (MPS_extraMin.length!=MPS_minutes.length) ||
-                (MPS_minutes.length!=MPS_sms.length) ||
-                (MPS_extraMin.length!=MPS_sms.length)) return null;
+        boolean flag = false;
 
+        if(MPS_extraMin == null) return services;
+        if(MPS_extraSms == null) return services;
+        if(MPS_minutes == null)  return services;
+        if(MPS_sms == null)      return services;
+
+        int size = MPS_extraMin.length;
+
+        if(MPS_minutes.length != size)  flag = true; ;
+        if(MPS_sms.length != size)      flag = true; ;
+        if(MPS_extraSms.length != size) flag = true;
+
+
+        if(flag) throw new MissingFormData("Mobile phone services form error");
         for(int i=0;i<MPS_minutes.length;i++)
         {
             MobilePhoneServices tmp = new MobilePhoneServices();
 
-            tmp.setMinutes(Integer.parseInt(MPS_minutes[i]));
-            tmp.setExtraMinutesFee(Float.parseFloat(MPS_extraMin[i]));
-            tmp.setSms(Integer.parseInt(MPS_sms[i]));
-            tmp.setExtraSMSFee(Float.parseFloat(MPS_extraSms[i]));
+            try {
+                tmp.setMinutes(Integer.parseInt(MPS_minutes[i]));
+                tmp.setExtraMinutesFee(Float.parseFloat(MPS_extraMin[i]));
+                tmp.setSms(Integer.parseInt(MPS_sms[i]));
+                tmp.setExtraSMSFee(Float.parseFloat(MPS_extraSms[i]));
 
-            services.add(tmp);
+                services.add(tmp);
+            } catch (Exception e)
+            {
+                throw new MissingFormData("Mobile phone services form error");
+            }
+
         }
 
         return services;
     }
 
-    private List<Service> createMobileInternetServicesFromForm(List<Service> services, String[] mis_gb, String[] mis_extraGb) {
+
+    private List<Service> createMobileInternetServicesFromForm(List<Service> services, String[] mis_gb, String[] mis_extraGb,String[] type) throws MissingFormData {
+
+        boolean flag = false;
+
+        if(mis_extraGb == null) return services;
+        if(mis_gb      == null) return services;
+
+        if(mis_extraGb.length != mis_gb.length) flag = true;
+
+        if(flag) throw new MissingFormData("Internet Form error");
 
         for(int i=0;i<mis_gb.length;i++)
         {
-            MobileInternetServices tmp = new MobileInternetServices();
 
-            tmp.setGigabyte(Integer.parseInt(mis_gb[i]));
-            tmp.setExtraFee(Float.parseFloat(mis_extraGb[i]));
+            try {
+                if(type[i].equals("FIS"))
+                {
+                    FixedInternetService tmp = new FixedInternetService();
+                    tmp.setGigabyte(Integer.parseInt(mis_gb[i]));
+                    tmp.setExtraFee(Float.parseFloat(mis_extraGb[i]));
+                    services.add(tmp);
+                }
+                else
+                {
+                    MobileInternetServices tmp = new MobileInternetServices();
+                    tmp.setGigabyte(Integer.parseInt(mis_gb[i]));
+                    tmp.setExtraFee(Float.parseFloat(mis_extraGb[i]));
+                    services.add(tmp);
+                }
+            }catch (Exception e)
+            {
+                throw new MissingFormData("Internet Form error");
+            }
 
-            services.add(tmp);
         }
 
         return services;

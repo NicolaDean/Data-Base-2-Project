@@ -13,8 +13,10 @@ function addService()
 
     switch (selectedType){
         case 'MIS':
+            addInternetForm(serviceForm,"MIS");
+            break;
         case 'FIS':
-            addInternetForm(serviceForm);
+            addInternetForm(serviceForm,"FIS");
             break;
         case 'MPS':
             addMobilePhoneForm(serviceForm);
@@ -27,17 +29,15 @@ function addService()
     container.appendChild(serviceForm);
 }
 
-function addInternetForm(serviceForm)
+function addInternetForm(serviceForm,type)
 {
     console.log(serviceForm);
-    //use selectedType as id
-    serviceForm.innerHTML = " <input type=\"number\" id=\"GB\" name=\"quantity\" min=\"1\"><br><br> ";
-
     serviceForm.innerHTML =
         "<div class=\"card border-secondary mb-3\" style=\"max-width: 32rem;\">\n" +
         "<div class=\"card-header\">Internet Phone Services</div>\n" +
         "<div class=\"card-body text-secondary\">\n" +
         "<div class=\"form-row\">\n" +
+        "      <input hidden type=\"text\" name=\"internet-type\" value=\""+ type+"\">\n" +
         "    <div class=\"form-group col-md-6\">\n" +
         "      <label for=\"inputEmail4\">GB</label>\n" +
         "      <input type=\"number\" id=\"GB\" name=\"Gb\" min=\"1\">\n" +
@@ -84,7 +84,7 @@ function addFixedPhoneForm(serviceForm)
 {
     //hidden form
     console.log(serviceForm);
-    serviceForm.innerHTML = "<input id=\"FIS-service\"/>";
+    serviceForm.innerHTML = "<input hidden name=\"FPS\" value=\"1\"/>";
 }
 
 function addValidityPeriodForm()

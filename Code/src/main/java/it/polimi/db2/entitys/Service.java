@@ -5,6 +5,7 @@ import javax.persistence.*;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "services", schema = "test")
+@DiscriminatorValue(value = "FPS")
 public class Service {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
