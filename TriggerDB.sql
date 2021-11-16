@@ -24,9 +24,12 @@ begin
 end if;
 if (new.status = false AND old.status = new.status)  then
 			insert into FailedPayments (userId,orderId,faildate) values (new.userId,new.id,CURRENT_TIMESTAMP);
+            SIGNAL SQLSTATE '02000' SET MESSAGE_TEXT = 'Warning: c > 100!';
+	
 end if;
 END $$
 DELIMITER ;
 select * from FailedPayments;
 update Orders set status = false where id = 2;
 select * from Orders;
+select * from Users;
