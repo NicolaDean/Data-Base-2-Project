@@ -75,9 +75,9 @@ public class Order {
         }
         this.totalPayment = tot;
 
-        startDate = new Date();
-        creationDate = new Date();//TODO add date in creation form
+        creationDate = new Date();
     }
+
 
     public void addOptionalProducts(List<OptionalProduct> products) {
         this.products = products;
@@ -129,5 +129,9 @@ public class Order {
 
     public User getUser() {
         return user;
+    }
+
+    public void setStartingDate(Date startDate) {
+        this.startDate = startDate;
     }
 }

@@ -17,7 +17,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static javax.swing.text.html.CSS.getAttribute;
@@ -37,6 +41,16 @@ public class ConfirmationPage extends BasicServerlet {
         String packageId;
         packageId = StringEscapeUtils.escapeJava(request.getParameter("packId"));
 
+        String rawData = request.getParameter("startDate");
+        Date startingDate = null;
+        try {
+            startingDate = new SimpleDateFormat("yyyy-mm-dd").parse(rawData);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            //TODO set Error
+        }
+
+
         String[]  optionalProducts = new String[0];
         if(request.getParameterValues("optionalProducts")!=null){
             optionalProducts = request.getParameterValues("optionalProducts");
@@ -46,7 +60,7 @@ public class ConfirmationPage extends BasicServerlet {
 
         try {
             //TRY CREATE THE CONTRACT
-            order = this.contractServices.createContract( Integer.parseInt(packageId), Integer.parseInt(rateId), optionalProducts);
+            order = this.contractServices.createContract( Integer.parseInt(packageId), Integer.parseInt(rateId), optionalProducts,startingDate);
         } catch (ElementNotFound e) {
             this.setError(request,response,"Order creation failed",TemplatePathManager.contract);
         }

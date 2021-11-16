@@ -8,6 +8,7 @@ import it.polimi.db2.exception.NoPackageFound;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //TODO VERIFICARE CHE NON POSSA ESSERE STATEFULL
@@ -33,9 +34,10 @@ public class ContractServices extends BasicService{
 
 
 
-    public Order createContract( int packageId, int rateId, String[] optionalProducts) throws ElementNotFound {
+    public Order createContract(int packageId, int rateId, String[] optionalProducts, Date startDate) throws ElementNotFound {
         Order order = new Order();
 
+        order.setStartingDate(startDate);
         //FIND SELECTED PACKAGE
         try {
             Package p = this.packageService.getPackageById(packageId);
