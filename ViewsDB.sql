@@ -1,8 +1,8 @@
 
-drop view if exists PurchasesCount;
+drop table if exists PurchasesCount;
 drop view if exists PurchasesCountGrouped;
 
-create view PurchasesCount as (
+create table PurchasesCount as (
                               Select Packages.name as name,Rate_costs.monthValidity as validity,count(*) as count
                               from Orders as o join Packages  join Rate_costs
                               on o.packageId=Packages.id and Rate_costs.packageId=o.packageId and o.rateId=Rate_costs.id
@@ -20,21 +20,23 @@ select * from PurchasesCountGrouped;
 
 select distinct o.id,o.packageId from Orders_OptionalProducts as opt join Orders as o where opt.orderId=o.id;
 
-drop view if exists OptionalProductsCount;
-create view OptionalProductsCount as(
-                                    select o.packageId as packageId, count(opt.productId) as optcount
+-- for each ordeer count how many optional product has
+drop table if exists OptionalProductsCount;
+create table OptionalProductsCount as(
+                                    select o.id,o.packageId as packageId, count(opt.productId) as optcount
                                     from Orders as o left join Orders_OptionalProducts as opt
                                                                on o.id=opt.orderId
                                     group by o.id
                                         );
 select * from OptionalProductsCount;
 
-drop view if exists OptionalProductsAverage;
-create view OptionalProductsAverage as(
+
+drop table if exists OptionalProductsAverage;
+create table OptionalProductsAverage as(
                                       select p.name as name,avg(opc.optcount) as avg
                                       from OptionalProductsCount as opc join Packages as p
                                       where opc.packageId=p.id
-                                      group by id
+                                      group by p.id
                                           );
 select * from OptionalProductsAverage;
 
