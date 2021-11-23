@@ -6,7 +6,6 @@
     <persistence-unit name="default">
         <class>it.polimi.db2.entitys.Service</class>
         <class>it.polimi.db2.entitys.ServiceTypes.MobilePhoneServices</class>
-        <class>it.polimi.db2.entitys.ServiceTypes.InternetServices</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>

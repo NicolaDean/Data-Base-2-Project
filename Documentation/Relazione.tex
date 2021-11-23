@@ -93,19 +93,39 @@ This document describes design and implementation of Data Base 2 Project
 A telco company offers pre-paid online services to web users. Two client applications using the same database have been developed: a costumer application and an employee application.
 \subsection{Extra hypotesis}
 A Service Package can have more than one Services of the same type (i.e. two fixed phones or different kind of mobile phones).
-\section{ER Diagram}
+
+\section{Diagrams and Schemas}
+
+\subsection{SQL DDL}
+Here is the SQL DDL schema of the Database
 
 \begin{figure}[hbt!]
 \centering
-\includegraphics[width=0.89\textwidth]{er.png}
+\includegraphics[width=0.80\textwidth]{sqlDDL.png}
+\caption{SQL DDL}
+\end{figure}
+\newpage
+
+Then Services references to three different tables depending on the type of offer:
+
+\begin{figure}[hbt!]
+\centering
+\includegraphics[width=0.70\textwidth]{sqlServicesDDL.png}
+\caption{SQL DDL Services Details}
+\end{figure}
+\subsection{ER}
+The Entity-Relation Diagram of the Database
+
+\begin{figure}[hbt!]
+\centering
+\includegraphics[width=0.99\textwidth]{er.png}
 \caption{ER Diagram}
 \end{figure}
 
-
-
+\newpage
 \section{SQL Description}
-Detailed description of SQL code used in the project.
 
+Detailed description of SQL code used in the project.
 \subsection{Views}
 The following views are used for various Sales Reports.
 
@@ -230,7 +250,7 @@ and  \emph{OptionalProductBestSellerForAmount}
           from OptionalProductBestSeller o2
           );
 \end{verbatim}
-
+\newpage
 \subsection{Triggers}
 \begin{verbatim}
 create trigger INSOLVENT_USER
@@ -261,6 +281,7 @@ if (new.status = false AND old.status = new.status)  then
 			values (new.userId,new.id,CURRENT_TIMESTAMP);
 end if;
 \end{verbatim}
+
 
 \section{ORM Description}
 
@@ -356,7 +377,7 @@ public class User {
 
 \end{lstlisting}
 
-
+\newpage
 \section{Application Components}
 
 \begin{figure}[hbt!]
@@ -371,6 +392,7 @@ public class User {
 \caption{Controllers}
 \end{figure}
 
+\newpage
 \section{UML sequence diagrams}
 
 \begin{figure}[hbt!]

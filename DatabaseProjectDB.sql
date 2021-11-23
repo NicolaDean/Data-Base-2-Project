@@ -1,5 +1,6 @@
+
 drop table if exists FailedPayments;
-drop table if exists Users;
+
 drop table if exists mobile_phone_services;
 drop table if exists fixed_phone_services;
 drop table if exists mobile_internet_services;
@@ -8,6 +9,7 @@ drop table if exists services;
 drop table if exists Orders_OptionalProducts;
 drop table if exists Orders;
 drop table if exists Packages_OptionalProducts;
+drop table if exists Users;
 create table Users(
                       id 			INT AUTO_INCREMENT,
                       username    VARCHAR(30) not null,
