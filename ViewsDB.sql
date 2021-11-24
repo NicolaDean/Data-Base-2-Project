@@ -25,7 +25,7 @@ select distinct o.id,o.packageId from Orders_OptionalProducts as opt join Orders
 -- for each ordeer count how many optional product has
 drop table if exists OptionalProductsCount;
 create table OptionalProductsCount as(
-                                    select o.id,o.packageId as packageId, count(opt.productId) as optcount
+                                    select o.packageId as packageId, count(opt.productId) as optcount
                                     from Orders as o left join Orders_OptionalProducts as opt
                                                                on o.id=opt.orderId
                                     group by o.id

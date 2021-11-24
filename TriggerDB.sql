@@ -31,26 +31,27 @@ create trigger INSOLVENT_USER_REMOVAL
 	end if;
 	END $$
 
--- populate view for counting Purchases of packages
+-- populate view for counting Purchases of Packages
 create trigger PurchasesCount_Population
 	after insert on Orders 
     for each row
 	begin
 	declare pkgname Varchar(20);
     declare orderVal int;
-    set pkgname   := (select name from packages where packages.id=new.packageId);
-    set orderVal  := (select monthValidity from rate_costs where id=new.rateId);
+    set pkgname   := (select name from Packages where Packages.id=new.packageId);
+    set orderVal  := (select monthValidity from Rate_costs where id=new.rateId);
 		 -- If this is the first order on package then set count = 1 and insert new line
-		if( (select count(distinct(name)) from PurchasesCount where 
-			 name = pkgname = 0 )) then
-			insert into purchasescount (name,validity,count) values (pkgname,
+		if(  (select count(*) from PurchasesCount where 
+			 name = pkgname and validity = orderVal  group by name,validity)>0) then
+			
+            SET SQL_SAFE_UPDATES=0;
+			update PurchasesCount set PurchasesCount.count = PurchasesCount.count + 1 where name = pkgname and validity = orderVal;
+            SET SQL_SAFE_UPDATES=1;
+		else
+            insert into PurchasesCount (name,validity,count) values (pkgname,
 																	 orderVal,
 																	 1
 																	 );
-		else
-			SET SQL_SAFE_UPDATES=0;
-			update purchasescount set count = purchasescount.count + 1 where name = pkgname;
-            SET SQL_SAFE_UPDATES=1;
 		end if;
 	END $$
 
@@ -59,12 +60,15 @@ create trigger OptionalProdInOrdersCount
 	after insert on Orders
     for each row
     begin
-		insert into OptionalProductsCount (packageId,optcount) 
-			select new.packageId, count(*) as optcount
-                                    from Orders as o left join Orders_OptionalProducts as opt
+    declare prodCount INT default null;
+    
+    set prodCount := (select  count(*) as optcount
+                                    from Orders as o left outer join Orders_OptionalProducts as opt
                                                                on o.id=opt.orderId
                                     group by o.id
-                                    having o.id = new.id;
+                                    having o.id = new.id);
+		-- TODO CHECK WHY IF prodCount = vuoto mette 1 in optcount
+		insert into OptionalProductsCount (packageId,optcount)  values (new.packageId,prodCount);
     END $$
     
 create trigger OptionalProdAvg
@@ -73,7 +77,7 @@ create trigger OptionalProdAvg
     begin
     declare pkgcount INT;
     declare pkgname Varchar(20);
-    set pkgname   := (select name from packages where packages.id=new.packageId);
+    set pkgname   := (select name from Packages where Packages.id=new.packageId);
 	set pkgcount  := (select count from PurchasesCountGrouped where name = pkgname) - 1;
 		if (select count(name) from OptionalProductsAverage where name=pkgname) = 0 then
 			insert into OptionalProductsAverage (name,avg) values (pkgname ,new.optcount);
@@ -85,22 +89,22 @@ create trigger OptionalProdAvg
     END $$
     
 create trigger ValueOfSalesDetailedUpdate
-	after insert on Orders
+	after insert on Orders 
     for each row
     begin
     declare pkgname Varchar(20);
     declare validity int;
 	declare totalOfProducts int default 0;
-    set pkgname   := (select name from packages where packages.id=new.packageId);
-    set validity  := (select monthValidity from rate_costs where id=new.rateId);
+    set pkgname   := (select name from Packages where Packages.id=new.packageId);
+    set validity  := (select monthValidity from Rate_costs where id=new.rateId);
     set totalOfProducts := (select sum(validity*monthlyFee) 
-												from optionalproducts join orders_optionalproducts 
-                                                on  optionalproducts.id = productId 
+												from OptionalProducts join Orders_OptionalProducts 
+                                                on  OptionalProducts.id = productId 
                                                 group by orderId
 												having orderId = new.id); -- revenue of optional prod for insereted order;
 		if (select count(name) from ValueOfSalesDetailed where name=pkgname) = 0 then
 			insert into ValueOfSalesDetailed  
-						select p.name as name,sum(o.totalPayment) as totalPayment, (totalPayment - totalOfProducts) as totalPaymentWithoutOP
+						select p.name as name,sum(o.totalPayment) as totalPayment,1
                                 from Orders as o join Packages as p
                                 where p.id=o.packageId
                                 group by o.packageId;
@@ -118,12 +122,12 @@ DELIMITER ;
 
 
 select * from PurchasesCount;
-select count(distinct(name)) from PurchasesCount where name = (select name from packages where id=5);
-insert into orders (userId,packageId,rateId) values (1,4,2);
+select count(distinct(name)) from PurchasesCount where name = (select name from Packages where id=5);
+insert into Orders (userId,packageId,rateId) values (1,4,2);
 select * from FailedPayments;
 update Orders set status = false where id = 2;
 select * from Orders;
-select * from packages;
+select * from Packages;
 select * from Orders_OptionalProducts;
 select * from OptionalProductsCount;
 select * from OptionalProductsAverage;
@@ -138,3 +142,13 @@ select o.packageId as packageId, count(opt.productId) as optcount
                                                 on  optionalproducts.id = productId 
                                                 group by orderId
 												having orderId = 8);
+                                                
+                                                
+select count(*) from PurchasesCount group by name,validity having
+ name = "Family" and validity = 12;
+ 
+ select 1,count(*) as optcount
+                                    from Orders as o left join Orders_OptionalProducts as opt
+                                                               on o.id=opt.orderId
+                                    group by o.id
+                                    having o.id = 1;

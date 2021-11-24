@@ -59,4 +59,10 @@ public class User {
         return email;
     }
 
+    public  boolean isAdmin()
+    {
+        if(type.equals("admin")) return true;
+        else return false;
+    }
+
 }
