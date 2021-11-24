@@ -8,6 +8,7 @@ import it.polimi.db2.entitys.ServiceTypes.MobileInternetServices;
 import it.polimi.db2.entitys.ServiceTypes.MobilePhoneServices;
 import it.polimi.db2.exception.ElementNotFound;
 import it.polimi.db2.exception.MissingFormData;
+import it.polimi.db2.exception.NotValidRates;
 import it.polimi.db2.services.OptionalProductService;
 import it.polimi.db2.services.PackageService;
 import it.polimi.db2.utils.TemplatePathManager;
@@ -93,10 +94,13 @@ public class CreatePackage extends BasicServerlet {
 
             //Persist
             packageService.persistPackage(name,optionals,rateCosts,services);
-            response.sendRedirect("/admin");
+            response.sendRedirect("admin");
         }catch (MissingFormData e)
         {
             response.sendRedirect("go-creation?error=\"Missing some Fields, check if all data inserted\"");
+        }catch ( NotValidRates e)
+        {
+            response.sendRedirect("go-creation?error=\"Rate with higher validity should have lower price, check them please\"");
         }
 
         System.out.println("");
@@ -123,9 +127,10 @@ public class CreatePackage extends BasicServerlet {
      * @param rate_price
      * @return list of rates from form
      */
-    public List<RateCost> createRatesFromForms(String[] rate_validity, String[] rate_price) throws MissingFormData {
+    public List<RateCost> createRatesFromForms(String[] rate_validity, String[] rate_price) throws MissingFormData, NotValidRates {
         boolean flag = false;
 
+        //TODO check if the rates are valid (eg higher validity-> lower price)
         if(rate_price == null) flag = true;
         if(rate_validity == null) flag = true;
 
@@ -153,6 +158,23 @@ public class CreatePackage extends BasicServerlet {
 
         }
 
+
+        for(int i=0;i<rates.size();i++)
+        {
+            for(int j=0;j<rates.size();j++)
+            {
+                if(i!=j)
+                {
+                    if(rates.get(i).getMonthValidity() <= rates.get(j).getMonthValidity())
+                    {
+                        if(rates.get(i).getPrice() <= rates.get(j).getPrice()) {
+                            throw new NotValidRates();
+                        }
+                    }
+                }
+
+            }
+        }
         return rates;
     }
 
