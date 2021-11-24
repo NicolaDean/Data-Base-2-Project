@@ -10,6 +10,7 @@ import it.polimi.db2.exception.ElementNotFound;
 import it.polimi.db2.exception.MissingFormData;
 import it.polimi.db2.services.OptionalProductService;
 import it.polimi.db2.services.PackageService;
+import it.polimi.db2.utils.TemplatePathManager;
 import org.thymeleaf.TemplateEngine;
 
 import javax.ejb.EJB;
@@ -36,7 +37,6 @@ public class CreatePackage extends BasicServerlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         //RETRIVE DATA FROM FORMS AND PUT THEM IN STRINGS ARRAY
-
         String name           = request.getParameter("name");
         //Optional Product data
         String[] optionalData = request.getParameterValues("optionals");
@@ -77,7 +77,7 @@ public class CreatePackage extends BasicServerlet {
             optionals = optionalProductService.convertOptionalProducts(optionalData);
         } catch (ElementNotFound e) {
             e.printStackTrace();
-            //TODO add error
+            this.setError(request,response,"Invalid Optional Prod", TemplatePathManager.creation);
         }
 
 
@@ -93,6 +93,7 @@ public class CreatePackage extends BasicServerlet {
 
             //Persist
             packageService.persistPackage(name,optionals,rateCosts,services);
+            response.sendRedirect("/admin");
         }catch (MissingFormData e)
         {
             response.sendRedirect("go-creation?error=\"Missing some Fields, check if all data inserted\"");
@@ -174,10 +175,11 @@ public class CreatePackage extends BasicServerlet {
         if(MPS_minutes == null)  return services;
         if(MPS_sms == null)      return services;
 
+
         int size = MPS_extraMin.length;
 
-        if(MPS_minutes.length != size)  flag = true; ;
-        if(MPS_sms.length != size)      flag = true; ;
+        if(MPS_minutes.length != size)  flag = true;
+        if(MPS_sms.length != size)      flag = true;
         if(MPS_extraSms.length != size) flag = true;
 
 

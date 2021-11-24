@@ -47,7 +47,12 @@ public class ConfirmationPage extends BasicServerlet {
             startingDate = new SimpleDateFormat("yyyy-mm-dd").parse(rawData);
         } catch (ParseException e) {
             e.printStackTrace();
-            //TODO set Error
+           this.setError(request,response,"Invalid Date",TemplatePathManager.contract);
+        }
+
+        if(startingDate == null){
+            setError(request,response,"Starting Date Missing",TemplatePathManager.contract);
+            return;
         }
 
 

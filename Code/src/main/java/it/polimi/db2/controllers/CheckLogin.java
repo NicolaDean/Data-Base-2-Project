@@ -42,7 +42,6 @@ public class CheckLogin extends BasicServerlet {
             //Check presence of pending order in session
             Order order = (Order) session.getAttribute("order");
 
-            //TODO Check user priviledge
           if(user.getType().equals("user"))
           {
               if (order != null) {

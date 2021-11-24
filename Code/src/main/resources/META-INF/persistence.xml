@@ -6,6 +6,14 @@
     <persistence-unit name="default">
         <class>it.polimi.db2.entitys.Service</class>
         <class>it.polimi.db2.entitys.ServiceTypes.MobilePhoneServices</class>
+        <class>it.polimi.db2.entitys.ServiceTypes.FixedInternetService</class>
+        <class>it.polimi.db2.entitys.ServiceTypes.FixedPhoneService</class>
+        <class>it.polimi.db2.entitys.ServiceTypes.MobileInternetServices</class>
+        <class>it.polimi.db2.entitys.User</class>
+        <class>it.polimi.db2.entitys.Package</class>
+        <class>it.polimi.db2.entitys.RateCost</class>
+        <class>it.polimi.db2.entitys.OptionalProduct</class>
+        <class>it.polimi.db2.entitys.Order</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>

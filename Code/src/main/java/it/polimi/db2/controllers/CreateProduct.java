@@ -28,8 +28,19 @@ public class CreateProduct extends BasicServerlet{
         String name = null;
         int    fee  = 0;
 
-        name = StringEscapeUtils.escapeJava(request.getParameter("name"));
-        fee = Integer.parseInt(StringEscapeUtils.escapeJava(request.getParameter("monthFee")));
+
+        try {
+            name = StringEscapeUtils.escapeJava(request.getParameter("name"));
+            fee = Integer.parseInt(StringEscapeUtils.escapeJava(request.getParameter("monthFee")));
+
+            if(name == null || fee == 0){
+                this.setError(request,response,"Fill all fields",TemplatePathManager.creation);
+            }
+        }catch (Exception e)
+        {
+            this.setError(request,response,"Fill all fields",TemplatePathManager.creation);
+        }
+
         this.optionalProductService.createProduct(name,fee);
 
         this.templateRenderer(request,response, TemplatePathManager.admin);

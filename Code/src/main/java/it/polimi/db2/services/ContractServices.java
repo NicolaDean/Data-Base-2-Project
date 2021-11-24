@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-//TODO VERIFICARE CHE NON POSSA ESSERE STATEFULL
 @Stateless
 public class ContractServices extends BasicService{
 

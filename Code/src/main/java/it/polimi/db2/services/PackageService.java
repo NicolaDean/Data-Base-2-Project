@@ -34,7 +34,6 @@ public class PackageService extends BasicService{
 
     public void persistPackage(String name, List<OptionalProduct> optionals , List<RateCost> rates, List<Service> services)
     {
-        //TODO Controlli (Internet package), fixed phone e distinzione mobile/fixed internet
         Package p = new Package();
         p.setName(name);
         p.setProducts(optionals);
