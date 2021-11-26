@@ -15,4 +15,5 @@ public class BasicService{
         EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("default" );
         this.em = emfactory.createEntityManager( );
     }
+
 }

@@ -112,6 +112,7 @@ Then Services references to three different tables depending on the type of offe
 \centering
 \includegraphics[width=0.70\textwidth]{sqlServicesDDL.png}
 \caption{SQL DDL Services Details}
+\label{fig:services}
 \end{figure}
 \subsection{ER}
 The Entity-Relation Diagram of the Database
@@ -127,6 +128,7 @@ The Entity-Relation Diagram of the Database
 
 Detailed description of SQL code used in the project.
 \subsection{Views}
+\label{views}
 The following views are used for various Sales Reports.
 
 
@@ -265,7 +267,6 @@ end if;
 \end{verbatim}
 
 
-
 \begin{verbatim}
 create trigger INSOLVENT_USER_REMOVAL
     after update on Orders
@@ -281,14 +282,14 @@ if (new.status = false AND old.status = new.status)  then
 			values (new.userId,new.id,CURRENT_TIMESTAMP);
 end if;
 \end{verbatim}
-
+\newpage
 
 \section{ORM Description}
 
 \subsection{Entities}
 
 \paragraph{Optional Product}
-
+Entity related to all type of optional products with id and related name.
 \begin{lstlisting}
 @Entity
 @Table(name = "OptionalProducts", schema = "test")
@@ -302,7 +303,7 @@ public class OptionalProduct{
 \end{lstlisting}
 
 \paragraph{Order}
-The Order entity refers to Table \emph{Orders}
+The Order entity refers to Table \emph{Orders}, with a boolean \emph{status} that is true if the payment has been accepted from bank. The \emph{bank} pseudo application works at follows: the first payment is completely pseudo-random (using \emph{Random} java library). Then if the order is insolvent the purchase process is always accepted for demo purposes.
 \begin{lstlisting}
 @Entity
 @Table(name = "Orders", schema = "test")
@@ -327,7 +328,7 @@ public class Order {
 
 
 \paragraph{RateCost}
-
+Entity of a package rate cost, depending on the \emph{monthValidity} period.
 \begin{lstlisting}
 @Entity
 @Table(name="Rate_costs", schema = "test")
@@ -342,6 +343,7 @@ public class RateCost {
 \end{lstlisting}
 
 \paragraph{Service}
+Entity of services, used as a connection between \emph{Packages} and various services as mentioned in figure \ref{fig:services}
 \begin{lstlisting}
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -356,6 +358,7 @@ public class Service {
 \end{lstlisting}
 
 \paragraph{User}
+Entity with data of users, and boolean \emph{Insolvent} to determine if there are three or more purchases not completed.
 \begin{lstlisting}
 @Entity
 @NamedQuery(name = "User.authentication", query = "select usr from User usr WHERE usr.username = :username and usr.password = :password")
@@ -373,9 +376,47 @@ public class User {
     boolean insolvent;
 \end{lstlisting}
 
+\paragraph{Package}
+Entity of purchased packages with its rates, services and optional products.
 \begin{lstlisting}
+@Entity
+@NamedQuery(name="Packages.All",query="select p from Package p")
+@Table(name = "Packages", schema = "test")
+public class Package {
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    int     id;
+    String  name;
 
+
+    @OneToMany
+    @JoinColumn(name = "packageId")
+    List<Service> services;
+
+    @OneToMany
+    @JoinColumn(name = "packageId")
+    List<RateCost> rates;
+
+    @JoinTable(
+            name = "Packages_OptionalProducts",
+            schema = "test",
+            joinColumns = @JoinColumn(name = "packageId"),
+            inverseJoinColumns = @JoinColumn(name = "productId"))
+    @ManyToMany
+    List<OptionalProduct> products;
 \end{lstlisting}
+
+\paragraph{Custom}
+Furthermore to manage the views, some custom classes have been created to store query views correctly. These classes reflect exactly the type of data queried in Views from page \pageref{views}.
+A list of them:
+\begin{itemize}
+    \item InsolventReport
+    \item OptionalProductBestSeller
+    \item OptionalProductsAverage
+    \item PurchasesCoun
+    \item PurchasesCountGrouped
+    \item ValueOfSalesDetailed
+\end{itemize}
 
 \newpage
 \section{Application Components}
@@ -424,5 +465,11 @@ public class User {
 \centering
 \includegraphics[width=0.99\textwidth]{Insolvent.png}
 \caption{Insolvent User}
+\end{figure}
+
+\begin{figure}[hbt!]
+\centering
+\includegraphics[width=0.99\textwidth]{Creation.png}
+\caption{Package Creation}
 \end{figure}
 \end{document}
