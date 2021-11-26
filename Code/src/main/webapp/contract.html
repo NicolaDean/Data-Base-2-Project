@@ -21,7 +21,7 @@
 <div th:replace="/WEB-INF/templateHTML/customTags/header::header"></div>
 <td>
  <!--<div th:replace="/WEB-INF/templateHTML/customTags/package::package(${package})"></div>-->
-
+    <div th:replace="/WEB-INF/templateHTML/errorTemplate::errorTemplate"></div>
     <h4>SERVICES:</h4>
     <div class="card-columns">
         <div th:each="s :${order.getPackage().getServices()}">

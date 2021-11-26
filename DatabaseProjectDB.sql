@@ -206,9 +206,6 @@ select * from Orders where status = false;
 -- 	orderId 	INT,
 --    DeactivationDate
 -- );
-
-drop view if exists Purchase_By_Packages;
-
 -- populate with trigger
 
 create table FailedPayments(

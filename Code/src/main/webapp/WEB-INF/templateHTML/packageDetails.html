@@ -12,6 +12,7 @@
 </head>
 <body>
     <div th:replace="/WEB-INF/templateHTML/customTags/header::header"></div>
+    <div th:replace="/WEB-INF/templateHTML/errorTemplate::errorTemplate"></div>
     <h1>Package Purchase Details</h1>
 
     <h2 th:text="'Package : ' + ${package.getName()}"></h2>

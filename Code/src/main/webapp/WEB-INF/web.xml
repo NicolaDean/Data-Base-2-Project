@@ -26,6 +26,5 @@
         <url-pattern>/create-package</url-pattern>
         <url-pattern>/create-product</url-pattern>
         <url-pattern>/admin</url-pattern>
-
     </filter-mapping>
 </web-app>

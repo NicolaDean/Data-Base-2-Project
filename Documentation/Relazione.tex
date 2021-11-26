@@ -282,6 +282,29 @@ if (new.status = false AND old.status = new.status)  then
 end if;
 \end{verbatim}
 
+\begin{verbatim}
+create trigger PurchasesCount_Population
+	after insert on Orders 
+    for each row
+	begin
+	declare pkgname Varchar(20);
+    declare orderVal int;
+    set pkgname   := (select name from Packages where Packages.id=new.packageId);
+    set orderVal  := (select monthValidity from Rate_costs where id=new.rateId);
+		 -- If this is the first order on package then set count = 1 and insert new line
+		if(  (select count(*) from PurchasesCount where 
+			 name = pkgname and validity = orderVal  group by name,validity)>0) then
+			
+            SET SQL_SAFE_UPDATES=0;
+			update PurchasesCount set PurchasesCount.count = PurchasesCount.count + 1 
+			where name = pkgname and validity = orderVal;
+            SET SQL_SAFE_UPDATES=1;
+		else
+            insert into PurchasesCount (name,validity,count) 
+            values (pkgname,orderVal,1);
+		end if;
+	END $$
+\end{verbatim}
 
 \section{ORM Description}
 

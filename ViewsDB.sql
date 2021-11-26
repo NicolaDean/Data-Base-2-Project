@@ -23,8 +23,8 @@ select distinct o.id,o.packageId from Orders_OptionalProducts as opt join Orders
 
 -- Done
 -- for each ordeer count how many optional product has
-drop table if exists OptionalProductsCount;
-create table OptionalProductsCount as(
+drop view if exists OptionalProductsCount;
+create view OptionalProductsCount as(
                                     select o.packageId as packageId, count(opt.productId) as optcount
                                     from Orders as o left join Orders_OptionalProducts as opt
                                                                on o.id=opt.orderId
@@ -74,8 +74,8 @@ create table ValueOfSalesDetailed as(
 select * from ValueOfSalesDetailed;
 
                                 
-drop view if exists InsolventReport;
-create view InsolventReport as(
+drop table if exists InsolventReport;
+create table InsolventReport as(
                               select u.id as id,u.username as username,u.email as email,(select max(fp1.faildate) from FailedPayments as fp1 where fp1.userId=u.id) as lastDate,(select o.totalPayment from Orders as o join FailedPayments as fp2 where o.id=fp2.orderId and lastdate=fp2.faildate) as amount
                               from FailedPayments as fp join Users as u
                               where fp.userId=u.id
@@ -84,8 +84,8 @@ create view InsolventReport as(
                                   );
 select * from InsolventReport;
 
-drop view if exists OptionalProductBestSeller;
-create view OptionalProductBestSeller as(
+drop table if exists OptionalProductBestSeller;
+create table OptionalProductBestSeller as(
                                         select op.name as name,count(op.id) as amountSold,sum(op.monthlyFee*r.monthValidity) as value
                                         from Orders_OptionalProducts as ordop join OptionalProducts as op join Rate_costs as r join Orders as o
                                         where ordop.productId=op.id and o.rateId=r.id and o.id=ordop.orderId

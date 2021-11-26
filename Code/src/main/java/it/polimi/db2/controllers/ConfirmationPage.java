@@ -33,25 +33,42 @@ public class ConfirmationPage extends BasicServerlet {
     @EJB(name = "it.polimi.db2.services/ContractServices")
     private ContractServices contractServices;
 
+    @EJB(name="it.polimi.db2.services/PackageService")
+    private PackageService packageService;
+
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String rateId;
+
         rateId = StringEscapeUtils.escapeJava(request.getParameter("rates"));
         String packageId;
         packageId = StringEscapeUtils.escapeJava(request.getParameter("packId"));
 
+        int pkgId = Integer.parseInt(packageId);
         String rawData = request.getParameter("startDate");
         Date startingDate = null;
         try {
             startingDate = new SimpleDateFormat("yyyy-mm-dd").parse(rawData);
         } catch (ParseException e) {
             e.printStackTrace();
-           this.setError(request,response,"Invalid Date",TemplatePathManager.contract);
+
+            try {
+                request.setAttribute("package",packageService.getPackageById(pkgId));
+            } catch (NoPackageFound ex) {
+                ex.printStackTrace();
+            }
+            this.setError(request,response,"Invalid Date",TemplatePathManager.packageDetails);
+            return;
         }
 
         if(startingDate == null){
-            setError(request,response,"Starting Date Missing",TemplatePathManager.contract);
+            try {
+                request.setAttribute("package",packageService.getPackageById(pkgId));
+            } catch (NoPackageFound ex) {
+                ex.printStackTrace();
+            }
+            setError(request,response,"Starting Date Missing",TemplatePathManager.packageDetails);
             return;
         }
 
@@ -65,7 +82,7 @@ public class ConfirmationPage extends BasicServerlet {
 
         try {
             //TRY CREATE THE CONTRACT
-            order = this.contractServices.createContract( Integer.parseInt(packageId), Integer.parseInt(rateId), optionalProducts,startingDate);
+            order = this.contractServices.createContract(pkgId , Integer.parseInt(rateId), optionalProducts,startingDate);
         } catch (ElementNotFound e) {
             this.setError(request,response,"Order creation failed",TemplatePathManager.contract);
         }
