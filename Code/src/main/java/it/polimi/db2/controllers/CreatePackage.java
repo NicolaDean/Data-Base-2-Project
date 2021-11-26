@@ -37,7 +37,7 @@ public class CreatePackage extends BasicServerlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        //RETRIVE DATA FROM FORMS AND PUT THEM IN STRINGS ARRAY
+        //RETRIEVE DATA FROM FORMS AND PUT THEM IN STRINGS ARRAY
         String name           = request.getParameter("name");
         //Optional Product data
         String[] optionalData = request.getParameterValues("optionals");
@@ -59,7 +59,7 @@ public class CreatePackage extends BasicServerlet {
         String[] MPS_extraMin   = request.getParameterValues("ExtraMin");
         String[] MPS_extraSms   = request.getParameterValues("ExtraSms");
 
-        // Internet Serivces Data
+        // Internet Services Data
 
         String[] MIS_type = request.getParameterValues("internet-type");
         String[] MIS_Gb  = request.getParameterValues("Gb");
@@ -102,9 +102,6 @@ public class CreatePackage extends BasicServerlet {
         {
             response.sendRedirect("go-creation?error=\"Rate with higher validity should have lower price, check them please\"");
         }
-
-        System.out.println("");
-        //Services
     }
 
     private List<Service> createFixedPhoneServiceFromForm(List<Service> services, String[] FPS) {
