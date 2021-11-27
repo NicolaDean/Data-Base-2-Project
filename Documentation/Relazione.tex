@@ -254,33 +254,352 @@ and  \emph{OptionalProductBestSellerForAmount}
 \end{verbatim}
 \newpage
 \subsection{Triggers}
+\subparagraph{INSOLVENT_USER}
+When a new order is created, if it's status is "false" then mark user as insolvent by changing a boolean into user table.
 \begin{verbatim}
 create trigger INSOLVENT_USER
     after insert on Orders
     for each row
-begin
-    if ( new.status = false) then
-    update Users set Users.insolvent = true where Users.id = new.userId;
-    insert into FailedPayments (userId,orderId,faildate) 
-    values (new.userId,new.id,CURRENT_TIMESTAMP);
-end if;
+	begin
+		if ( new.status = false) then
+		update Users set Users.insolvent = true where Users.id = new.userId;
+		insert into FailedPayments (userId,orderId,faildate) values (new.userId,new.id,CURRENT_TIMESTAMP);
+	end if;
+	END $$
 \end{verbatim}
-
+\subparagraph{INSOLVENT_USER_REMOVAL}
+When an order is updated, if it's status is "true" then remove insolvance status from user.
 
 \begin{verbatim}
 create trigger INSOLVENT_USER_REMOVAL
     after update on Orders
     for each row
-begin
-    if (new.status = true) AND
-		     (select count(*) from Orders as o where o.userId=new.userId and o.status = false) = 0
-		then
-    update Users set Users.insolvent = false where Users.id = new.userId;
-end if;
-if (new.status = false AND old.status = new.status)  then
-			insert into FailedPayments (userId,orderId,faildate) 
-			values (new.userId,new.id,CURRENT_TIMESTAMP);
-end if;
+	begin
+		if (new.status = true) AND -- user payed a suspended order i check if all his pending order are payed (if yes remove flag)
+				(select count(*) from Orders as o where o.userId=new.userId and o.status = false) = 0
+			then
+		update Users set Users.insolvent = false where Users.id = new.userId;
+	end if;
+	if (new.status = false AND old.status = new.status)  then
+				insert into FailedPayments (userId,orderId,faildate) values (new.userId,new.id,CURRENT_TIMESTAMP);
+	end if;
+	END $$
+\end{verbatim}
+
+\subparagraph{NewPackage}
+When a new package is created some view are initialized with a new row containing the package name and empty values for the statistic field (eg: AVG,totalPayments...)
+\begin{verbatim}
+    create trigger NewPackage
+		after insert on Packages
+        for each row
+        begin
+			-- Optional Average per package
+			insert into OptionalProductsAverage (name,avg) values (new.name ,0);
+            -- Revenue per package
+            insert into ValueOfSalesDetailed  (name,totalPayment,totalPaymentWithoutOP) values (new.name,0,0);
+        END $$
+\end{verbatim}
+
+\subparagraph{PurchaseCountInitialize}
+When a new package is created are created also the rate cost, so as in the  "NewPackage" trigger and for each new RateCost a new row with initial value is added to "PurchaseCount" view
+\begin{verbatim}
+create trigger PurchaseCountInitialize 
+		after insert on Rate_costs
+        for each row
+        begin
+			declare pkgname Varchar(30);
+			set pkgname   := (select name from Packages where Packages.id=new.packageId);
+			insert into PurchasesCount (name,validity,count) values (pkgname,new.monthValidity,0);
+        END$$
+\end{verbatim}
+
+\subparagraph{PurchasesCount_Population}
+Whenever an Order is created and has a valid payment this table increase the number of time the package is payed
+\begin{verbatim}
+create trigger PurchasesCount_Population
+	after insert on Orders 
+    for each row
+	begin
+	declare pkgname Varchar(30);
+    declare orderVal int;
+    if new.status = true then
+    set pkgname   := (select name from Packages where Packages.id=new.packageId);
+    set orderVal  := (select monthValidity from Rate_costs where id=new.rateId);
+		 -- If this is the first order on package then set count = 1 and insert new line
+            SET SQL_SAFE_UPDATES=0;
+			update PurchasesCount set PurchasesCount.count = PurchasesCount.count + 1
+					where name = pkgname and validity = orderVal;
+            SET SQL_SAFE_UPDATES=1;
+        end if;
+	END $$
+\end{verbatim}
+
+\subparagraph{PurchasesCount_Population_Update}
+Same as PurchasesCount_Population but when Order is updated, check if payment is ok then update view.
+\begin{verbatim}
+create trigger  PurchasesCount_Population_Update
+    after update on Orders
+    for each row
+	begin
+	declare pkgname Varchar(30);
+    declare orderVal int;
+    if new.status = true then
+		set pkgname   := (select name from Packages where Packages.id=new.packageId);
+		set orderVal  := (select monthValidity from Rate_costs where id=new.rateId);
+
+            SET SQL_SAFE_UPDATES=0;
+			update PurchasesCount set PurchasesCount.count = PurchasesCount.count + 1
+					where name = pkgname and validity = orderVal;
+            SET SQL_SAFE_UPDATES=1;
+        end if;
+    END $$
+\end{verbatim}
+
+\subparagraph{AddNoOptionalOrderToAVG}
+This trigger is a "support trigger" because is used to call another trigger.
+When an order is created add a "fake null optionalProduct" to it so that Order with no product are counted in the Average.(See next trigger)
+\begin{verbatim}
+create trigger AddNoOptionalOrderToAVG
+	after insert on Orders
+    for each row
+    begin
+		-- trigger OptionalProdAvg trigger
+		insert into Orders_OptionalProducts (orderId,productId) values (new.id,null);
+		delete from Orders_OptionalProducts where orderId = new.id;
+    END $$
+\end{verbatim}
+
+\subparagraph{OptionalProdAvg}
+When a new product is associated to a new order, after checking if payment is ok update the average of the specific product that is been added.
+\begin{verbatim}
+create trigger OptionalProdAvg
+	after insert on Orders_OptionalProducts
+	for each row
+    begin
+    declare pkgcount INT;
+    declare pkgname Varchar(30);
+    declare stat  bool;
+    set stat    := (select status from Orders where id=new.orderId);
+
+    if stat = 1 then
+    set pkgname   := (select name from Packages where Packages.id=(select packageId from Orders where id=new.orderId));
+	set pkgcount  := (select count(*) from PurchasesCountGrouped group by name having name = pkgname) - 1;
+			SET SQL_SAFE_UPDATES=0;
+            if(new.productId is null) then
+				update OptionalProductsAverage set avg = ((avg*pkgcount))/(pkgcount+1) where name=pkgname;
+            else 
+				update OptionalProductsAverage set avg = ((avg*pkgcount)+1)/(pkgcount+1) where name=pkgname;
+            end if;
+            SET SQL_SAFE_UPDATES=1;
+        end if;
+    END $$
+\end{verbatim}
+
+\subparagraph{OptionalProdAvgOnUpdate}
+When an order is updated, if payment is ok, this trigger calculate how many optional is associated with it and update the AVG of the package in consequence.
+\begin{verbatim}
+create trigger OptionalProdAvgOnUpdate
+	after update on Orders
+    for each row
+    begin
+	declare pkgcount INT;
+    declare pkgname Varchar(30);
+    declare prodCount INT;
+    if new.status then
+    set pkgname   := (select name from Packages where Packages.id=(select packageId from Orders where id=new.id));
+	set pkgcount  := (select count(*) from PurchasesCountGrouped group by name having name = pkgname);
+    set prodCount := (select count(*) from Orders_OptionalProducts group by orderId having  orderId= new.id);
+			SET SQL_SAFE_UPDATES=0;
+            if(prodCount is null) then
+				update OptionalProductsAverage set avg = ((avg*pkgcount))/(pkgcount+1) where name=pkgname;
+            else 
+				update OptionalProductsAverage set avg = ((avg*pkgcount)+prodCount)/(pkgcount+1) where name=pkgname;
+            end if;
+            SET SQL_SAFE_UPDATES=1;
+        end if;
+    END $$
+\end{verbatim}
+
+\subparagraph{TotalPackageRevenue}
+When a new order is created, if payment is ok update this view with totalRevenue of this package 
+(see trigger PackageRevenueNoOptional to see how the OptionalRevenue is removed from totalRevenue).
+\begin{verbatim}
+create trigger TotalPackageRevenue
+	after insert on Orders
+    for each row
+    begin
+    declare pkgname Varchar(20);
+    declare validity int;
+	declare totalOfProducts int;
+    if new.status = 1 then
+		set pkgname   := (select name from Packages where Packages.id=new.packageId);
+		set validity  := (select monthValidity from Rate_costs where id=new.rateId);
+			SET SQL_SAFE_UPDATES=0;
+				update ValueOfSalesDetailed set totalPayment =  totalPayment + new.totalPayment ,
+                                                    totalPaymentWithoutOP = totalPaymentWithoutOP + new.totalPayment
+													where name=pkgname;
+			SET SQL_SAFE_UPDATES=1;                     
+        end if;
+    END $$
+\end{verbatim}
+
+\subparagraph{PackageRevenueNoOptional}
+For each product associated with order it query the revenue of it and remove it from the total revenue of the package.
+\begin{verbatim}
+-- remove optional revenue for each optional
+create trigger PackageRevenueNoOptional 
+	after insert on Orders_OptionalProducts
+    for each row
+    begin
+    declare pkgId     INT;
+	declare pkgname Varchar(20);
+	declare price     INT;
+    declare validity  INT;
+	declare stat  bool;
+    set stat    := (select status from Orders where id=new.orderId);
+
+    if stat = 1 then
+		 
+         set pkgId     := (select packageId from Orders where id=new.orderId);
+		 set pkgname   := (select name from Packages where Packages.id=pkgId);
+         set validity  := (select monthValidity from Rate_costs where id=(select rateId from Orders where id=new.orderId));
+		 set price     := (select monthlyFee from OptionalProducts where id=new.productId)*validity;
+         
+         if(price is null)then
+			set price := 0;
+         end if;
+        SET SQL_SAFE_UPDATES=0;    
+        update ValueOfSalesDetailed set 
+				totalPaymentWithoutOP = totalPaymentWithoutOP - price
+				where name=pkgname;
+		SET SQL_SAFE_UPDATES=1; 
+        
+	end if;
+    END $$
+\end{verbatim}
+
+\subparagraph{TotalPackageRevenue_Update}
+When Order is updated, check if payment is ok and as before it calculate optional prod revenue and remove it from the totalRevenue of this package.
+\begin{verbatim}
+create trigger TotalPackageRevenue_Update
+	after update on Orders
+	for each row
+    begin
+    declare pkgname Varchar(30);
+	declare revenueOptional   INT;
+    declare validity  INT;
+		if new.status = 1 then
+			set pkgname   := (select name from Packages where Packages.id=new.packageId);
+			set validity  := (select monthValidity from Rate_costs where id=(select rateId from Orders where id=new.id));
+			set revenueOptional := (select sum(monthlyFee) from Orders_OptionalProducts join OptionalProducts on productId = id group by orderId having orderId=new.id)*validity;
+        
+			if(revenueOptional is null) then
+				set revenueOptional := 0;
+			end if;
+        
+			SET SQL_SAFE_UPDATES=0;
+				update ValueOfSalesDetailed set totalPayment =  totalPayment + new.totalPayment ,
+                                                    totalPaymentWithoutOP = totalPaymentWithoutOP + (new.totalPayment -revenueOptional)
+													where name=pkgname;
+			SET SQL_SAFE_UPDATES=1;                     
+        end if;
+    END$$
+\end{verbatim}
+
+\subparagraph{InitializeBestOptional}
+Initialize the BestOptional view whenever a new optional product occur
+\begin{verbatim}
+create trigger InitializeBestOptional
+	after insert on OptionalProducts
+    for each row
+    begin
+		insert into OptionalProductBestSeller (name,amountSold,value) values (new.name,0,0);
+    END$$
+\end{verbatim}
+
+\subparagraph{UpdateBestOptional}
+Whenever a product is associated with an order this trigger update the view that contain statistic about best optional.
+It calculate the revenue for this new product and sum it to the total revenue of it
+It increase the counter of how many time this product have been bought.
+\begin{verbatim}
+    
+create trigger UpdateBestOptional
+    after insert on Orders_OptionalProducts
+	for each row
+    begin
+		 declare prodName Varchar(30);
+         declare price     INT;
+         declare validity  INT;
+         
+         declare stat  bool;
+		set stat    := (select status from Orders where id=new.orderId);
+
+		if stat = 1 then
+		 set prodName  := (select name from OptionalProducts where id=new.productId);
+         set validity  := (select monthValidity from Rate_costs where id=(select rateId from Orders where id=new.orderId));
+		 set price     := (select monthlyFee from OptionalProducts where id=new.productId)*validity;
+         
+			if(prodName is not null) then
+			 SET SQL_SAFE_UPDATES=0;    
+				update OptionalProductBestSeller set value = value + price,
+													 amountSold = amountSold + 1 
+													 where name=prodName;
+				SET SQL_SAFE_UPDATES=1;    
+			 end if;
+        end if;
+    END$$
+\end{verbatim}
+
+\subparagraph{UpdateBestOptional_OnUpdate}
+Same as UpdateBestOptional but with a unique query for all product associated with this order (more expensive but only way if the first payment fail)
+\begin{verbatim}
+    create trigger UpdateBestOptional_OnUpdate
+	after update on Orders
+    for each row
+		begin
+         declare revenue     INT;
+         declare validity  INT;
+		 declare count  INT;
+		if new.status = 1 then
+			 SET SQL_SAFE_UPDATES=0;    
+				update OptionalProductBestSeller as best join OptionalProducts as op
+									on best.name = op.name
+									set amountSold = amountSold + 1,
+									value = amountSold * op.monthlyFee
+									where op.name in (select op1.name from OptionalProducts as op1 join Orders_OptionalProducts as ord
+													on id = productId where ord.orderId =new.id);
+				SET SQL_SAFE_UPDATES=1;    
+		end if;
+	END $$
+\end{verbatim}
+
+\subparagraph{UpdateInsolventUser}
+When a user fail a payment this trigger count how many time is happened and if it happen more then 3 times it update (or insert) a line with the last failed payment (date,amount).
+\begin{verbatim}
+
+create trigger UpdateInsolventUser
+    after insert on FailedPayments
+	for each row
+    begin
+		declare failedCount INT;
+        declare failedImport INT;
+        declare usr Varchar(30);
+        declare mail	 Varchar(30);
+
+        set failedCount := (select count(*) from FailedPayments  group by userId having userId = new.userId );
+        set failedImport := (select totalPayment from Orders where id=new.orderId);
+        set usr := (select username from Users where id=new.userId);
+        set mail    := (select email from Users where id=new.userId);
+        
+         -- SIGNAL SQLSTATE '02000' SET MESSAGE_TEXT =username ;
+        if(failedCount >=3) then
+			if( (select id from InsolventReport where id=new.userId) is  null) then
+				insert into InsolventReport (id,username,email,lastDate,amount) values (new.userId,usr ,mail ,new.faildate,failedImport);
+			else
+				update InsolventReport set lastDate = new.faildate, amount = failedImport where id=new.userId;
+			end if;
+        end if;
+    END$$
 \end{verbatim}
 \newpage
 

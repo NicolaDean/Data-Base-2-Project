@@ -2,6 +2,9 @@
 drop trigger if exists INSOLVENT_USER;
 drop trigger if exists INSOLVENT_USER_REMOVAL;
 
+drop trigger if exists NewPackage;
+
+drop trigger if exists PurchaseCountInitialize;
 drop trigger if exists PurchasesCount_Population;
 drop trigger if exists PurchasesCount_Population_Update;
 
@@ -15,7 +18,9 @@ drop trigger if exists PackageRevenueNoOptional;
 
 drop trigger if exists UpdateInsolventUser;
 
+drop trigger if exists InitializeBestOptional;
 drop trigger if exists UpdateBestOptional;
+drop trigger if exists UpdateBestOptional_OnUpdate;
 
 DELIMITER $$
 -- IF USER DO A FAILED ORDER THEN UPDATE USER TABLE FLAGGING IT AS INSOLVENT
@@ -43,30 +48,41 @@ create trigger INSOLVENT_USER_REMOVAL
 	end if;
 	END $$
 
+
+    create trigger NewPackage
+		after insert on Packages
+        for each row
+        begin
+			-- Optional Average per package
+			insert into OptionalProductsAverage (name,avg) values (new.name ,0);
+            -- Revenue per package
+            insert into ValueOfSalesDetailed  (name,totalPayment,totalPaymentWithoutOP) values (new.name,0,0);
+        END $$
+
+create trigger PurchaseCountInitialize 
+		after insert on Rate_costs
+        for each row
+        begin
+			declare pkgname Varchar(30);
+			set pkgname   := (select name from Packages where Packages.id=new.packageId);
+			insert into PurchasesCount (name,validity,count) values (pkgname,new.monthValidity,0);
+        END$$
+        
 -- populate view for counting Purchases of Packages
 create trigger PurchasesCount_Population
 	after insert on Orders 
     for each row
 	begin
-	declare pkgname Varchar(20);
+	declare pkgname Varchar(30);
     declare orderVal int;
     if new.status = true then
     set pkgname   := (select name from Packages where Packages.id=new.packageId);
     set orderVal  := (select monthValidity from Rate_costs where id=new.rateId);
 		 -- If this is the first order on package then set count = 1 and insert new line
-		if(  (select count(*) from PurchasesCount where 
-			 name = pkgname and validity = orderVal  group by name,validity)>0) then
-			
             SET SQL_SAFE_UPDATES=0;
 			update PurchasesCount set PurchasesCount.count = PurchasesCount.count + 1
 					where name = pkgname and validity = orderVal;
             SET SQL_SAFE_UPDATES=1;
-		else
-            insert into PurchasesCount (name,validity,count) values (pkgname,
-																	 orderVal,
-																	 1
-																	 );
-		end if;
         end if;
 	END $$
     
@@ -74,25 +90,16 @@ create trigger  PurchasesCount_Population_Update
     after update on Orders
     for each row
 	begin
-		declare pkgname Varchar(20);
+	declare pkgname Varchar(30);
     declare orderVal int;
     if new.status = true then
-    set pkgname   := (select name from Packages where Packages.id=new.packageId);
-    set orderVal  := (select monthValidity from Rate_costs where id=new.rateId);
-		 -- If this is the first order on package then set count = 1 and insert new line
-		if(  (select count(*) from PurchasesCount where 
-			 name = pkgname and validity = orderVal  group by name,validity)>0) then
-			
+		set pkgname   := (select name from Packages where Packages.id=new.packageId);
+		set orderVal  := (select monthValidity from Rate_costs where id=new.rateId);
+
             SET SQL_SAFE_UPDATES=0;
 			update PurchasesCount set PurchasesCount.count = PurchasesCount.count + 1
 					where name = pkgname and validity = orderVal;
             SET SQL_SAFE_UPDATES=1;
-		else
-            insert into PurchasesCount (name,validity,count) values (pkgname,
-																	 orderVal,
-																	 1
-																	 );
-		end if;
         end if;
     END $$
 
@@ -110,20 +117,13 @@ create trigger OptionalProdAvg
 	for each row
     begin
     declare pkgcount INT;
-    declare pkgname Varchar(20);
+    declare pkgname Varchar(30);
     declare stat  bool;
     set stat    := (select status from Orders where id=new.orderId);
 
     if stat = 1 then
     set pkgname   := (select name from Packages where Packages.id=(select packageId from Orders where id=new.orderId));
 	set pkgcount  := (select count(*) from PurchasesCountGrouped group by name having name = pkgname) - 1;
-		if (select count(name) from OptionalProductsAverage where name=pkgname) = 0 then
-			if(new.productId is  null) then
-				insert into OptionalProductsAverage (name,avg) values (pkgname ,0);
-			else
-				insert into OptionalProductsAverage (name,avg) values (pkgname ,1/(pkgcount+1));
-			end if;
-		else
 			SET SQL_SAFE_UPDATES=0;
             if(new.productId is null) then
 				update OptionalProductsAverage set avg = ((avg*pkgcount))/(pkgcount+1) where name=pkgname;
@@ -132,7 +132,6 @@ create trigger OptionalProdAvg
             end if;
             SET SQL_SAFE_UPDATES=1;
         end if;
-        end if;
     END $$
     
 create trigger OptionalProdAvgOnUpdate
@@ -140,19 +139,12 @@ create trigger OptionalProdAvgOnUpdate
     for each row
     begin
 	declare pkgcount INT;
-    declare pkgname Varchar(20);
+    declare pkgname Varchar(30);
     declare prodCount INT;
     if new.status then
     set pkgname   := (select name from Packages where Packages.id=(select packageId from Orders where id=new.id));
 	set pkgcount  := (select count(*) from PurchasesCountGrouped group by name having name = pkgname);
     set prodCount := (select count(*) from Orders_OptionalProducts group by orderId having  orderId= new.id);
-		if (select count(name) from OptionalProductsAverage where name=pkgname) = 0 then
-			if(prodCount is  null) then
-				insert into OptionalProductsAverage (name,avg) values (pkgname ,0);
-			else
-				insert into OptionalProductsAverage (name,avg) values (pkgname ,prodCount);
-			end if;
-		else
 			SET SQL_SAFE_UPDATES=0;
             if(prodCount is null) then
 				update OptionalProductsAverage set avg = ((avg*pkgcount))/(pkgcount+1) where name=pkgname;
@@ -160,7 +152,6 @@ create trigger OptionalProdAvgOnUpdate
 				update OptionalProductsAverage set avg = ((avg*pkgcount)+prodCount)/(pkgcount+1) where name=pkgname;
             end if;
             SET SQL_SAFE_UPDATES=1;
-        end if;
         end if;
     END $$
     
@@ -172,21 +163,13 @@ create trigger TotalPackageRevenue
     declare validity int;
 	declare totalOfProducts int;
     if new.status = 1 then
-    set pkgname   := (select name from Packages where Packages.id=new.packageId);
-    set validity  := (select monthValidity from Rate_costs where id=new.rateId);
-
-		if (select count(name) from ValueOfSalesDetailed where name=pkgname) = 0 then
-			insert into ValueOfSalesDetailed  (name,totalPayment,totalPaymentWithoutOP) values (pkgname,new.totalPayment,new.totalPayment);
-            -- SIGNAL SQLSTATE '02000' SET MESSAGE_TEXT = 'Warning: c > 99!';
-        else
-			begin
-				SET SQL_SAFE_UPDATES=0;
+		set pkgname   := (select name from Packages where Packages.id=new.packageId);
+		set validity  := (select monthValidity from Rate_costs where id=new.rateId);
+			SET SQL_SAFE_UPDATES=0;
 				update ValueOfSalesDetailed set totalPayment =  totalPayment + new.totalPayment ,
                                                     totalPaymentWithoutOP = totalPaymentWithoutOP + new.totalPayment
 													where name=pkgname;
-				SET SQL_SAFE_UPDATES=1;                     
-			end;
-        end if;
+			SET SQL_SAFE_UPDATES=1;                     
         end if;
     END $$
 -- remove optional revenue for each optional
@@ -224,40 +207,41 @@ create trigger TotalPackageRevenue_Update
 	after update on Orders
 	for each row
     begin
-    declare pkgname Varchar(20);
+    declare pkgname Varchar(30);
 	declare revenueOptional   INT;
     declare validity  INT;
 		if new.status = 1 then
-		set pkgname   := (select name from Packages where Packages.id=new.packageId);
-        set validity  := (select monthValidity from Rate_costs where id=(select rateId from Orders where id=new.id));
-		set revenueOptional := (select sum(monthlyFee) from Orders_OptionalProducts join OptionalProducts on productId = id group by orderId having orderId=new.id)*validity;
+			set pkgname   := (select name from Packages where Packages.id=new.packageId);
+			set validity  := (select monthValidity from Rate_costs where id=(select rateId from Orders where id=new.id));
+			set revenueOptional := (select sum(monthlyFee) from Orders_OptionalProducts join OptionalProducts on productId = id group by orderId having orderId=new.id)*validity;
         
-        if(revenueOptional is null) then
-			set revenueOptional := 0;
-        end if;
-        if (select count(name) from ValueOfSalesDetailed where name=pkgname) = 0 then
-			insert into ValueOfSalesDetailed  (name,totalPayment,totalPaymentWithoutOP) values (pkgname,new.totalPayment,new.totalPayment-revenueOptional);
-            -- SIGNAL SQLSTATE '02000' SET MESSAGE_TEXT = 'Warning: c > 99!';
-        else
-			begin
-				SET SQL_SAFE_UPDATES=0;
+			if(revenueOptional is null) then
+				set revenueOptional := 0;
+			end if;
+        
+			SET SQL_SAFE_UPDATES=0;
 				update ValueOfSalesDetailed set totalPayment =  totalPayment + new.totalPayment ,
                                                     totalPaymentWithoutOP = totalPaymentWithoutOP + (new.totalPayment -revenueOptional)
 													where name=pkgname;
-				SET SQL_SAFE_UPDATES=1;                     
-			end;
-        end if;
-        
+			SET SQL_SAFE_UPDATES=1;                     
         end if;
     END$$
     
 -- todo how can we do a trigger when 
     
+-- when create a OptionalProduct add it to this list
+create trigger InitializeBestOptional
+	after insert on OptionalProducts
+    for each row
+    begin
+		insert into OptionalProductBestSeller (name,amountSold,value) values (new.name,0,0);
+    END$$
+    
 create trigger UpdateBestOptional
     after insert on Orders_OptionalProducts
 	for each row
     begin
-		 declare prodName Varchar(20);
+		 declare prodName Varchar(30);
          declare price     INT;
          declare validity  INT;
          
@@ -269,55 +253,37 @@ create trigger UpdateBestOptional
          set validity  := (select monthValidity from Rate_costs where id=(select rateId from Orders where id=new.orderId));
 		 set price     := (select monthlyFee from OptionalProducts where id=new.productId)*validity;
          
-		 if(prodName is not null) then
-			 if (select count(name) from OptionalProductBestSeller where name=prodName) = 0 then
-				insert into OptionalProductBestSeller (name,amountSold,value) values (prodName,1,price);
-			 else
+			if(prodName is not null) then
 			 SET SQL_SAFE_UPDATES=0;    
 				update OptionalProductBestSeller set value = value + price,
 													 amountSold = amountSold + 1 
 													 where name=prodName;
 				SET SQL_SAFE_UPDATES=1;    
 			 end if;
-		end if;
         end if;
     END$$
- /*   
+
+
+
 create trigger UpdateBestOptional_OnUpdate
 	after update on Orders
     for each row
 		begin
-		 declare prodName Varchar(20);
          declare revenue     INT;
          declare validity  INT;
 		 declare count  INT;
 		if new.status = 1 then
-			set prodName  := (select name from OptionalProducts where id=new.productId);
-         set validity  := (select monthValidity from Rate_costs where id=(select rateId from Orders where id=new.orderId));
-		 set revenue   := (select sum(monthlyFee) from Orders_OptionalProducts join OptionalProducts group by productId having orderId=new.id)*validity;
-         set count     := (select count(*) from Orders_OptionalProducts join OptionalProducts group by p having orderId=new.id);
-		 
-         if(revenue is null) then
-			set revenue := 0;
-         end if;
-         
-          if(count is null) then
-			set count := 0;
-         end if;
-         if(prodName is not null) then
-			 if (select count(name) from OptionalProductBestSeller where name=prodName) = 0 then
-				insert into OptionalProductBestSeller (name,amountSold,value) values (prodName,count,revenue);
-			 else
 			 SET SQL_SAFE_UPDATES=0;    
-				update OptionalProductBestSeller set value = value + revenue,
-													 amountSold = amountSold + count 
-													 where name=prodName;
+				update OptionalProductBestSeller as best join OptionalProducts as op
+									on best.name = op.name
+									set amountSold = amountSold + 1,
+									value = amountSold * op.monthlyFee
+									where op.name in (select op1.name from OptionalProducts as op1 join Orders_OptionalProducts as ord
+													on id = productId where ord.orderId =new.id);
 				SET SQL_SAFE_UPDATES=1;    
-			 end if;
 		end if;
-        end if;
-	END $$*/
-    
+	END $$
+
 create trigger UpdateInsolventUser
     after insert on FailedPayments
 	for each row
@@ -347,9 +313,7 @@ DELIMITER ;
 
 
 select count(distinct(name)) from PurchasesCount where name = (select name from Packages where id=5);
-insert into Orders (userId,packageId,rateId) values (1,3,2);
 select * from FailedPayments;
-update Orders set status = false where id = 2;
 select * from Orders;
 select * from Packages;
 select * from PurchasesCount;
