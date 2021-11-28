@@ -22,6 +22,9 @@ drop trigger if exists InitializeBestOptional;
 drop trigger if exists UpdateBestOptional;
 drop trigger if exists UpdateBestOptional_OnUpdate;
 
+drop trigger if exists ActivationScheduleServices;
+drop trigger if exists ActivationScheduleOptional;
+drop trigger if exists ActivationSchedule_OnUpdate;
 DELIMITER $$
 -- IF USER DO A FAILED ORDER THEN UPDATE USER TABLE FLAGGING IT AS INSOLVENT
 create trigger INSOLVENT_USER
@@ -307,6 +310,63 @@ create trigger UpdateInsolventUser
 			end if;
         end if;
     END$$
+    
+create trigger ActivationScheduleServices
+	after insert on Orders
+	for each row
+	begin
+    declare validity int;
+    if new.status = true then
+        set validity := (select monthValidity from Rate_costs where id = new.rateId);
+        
+		insert into ActivationSchedule_Services (serviceId,userId,activationdate,deactivationDate)
+				select id,new.userId,new.startDate,DATE_ADD(new.startDate, INTERVAL validity MONTH) from services as s where s.packageId = new.packageId;
+    end if;
+    END $$
+    
+create  trigger ActivationScheduleOptional
+	after insert on Orders_OptionalProducts
+    for each row
+    begin
+    declare usr INT;
+    declare actDate timestamp;
+    declare rateId int;
+    declare validity int;
+    
+	declare stat  bool;
+	set stat    := (select status from Orders where id=new.orderId);
+
+	if stat = 1 then
+		set usr      := (select userId  from Orders where id = new.orderId);
+		set actDate  := (select startDate from Orders where id=new.orderId);
+		set rateId   := (select rateId from Orders where id = new.orderId);
+		set validity := (select monthValidity from Rate_costs where id = rateId);
+			
+        if(new.productId is not null) then    
+		insert into ActivationSchedule_Optional (productId,userId,activationdate,deactivationDate)
+				values (new.productId, usr , actDate, DATE_ADD(actDate,INTERVAL validity MONTH));
+		end if;
+    end if;
+    END $$
+    
+create trigger ActivationSchedule_OnUpdate
+	after update on Orders
+    for each row
+    begin
+	declare validity int;
+    if new.status = true then
+        set validity := (select monthValidity from Rate_costs where id = new.rateId);
+        
+        -- update services activation
+        insert into ActivationSchedule_Services (serviceId,userId,activationdate,deactivationDate)
+				select id,new.userId,new.startDate,DATE_ADD(new.startDate, INTERVAL validity MONTH) from services as s where s.packageId = new.packageId;
+		 -- update optional activation
+         insert into ActivationSchedule_Optional (productId,userId,activationdate,deactivationDate)
+				select id,new.userId,new.startDate,DATE_ADD(new.startDate, INTERVAL validity MONTH) 
+						from OptionalProducts join Orders_OptionalProducts on id = productId
+                        where orderId = new.id;
+        end if;
+    END$$
 DELIMITER ;
 
 
@@ -323,5 +383,8 @@ select * from OptionalProductsAverage;
 select * from ValueOfSalesDetailed;
 select * from OptionalProductBestSeller;
 select * from InsolventReport;
+select * from ActivationSchedule_Optional;
+select * from ActivationSchedule_Services;
 
-(select username from Users where id=1)
+
+select 1,id,CURRENT_TIMESTAMP,DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 12 MONTH) from services as s where s.packageId = 2;

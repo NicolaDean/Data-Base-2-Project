@@ -1,6 +1,7 @@
 
 drop table if exists FailedPayments;
-
+drop   table if exists ActivationSchedule_Services;
+drop   table if exists ActivationSchedule_Optional;
 drop table if exists mobile_phone_services;
 drop table if exists fixed_phone_services;
 drop table if exists mobile_internet_services;

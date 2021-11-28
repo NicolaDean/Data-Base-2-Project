@@ -29,7 +29,6 @@ import static javax.swing.text.html.CSS.getAttribute;
 @WebServlet(name = "confirmation", value = "/confirmation")
 public class ConfirmationPage extends BasicServerlet {
 
-
     @EJB(name = "it.polimi.db2.services/ContractServices")
     private ContractServices contractServices;
 
@@ -49,7 +48,10 @@ public class ConfirmationPage extends BasicServerlet {
         String rawData = request.getParameter("startDate");
         Date startingDate = null;
         try {
+            System.out.println("dateString:"+rawData);
             startingDate = new SimpleDateFormat("yyyy-mm-dd").parse(rawData);
+
+            System.out.println("DATAAAA: " + startingDate.toString());
         } catch (ParseException e) {
             e.printStackTrace();
 

@@ -92,3 +92,31 @@ create table OptionalProductBestSeller as(
                                         group by op.id
                                             );
 select * from OptionalProductBestSeller;
+
+
+create table ActivationSchedule_Services 
+(
+	id	      int auto_increment,
+    serviceId int not null,
+    userId	  int not null,
+    activationDate timestamp,
+	deactivationDate timestamp,
+	PRIMARY KEY(id),
+	FOREIGN KEY (serviceId) REFERENCES services (id),
+    FOREIGN KEY (userId)    REFERENCES Users (id)
+    
+);
+
+
+create table ActivationSchedule_Optional 
+(
+	id	      int auto_increment,
+    productId int not null,
+    userId	  int not null,
+	activationDate timestamp,
+	deactivationDate timestamp,
+	PRIMARY KEY(id),
+	FOREIGN KEY (productId) REFERENCES OptionalProducts (id),
+    FOREIGN KEY (userId)    REFERENCES Users (id)
+    
+);
