@@ -146,7 +146,7 @@ create trigger OptionalProdAvgOnUpdate
     declare prodCount INT;
     if new.status then
     set pkgname   := (select name from Packages where Packages.id=(select packageId from Orders where id=new.id));
-	set pkgcount  := (select count(*) from PurchasesCountGrouped group by name having name = pkgname);
+	set pkgcount  := (select count(*) from PurchasesCountGrouped group by name having name = pkgname)-1;
     set prodCount := (select count(*) from Orders_OptionalProducts group by orderId having  orderId= new.id);
 			SET SQL_SAFE_UPDATES=0;
             if(prodCount is null) then
@@ -280,7 +280,7 @@ create trigger UpdateBestOptional_OnUpdate
 				update OptionalProductBestSeller as best join OptionalProducts as op
 									on best.name = op.name
 									set amountSold = amountSold + 1,
-									value = amountSold * op.monthlyFee
+									value = (amountSold + 1) * op.monthlyFee
 									where op.name in (select op1.name from OptionalProducts as op1 join Orders_OptionalProducts as ord
 													on id = productId where ord.orderId =new.id);
 				SET SQL_SAFE_UPDATES=1;    
@@ -319,8 +319,8 @@ create trigger ActivationScheduleServices
     if new.status = true then
         set validity := (select monthValidity from Rate_costs where id = new.rateId);
         
-		insert into ActivationSchedule_Services (serviceId,userId,activationdate,deactivationDate)
-				select id,new.userId,new.startDate,DATE_ADD(new.startDate, INTERVAL validity MONTH) from services as s where s.packageId = new.packageId;
+		insert into ActivationSchedule_Services (packageId,userId,activationdate,deactivationDate)
+				values (new.id,new.userId,new.startDate,DATE_ADD(new.startDate, INTERVAL validity MONTH));
     end if;
     END $$
     
@@ -358,19 +358,16 @@ create trigger ActivationSchedule_OnUpdate
         set validity := (select monthValidity from Rate_costs where id = new.rateId);
         
         -- update services activation
-        insert into ActivationSchedule_Services (serviceId,userId,activationdate,deactivationDate)
-				select id,new.userId,new.startDate,DATE_ADD(new.startDate, INTERVAL validity MONTH) from services as s where s.packageId = new.packageId;
-		 -- update optional activation
-         insert into ActivationSchedule_Optional (productId,userId,activationdate,deactivationDate)
+       insert into ActivationSchedule_Services (packageId,userId,activationdate,deactivationDate)
+				values (new.id,new.userId,new.startDate,DATE_ADD(new.startDate, INTERVAL validity MONTH));
+		-- update optional activation
+	   insert into ActivationSchedule_Optional (productId,userId,activationdate,deactivationDate)
 				select id,new.userId,new.startDate,DATE_ADD(new.startDate, INTERVAL validity MONTH) 
 						from OptionalProducts join Orders_OptionalProducts on id = productId
                         where orderId = new.id;
         end if;
     END$$
 DELIMITER ;
-
-
-
 
 select count(distinct(name)) from PurchasesCount where name = (select name from Packages where id=5);
 select * from FailedPayments;

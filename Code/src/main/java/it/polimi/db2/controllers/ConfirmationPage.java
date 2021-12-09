@@ -48,10 +48,7 @@ public class ConfirmationPage extends BasicServerlet {
         String rawData = request.getParameter("startDate");
         Date startingDate = null;
         try {
-            System.out.println("dateString:"+rawData);
             startingDate = new SimpleDateFormat("yyyy-MM-dd").parse(rawData);
-
-            System.out.println("DATAAAA: " + startingDate.toString());
         } catch (ParseException e) {
             e.printStackTrace();
 

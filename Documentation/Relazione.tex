@@ -25,8 +25,8 @@
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 
 \lstset{frame=tb,
-  language=Java,
-  aboveskip=3mm,
+  language=SQL,
+  aboveskip=2mm,
   belowskip=3mm,
   showstringspaces=false,
   columns=flexible,
@@ -48,7 +48,7 @@
 \makeindex
 
 \begin{document}
-
+\lstset{language=SQL}
 \title{Documentation - Data Bases 2%
 % Use \\ to indicate line breaks in titles longer than about 
 % 55 characters. 
@@ -119,7 +119,7 @@ The Entity-Relation Diagram of the Database
 
 \begin{figure}[hbt!]
 \centering
-\includegraphics[width=0.99\textwidth]{er.png}
+\includegraphics[width=0.99\textwidth]{er2.png}
 \caption{ER Diagram}
 \end{figure}
 
@@ -134,7 +134,7 @@ The following views are used for various Sales Reports.
 
 
 Joining Orders and Rate_costs tables we performed a \emph{selection} for each distinct package (depending on their month validity) and a \emph{count} for their occurrences.
-\begin{verbatim}
+\begin{lstlisting}
 create view PurchasesCount as (
        Select Packages.name as name,Rate_costs.monthValidity as validity, count(*) as count
        from Orders as o join Packages  join Rate_costs
@@ -142,28 +142,28 @@ create view PurchasesCount as (
        and o.rateId=Rate_costs.id
        group by o.packageId, Rate_costs.id
            );
-\end{verbatim}
+\end{lstlisting}
 Then for a less detailed view, from \emph{PurchasesCount} , a \emph{group by} on the name of the package gives a count of each one.
-\begin{verbatim}
+\begin{lstlisting}
 create view PurchasesCountGrouped as (
        select p.name as name, sum(p.count) as count
        from PurchasesCount as p
        group by p.name
            );
 
-\end{verbatim}
+\end{lstlisting}
 
 To count the Optional Products was necessary a \emph{left join} because it could exist a Package without any Optional Product, and as a consequence it wouldn't be stored in \emph{Orders_OptionalProducts} table.
-\begin{verbatim}
+\begin{lstlisting}
 create view OptionalProductsCount as(
        select o.packageId as packageId, count(opt.productId) as optcount
        from Orders as o left join Orders_OptionalProducts as opt
        on o.id=opt.orderId
        group by o.id
            );
-\end{verbatim}
+\end{lstlisting}
 Then to have the average count of them, we performed an \emph{avg} on the count of previous view.
-\begin{verbatim}
+\begin{lstlisting}
 create view OptionalProductsAverage as(
        select p.name as name, avg(opc.optcount) as avg
        from OptionalProductsCount as opc join Packages as p
@@ -171,19 +171,19 @@ create view OptionalProductsAverage as(
        group by id
            );
            
-\end{verbatim}
+\end{lstlisting}
 
 Following view sums the \emph{totalPayment} of each Order grouped by \emph{packageId}
-\begin{verbatim}
+\begin{lstlisting}
 create view ValueOfTotalSales as(
        select p.name as name, sum(o.totalPayment) as totalPayment
        from Orders as o join Packages as p
        where p.id=o.packageId
        group by o.packageId
            );
-\end{verbatim}
+\end{lstlisting}
 Then in \emph{OptionalProductsSales} the same method is used to get the totalCost of the Optional Products related to their corresponding Service Package in \emph{Orderds}
-\begin{verbatim}
+\begin{lstlisting}
 create view OptionalProductsSales as(
      select p.name as name,sum(op.monthlyFee*r.monthValidity) as totalOptionalProductsSales
      from Orders_OptionalProducts as orderop join Orders as o
@@ -192,21 +192,21 @@ create view OptionalProductsSales as(
      and o.packageId=p.id and o.rateId=r.id
      group by p.id
           );
-\end{verbatim}
+\end{lstlisting}
 
 And finally these two views are \emph{left joined} to have both \emph{totalPayment} with and without Optional Products. A \emph{left join} is required because as mentioned before it could exist a service package without Optional Product. In this case \emph{totalPaymentWithoutOP} will return \emph{null}.
-\begin{verbatim}
+\begin{lstlisting}
 create view ValueOfSalesDetailed as(
        select vot.name as name, vot.totalPayment as totalPayment, 
                (vot.totalPayment-ops.totalOptionalProductsSales) as totalPaymentWithoutOP
        from ValueOfTotalSales as vot left join OptionalProductsSales as ops
        on vot.name=ops.name
          );
-\end{verbatim}                                     
+\end{lstlisting}                                     
 
 
 In \emph{InsolventReport} are selected all Users with \emph{having count(*)>=3} of insolvent orders stored in \emph{FailedPayments}.
-\begin{verbatim}
+\begin{lstlisting}
 create view InsolventReport as(
         select u.id as id,u.username as username,u.email as email,
               (
@@ -222,10 +222,10 @@ create view InsolventReport as(
         group by u.id
         having count(*)>=3
            );
-\end{verbatim}
+\end{lstlisting}
 
 Last view  \emph{OptionalProductBestSeller} is used to have a count and the value of total sales of each Optional Product.
-\begin{verbatim}
+\begin{lstlisting}
 create view OptionalProductBestSeller as(
         select op.name as name,count(op.id) as amountSold, 
                sum(op.monthlyFee*r.monthValidity) as value
@@ -234,61 +234,64 @@ create view OptionalProductBestSeller as(
         where ordop.productId=op.id and o.rateId=r.id and o.id=ordop.orderId
         group by op.id
              );
-\end{verbatim}
+\end{lstlisting}
 The using two distinct queries we performed the  \emph{OptionalProductBestSellerForValue}
-\begin{verbatim}
+\begin{lstlisting}
         select o 
         from OptionalProductBestSeller o 
         where o.value=(
         select max(o2.value) 
         from OptionalProductBestSeller o2
         );
-\end{verbatim}
+\end{lstlisting}
 and  \emph{OptionalProductBestSellerForAmount}
-\begin{verbatim}
+\begin{lstlisting}
           select o from OptionalProductBestSeller o 
           where o.amountSold=(
           select max(o2.amountSold) 
           from OptionalProductBestSeller o2
           );
-\end{verbatim}
+\end{lstlisting}
 \newpage
 \subsection{Triggers}
 \subparagraph{INSOLVENT_USER}
 When a new order is created, if it's status is "false" then mark user as insolvent by changing a boolean into user table.
-\begin{verbatim}
+\begin{lstlisting}
 create trigger INSOLVENT_USER
     after insert on Orders
     for each row
 	begin
 		if ( new.status = false) then
 		update Users set Users.insolvent = true where Users.id = new.userId;
-		insert into FailedPayments (userId,orderId,faildate) values (new.userId,new.id,CURRENT_TIMESTAMP);
+		insert into FailedPayments (userId,orderId,faildate) 
+		values (new.userId,new.id,CURRENT_TIMESTAMP);
 	end if;
 	END $$
-\end{verbatim}
+\end{lstlisting}
 \subparagraph{INSOLVENT_USER_REMOVAL}
 When an order is updated, if it's status is "true" then remove insolvance status from user.
 
-\begin{verbatim}
+\begin{lstlisting}
 create trigger INSOLVENT_USER_REMOVAL
     after update on Orders
     for each row
 	begin
-		if (new.status = true) AND -- user payed a suspended order i check if all his pending order are payed (if yes remove flag)
-				(select count(*) from Orders as o where o.userId=new.userId and o.status = false) = 0
+	-- user payed a suspended order i check if all his pending order are payed (if yes remove flag)
+		if (new.status = true) AND (select count(*) from Orders as o 
+								   where o.userId=new.userId and o.status = false) = 0
 			then
 		update Users set Users.insolvent = false where Users.id = new.userId;
 	end if;
 	if (new.status = false AND old.status = new.status)  then
-				insert into FailedPayments (userId,orderId,faildate) values (new.userId,new.id,CURRENT_TIMESTAMP);
+				insert into FailedPayments (userId,orderId,faildate) 
+				values (new.userId,new.id,CURRENT_TIMESTAMP);
 	end if;
 	END $$
-\end{verbatim}
+\end{lstlisting}
 
 \subparagraph{NewPackage}
 When a new package is created some view are initialized with a new row containing the package name and empty values for the statistic field (eg: AVG,totalPayments...)
-\begin{verbatim}
+\begin{lstlisting}
     create trigger NewPackage
 		after insert on Packages
         for each row
@@ -296,26 +299,28 @@ When a new package is created some view are initialized with a new row containin
 			-- Optional Average per package
 			insert into OptionalProductsAverage (name,avg) values (new.name ,0);
             -- Revenue per package
-            insert into ValueOfSalesDetailed  (name,totalPayment,totalPaymentWithoutOP) values (new.name,0,0);
+            insert into ValueOfSalesDetailed  (name,totalPayment,totalPaymentWithoutOP) 
+            values (new.name,0,0);
         END $$
-\end{verbatim}
+\end{lstlisting}
 
 \subparagraph{PurchaseCountInitialize}
 When a new package is created are created also the rate cost, so as in the  "NewPackage" trigger and for each new RateCost a new row with initial value is added to "PurchaseCount" view
-\begin{verbatim}
+\begin{lstlisting}
 create trigger PurchaseCountInitialize 
 		after insert on Rate_costs
         for each row
         begin
 			declare pkgname Varchar(30);
 			set pkgname   := (select name from Packages where Packages.id=new.packageId);
-			insert into PurchasesCount (name,validity,count) values (pkgname,new.monthValidity,0);
+			insert into PurchasesCount (name,validity,count) 
+			values (pkgname,new.monthValidity,0);
         END$$
-\end{verbatim}
+\end{lstlisting}
 
 \subparagraph{PurchasesCount_Population}
 Whenever an Order is created and has a valid payment this table increase the number of time the package is payed
-\begin{verbatim}
+\begin{lstlisting}
 create trigger PurchasesCount_Population
 	after insert on Orders 
     for each row
@@ -332,11 +337,11 @@ create trigger PurchasesCount_Population
             SET SQL_SAFE_UPDATES=1;
         end if;
 	END $$
-\end{verbatim}
+\end{lstlisting}
 
 \subparagraph{PurchasesCount_Population_Update}
 Same as PurchasesCount_Population but when Order is updated, check if payment is ok then update view.
-\begin{verbatim}
+\begin{lstlisting}
 create trigger  PurchasesCount_Population_Update
     after update on Orders
     for each row
@@ -353,12 +358,12 @@ create trigger  PurchasesCount_Population_Update
             SET SQL_SAFE_UPDATES=1;
         end if;
     END $$
-\end{verbatim}
+\end{lstlisting}
 
 \subparagraph{AddNoOptionalOrderToAVG}
 This trigger is a "support trigger" because is used to call another trigger.
 When an order is created add a "fake null optionalProduct" to it so that Order with no product are counted in the Average.(See next trigger)
-\begin{verbatim}
+\begin{lstlisting}
 create trigger AddNoOptionalOrderToAVG
 	after insert on Orders
     for each row
@@ -367,11 +372,11 @@ create trigger AddNoOptionalOrderToAVG
 		insert into Orders_OptionalProducts (orderId,productId) values (new.id,null);
 		delete from Orders_OptionalProducts where orderId = new.id;
     END $$
-\end{verbatim}
+\end{lstlisting}
 
 \subparagraph{OptionalProdAvg}
 When a new product is associated to a new order, after checking if payment is ok update the average of the specific product that is been added.
-\begin{verbatim}
+\begin{lstlisting}
 create trigger OptionalProdAvg
 	after insert on Orders_OptionalProducts
 	for each row
@@ -380,24 +385,27 @@ create trigger OptionalProdAvg
     declare pkgname Varchar(30);
     declare stat  bool;
     set stat    := (select status from Orders where id=new.orderId);
-
     if stat = 1 then
-    set pkgname   := (select name from Packages where Packages.id=(select packageId from Orders where id=new.orderId));
-	set pkgcount  := (select count(*) from PurchasesCountGrouped group by name having name = pkgname) - 1;
-			SET SQL_SAFE_UPDATES=0;
-            if(new.productId is null) then
-				update OptionalProductsAverage set avg = ((avg*pkgcount))/(pkgcount+1) where name=pkgname;
-            else 
-				update OptionalProductsAverage set avg = ((avg*pkgcount)+1)/(pkgcount+1) where name=pkgname;
-            end if;
-            SET SQL_SAFE_UPDATES=1;
+    set pkgname   := (select name from Packages 
+    where Packages.id=(select packageId from Orders where id=new.orderId));
+	set pkgcount  := (select count(*) from PurchasesCountGrouped 
+	group by name having name = pkgname) - 1;
+	SET SQL_SAFE_UPDATES=0;
+    if(new.productId is null) then
+		update OptionalProductsAverage 
+		set avg = ((avg*pkgcount))/(pkgcount+1) where name=pkgname;
+    else 
+		update OptionalProductsAverage 
+		set avg = ((avg*pkgcount)+1)/(pkgcount+1) where name=pkgname;
+    end if;
+    SET SQL_SAFE_UPDATES=1;
         end if;
     END $$
-\end{verbatim}
+\end{lstlisting}
 
 \subparagraph{OptionalProdAvgOnUpdate}
 When an order is updated, if payment is ok, this trigger calculate how many optional is associated with it and update the AVG of the package in consequence.
-\begin{verbatim}
+\begin{lstlisting}
 create trigger OptionalProdAvgOnUpdate
 	after update on Orders
     for each row
@@ -406,24 +414,29 @@ create trigger OptionalProdAvgOnUpdate
     declare pkgname Varchar(30);
     declare prodCount INT;
     if new.status then
-    set pkgname   := (select name from Packages where Packages.id=(select packageId from Orders where id=new.id));
-	set pkgcount  := (select count(*) from PurchasesCountGrouped group by name having name = pkgname);
-    set prodCount := (select count(*) from Orders_OptionalProducts group by orderId having  orderId= new.id);
+    set pkgname   := (select name from Packages 
+    			where Packages.id=(select packageId from Orders where id=new.id));
+	set pkgcount  := (select count(*) from PurchasesCountGrouped 
+			group by name having name = pkgname);
+    set prodCount := (select count(*) from Orders_OptionalProducts 
+    			group by orderId having  orderId= new.id) -1;
 			SET SQL_SAFE_UPDATES=0;
             if(prodCount is null) then
-				update OptionalProductsAverage set avg = ((avg*pkgcount))/(pkgcount+1) where name=pkgname;
+				update OptionalProductsAverage 
+				set avg = ((avg*pkgcount))/(pkgcount+1) where name=pkgname;
             else 
-				update OptionalProductsAverage set avg = ((avg*pkgcount)+prodCount)/(pkgcount+1) where name=pkgname;
+				update OptionalProductsAverage 
+				set avg = ((avg*pkgcount)+prodCount)/(pkgcount+1) where name=pkgname;
             end if;
             SET SQL_SAFE_UPDATES=1;
         end if;
     END $$
-\end{verbatim}
+\end{lstlisting}
 
 \subparagraph{TotalPackageRevenue}
 When a new order is created, if payment is ok update this view with totalRevenue of this package 
 (see trigger PackageRevenueNoOptional to see how the OptionalRevenue is removed from totalRevenue).
-\begin{verbatim}
+\begin{lstlisting}
 create trigger TotalPackageRevenue
 	after insert on Orders
     for each row
@@ -435,17 +448,18 @@ create trigger TotalPackageRevenue
 		set pkgname   := (select name from Packages where Packages.id=new.packageId);
 		set validity  := (select monthValidity from Rate_costs where id=new.rateId);
 			SET SQL_SAFE_UPDATES=0;
-				update ValueOfSalesDetailed set totalPayment =  totalPayment + new.totalPayment ,
-                                                    totalPaymentWithoutOP = totalPaymentWithoutOP + new.totalPayment
-													where name=pkgname;
+				update ValueOfSalesDetailed 
+				set totalPayment =  totalPayment + new.totalPayment ,
+                     totalPaymentWithoutOP = totalPaymentWithoutOP + new.totalPayment
+				where name=pkgname;
 			SET SQL_SAFE_UPDATES=1;                     
         end if;
     END $$
-\end{verbatim}
+\end{lstlisting}
 
 \subparagraph{PackageRevenueNoOptional}
 For each product associated with order it query the revenue of it and remove it from the total revenue of the package.
-\begin{verbatim}
+\begin{lstlisting}
 -- remove optional revenue for each optional
 create trigger PackageRevenueNoOptional 
 	after insert on Orders_OptionalProducts
@@ -462,8 +476,10 @@ create trigger PackageRevenueNoOptional
 		 
          set pkgId     := (select packageId from Orders where id=new.orderId);
 		 set pkgname   := (select name from Packages where Packages.id=pkgId);
-         set validity  := (select monthValidity from Rate_costs where id=(select rateId from Orders where id=new.orderId));
-		 set price     := (select monthlyFee from OptionalProducts where id=new.productId)*validity;
+         set validity  := (select monthValidity from Rate_costs 
+         				  where id=(select rateId from Orders where id=new.orderId));
+		 set price     := (select monthlyFee from OptionalProducts 
+		 				where id=new.productId)*validity;
          
          if(price is null)then
 			set price := 0;
@@ -476,11 +492,11 @@ create trigger PackageRevenueNoOptional
         
 	end if;
     END $$
-\end{verbatim}
+\end{lstlisting}
 
 \subparagraph{TotalPackageRevenue_Update}
 When Order is updated, check if payment is ok and as before it calculate optional prod revenue and remove it from the totalRevenue of this package.
-\begin{verbatim}
+\begin{lstlisting}
 create trigger TotalPackageRevenue_Update
 	after update on Orders
 	for each row
@@ -490,38 +506,42 @@ create trigger TotalPackageRevenue_Update
     declare validity  INT;
 		if new.status = 1 then
 			set pkgname   := (select name from Packages where Packages.id=new.packageId);
-			set validity  := (select monthValidity from Rate_costs where id=(select rateId from Orders where id=new.id));
-			set revenueOptional := (select sum(monthlyFee) from Orders_OptionalProducts join OptionalProducts on productId = id group by orderId having orderId=new.id)*validity;
+			set validity  := (select monthValidity from Rate_costs 
+				where id=(select rateId from Orders where id=new.id));
+				set revenueOptional := (select sum(monthlyFee) 
+				from Orders_OptionalProducts join OptionalProducts on productId = id 
+				group by orderId having orderId=new.id)*validity;
         
 			if(revenueOptional is null) then
 				set revenueOptional := 0;
 			end if;
         
 			SET SQL_SAFE_UPDATES=0;
-				update ValueOfSalesDetailed set totalPayment =  totalPayment + new.totalPayment ,
-                                                    totalPaymentWithoutOP = totalPaymentWithoutOP + (new.totalPayment -revenueOptional)
-													where name=pkgname;
+				update ValueOfSalesDetailed 
+				set totalPayment =  totalPayment + new.totalPayment ,
+                		totalPaymentWithoutOP = totalPaymentWithoutOP + (new.totalPayment -revenueOptional)
+					where name=pkgname;
 			SET SQL_SAFE_UPDATES=1;                     
         end if;
     END$$
-\end{verbatim}
+\end{lstlisting}
 
 \subparagraph{InitializeBestOptional}
 Initialize the BestOptional view whenever a new optional product occur
-\begin{verbatim}
+\begin{lstlisting}
 create trigger InitializeBestOptional
 	after insert on OptionalProducts
     for each row
     begin
 		insert into OptionalProductBestSeller (name,amountSold,value) values (new.name,0,0);
     END$$
-\end{verbatim}
+\end{lstlisting}
 
 \subparagraph{UpdateBestOptional}
 Whenever a product is associated with an order this trigger update the view that contain statistic about best optional.
 It calculate the revenue for this new product and sum it to the total revenue of it
 It increase the counter of how many time this product have been bought.
-\begin{verbatim}
+\begin{lstlisting}
     
 create trigger UpdateBestOptional
     after insert on Orders_OptionalProducts
@@ -536,8 +556,10 @@ create trigger UpdateBestOptional
 
 		if stat = 1 then
 		 set prodName  := (select name from OptionalProducts where id=new.productId);
-         set validity  := (select monthValidity from Rate_costs where id=(select rateId from Orders where id=new.orderId));
-		 set price     := (select monthlyFee from OptionalProducts where id=new.productId)*validity;
+         set validity  := (select monthValidity from Rate_costs 
+         		where id=(select rateId from Orders where id=new.orderId));
+		 set price     := (select monthlyFee from OptionalProducts 
+		 		where id=new.productId)*validity;
          
 			if(prodName is not null) then
 			 SET SQL_SAFE_UPDATES=0;    
@@ -548,11 +570,11 @@ create trigger UpdateBestOptional
 			 end if;
         end if;
     END$$
-\end{verbatim}
+\end{lstlisting}
 
 \subparagraph{UpdateBestOptional_OnUpdate}
 Same as UpdateBestOptional but with a unique query for all product associated with this order (more expensive but only way if the first payment fail)
-\begin{verbatim}
+\begin{lstlisting}
     create trigger UpdateBestOptional_OnUpdate
 	after update on Orders
     for each row
@@ -565,17 +587,17 @@ Same as UpdateBestOptional but with a unique query for all product associated wi
 				update OptionalProductBestSeller as best join OptionalProducts as op
 									on best.name = op.name
 									set amountSold = amountSold + 1,
-									value = amountSold * op.monthlyFee
+									value = (amountSold +1 ) * op.monthlyFee
 									where op.name in (select op1.name from OptionalProducts as op1 join Orders_OptionalProducts as ord
 													on id = productId where ord.orderId =new.id);
 				SET SQL_SAFE_UPDATES=1;    
 		end if;
 	END $$
-\end{verbatim}
+\end{lstlisting}
 
 \subparagraph{UpdateInsolventUser}
 When a user fail a payment this trigger count how many time is happened and if it happen more then 3 times it update (or insert) a line with the last failed payment (date,amount).
-\begin{verbatim}
+\begin{lstlisting}
 
 create trigger UpdateInsolventUser
     after insert on FailedPayments
@@ -600,13 +622,13 @@ create trigger UpdateInsolventUser
 			end if;
         end if;
     END$$
-\end{verbatim}
+\end{lstlisting}
 \newpage
 
 \section{ORM Description}
 
 \subsection{Entities}
-
+\lstset{language=Java}
 \paragraph{Optional Product}
 Entity related to all type of optional products with id and related name.
 \begin{lstlisting}
@@ -739,18 +761,28 @@ A list of them:
 
 \newpage
 \section{Application Components}
-
+\subsubsection{Services:}
 \begin{figure}[hbt!]
 \centering
 \includegraphics[width=0.99\textwidth]{services.png}
 \caption{Services}
 \end{figure}
-
+\subsubsection{Controllers:}
 \begin{figure}[hbt!]
 \centering
 \includegraphics[width=0.99\textwidth]{controllers.png}
 \caption{Controllers}
 \end{figure}
+\begin{itemize}
+	\item \textbf{checkLogin} to manage login operation
+	\item \textbf{Registreation} to manage registration operation
+	\item \textbf{HomePage} to redirect user to the homepage and render all the packages available
+	\item \textbf{PackageDetails} to display details of a specific package
+	\item \textbf{ConfirmationPage} to display all date of the contract chosen by user
+	\item \textbf{Payment} to simulate payment system
+	\item \textbf{GoCreatePackage} to allow admin package creation
+	\item \textbf{GoCreateProduct} to allow admin optional product creation
+\end{itemize}
 
 \newpage
 \section{UML sequence diagrams}

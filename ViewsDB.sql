@@ -97,12 +97,12 @@ select * from OptionalProductBestSeller;
 create table ActivationSchedule_Services 
 (
 	id	      int auto_increment,
-    serviceId int not null,
+    packageId int not null,
     userId	  int not null,
     activationDate timestamp,
 	deactivationDate timestamp,
 	PRIMARY KEY(id),
-	FOREIGN KEY (serviceId) REFERENCES services (id),
+	FOREIGN KEY (packageId) REFERENCES Packages (id),
     FOREIGN KEY (userId)    REFERENCES Users (id)
     
 );
