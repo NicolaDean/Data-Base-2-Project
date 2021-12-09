@@ -49,7 +49,7 @@ public class ConfirmationPage extends BasicServerlet {
         Date startingDate = null;
         try {
             System.out.println("dateString:"+rawData);
-            startingDate = new SimpleDateFormat("yyyy-mm-dd").parse(rawData);
+            startingDate = new SimpleDateFormat("yyyy-MM-dd").parse(rawData);
 
             System.out.println("DATAAAA: " + startingDate.toString());
         } catch (ParseException e) {
