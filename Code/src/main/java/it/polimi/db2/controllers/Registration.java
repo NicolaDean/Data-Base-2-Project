@@ -1,5 +1,6 @@
 package it.polimi.db2.controllers;
 
+import it.polimi.db2.entitys.User;
 import it.polimi.db2.exception.RegistrationFailed;
 import it.polimi.db2.services.UserServices;
 import it.polimi.db2.utils.TemplatePathManager;
@@ -9,6 +10,7 @@ import javax.ejb.EJB;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.lang.reflect.GenericSignatureFormatError;
 
@@ -42,6 +44,17 @@ public class Registration extends BasicServerlet {
         }
     }
 
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if(user!=null)
+        {
+            session.invalidate();
+            this.setError(request,response,"To let you register, you have been logged out", TemplatePathManager.registration);
+        }
+        else this.templateRenderer(request,response, TemplatePathManager.registration);
+    }
 
     public void destroy() {
     }

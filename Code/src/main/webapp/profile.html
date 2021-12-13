@@ -16,12 +16,11 @@
           integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
           crossorigin="anonymous"></script>
 </head>
+<body>
 <div th:replace="/WEB-INF/templateHTML/customTags/header::header"></div>
 <h1>Profile</h1>
 <title>Profile</title>
-</head>
-<body>
-<div th:if="${session.user}">
+<div th:if="${session.user}" >
   <style>
     .row{
       font-size: 15px !important;
@@ -57,7 +56,7 @@
           <td th:text="${user.getEmail()}"></td>
         </tbody>
         <tbody>
-        <th scope="row" th:text="'Insolvent?'" ></th>
+        <th scope="row" th:text="'Insolvent'" ></th>
         <td th:text="${user.getInsolvent()}"></td>
         </tbody>
         <tbody>

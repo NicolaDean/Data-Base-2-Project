@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 import it.polimi.db2.utils.TemplatePathManager;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -64,7 +65,23 @@ public class CheckLogin extends BasicServerlet {
         }
     }
 
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
 
+        if (user != null) {
+            if (user.getType().equals("user")) {
+                    response.sendRedirect("home");
+            } else if (user.getType().equals("admin")) {
+                response.sendRedirect("admin");
+            }
+        }
+        else {
+            this.templateRenderer(request,response, TemplatePathManager.loginPage);
+        }
+
+    }
 
     public void destroy() {
     }

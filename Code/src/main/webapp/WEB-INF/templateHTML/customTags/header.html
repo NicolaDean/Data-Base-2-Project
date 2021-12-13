@@ -39,7 +39,7 @@
 
 
     <div th:if="${session.user}">
-    <form action="profile">
+    <form action="profile" method="post">
       <input type="submit" value="Profile" />
     </form>
     <form action="logout" method="GET">
@@ -47,7 +47,7 @@
     </form>
     </div>
     <div th:unless="${session.user}">
-      <form action="index.html" >
+      <form action="login">
         <input type="submit" value="Log in" />
       </form>
     </div>

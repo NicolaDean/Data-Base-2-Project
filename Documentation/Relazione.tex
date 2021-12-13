@@ -130,10 +130,8 @@ Detailed description of SQL code used in the project.
 \subsection{Views}
 \label{views}
 The following views are used for various Sales Reports.
+We performed a \emph{selection} for each distinct package (depending on their month validity) and a \emph{count} for their occurrences, Joining Orders and Rate_costs tables.
 
-
-
-Joining Orders and Rate_costs tables we performed a \emph{selection} for each distinct package (depending on their month validity) and a \emph{count} for their occurrences.
 \begin{lstlisting}
 create view PurchasesCount as (
        Select Packages.name as name,Rate_costs.monthValidity as validity, count(*) as count
@@ -143,7 +141,7 @@ create view PurchasesCount as (
        group by o.packageId, Rate_costs.id
            );
 \end{lstlisting}
-Then for a less detailed view, from \emph{PurchasesCount} , a \emph{group by} on the name of the package gives a count of each one.
+Then for a less detailed view, from \emph{PurchasesCount}, a \emph{group by} on the name of the package gives a count of each one.
 \begin{lstlisting}
 create view PurchasesCountGrouped as (
        select p.name as name, sum(p.count) as count
