@@ -11,7 +11,9 @@ public class RateCost {
     int id;
     int monthValidity;
     int cost;
-    int packageId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "packageId")
+    Package packageId;
 
     public int getPrice() {
         return cost;
@@ -25,8 +27,8 @@ public class RateCost {
         return id;
     }
 
-    public int getPackageId() {
-        return packageId;
+    public Package getPackageId() {
+        return null;
     }
 
     public String getRatesString()
@@ -34,7 +36,7 @@ public class RateCost {
         return this.cost + "$ for " + this.monthValidity + " month";
     }
 
-    public void setPackageId(int packageId) {
+   public void setPackageId(Package packageId) {
         this.packageId = packageId;
     }
 

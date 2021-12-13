@@ -12,13 +12,13 @@ drop table if exists Orders;
 drop table if exists Packages_OptionalProducts;
 drop table if exists Users;
 create table Users(
-                      id 			INT AUTO_INCREMENT,
-                      username    VARCHAR(30) not null,
+                      id 		INT AUTO_INCREMENT,
+                      username   VARCHAR(30) not null UNIQUE,
                       password	VARCHAR(30) not null,
-                      email		VARCHAR(30) not null,
+                      email		VARCHAR(30) not null  UNIQUE,
                       type      varchar(30) not null,
                       insolvent boolean,
-                      PRIMARY KEY(id)
+                      PRIMARY KEY(id) 
 );
 
 select * from Users;
@@ -26,8 +26,8 @@ select * from Users;
 drop table if exists OptionalProducts;
 
 create table OptionalProducts(
-                                 id 			INT AUTO_INCREMENT,
-                                 name 		VARCHAR(30) NOT NULL,
+                                 id 		 INT AUTO_INCREMENT,
+                                 name 		 VARCHAR(30) NOT NULL,
                                  monthlyFee  INT NOT NULL,
                                  PRIMARY KEY(id)
 );
@@ -53,8 +53,10 @@ create table Packages_OptionalProducts(
                                           packageId INT,
                                           productId INT,
 
-                                          FOREIGN KEY (packageId) REFERENCES Packages (id),
+                                          FOREIGN KEY (packageId) REFERENCES Packages (id) 
+                                          ON DELETE CASCADE,
                                           FOREIGN KEY (productId) REFERENCES OptionalProducts(id)
+                                          ON DELETE CASCADE
 );
 
 
@@ -66,6 +68,7 @@ create table Rate_costs(
                            packageId       INT,
                            PRIMARY KEY(id),
                            FOREIGN KEY(packageId) REFERENCES Packages(id)
+                           ON DELETE CASCADE
 );
 
 select * from Rate_costs;
@@ -83,6 +86,7 @@ create table services(
                          DTYPE	        VARCHAR(3),
                          PRIMARY KEY(id),
                          FOREIGN KEY(packageId) REFERENCES Packages (id)
+                         ON DELETE CASCADE
 );
 
 create table mobile_phone_services(
@@ -92,7 +96,8 @@ create table mobile_phone_services(
                                       extraMinutesFee FLOAT not null,
                                       extraSMSFee		FLOAT not null,
                                       PRIMARY KEY(id),
-                                      FOREIGN KEY (id) REFERENCES services (id)
+                                      FOREIGN KEY (id) REFERENCES services (id) 
+                                      ON DELETE CASCADE
 );
 
 -- and for fixed_internet???? is the same table, do 2 table or keep them united?
@@ -102,6 +107,7 @@ create table mobile_internet_services(
                                          extraFee        FLOAT not null,
                                          PRIMARY KEY(id),
                                          FOREIGN KEY (id) REFERENCES services (id)
+                                         ON DELETE CASCADE
 );
 
 create table fixed_internet_services(
@@ -110,6 +116,7 @@ create table fixed_internet_services(
                                          extraFee       FLOAT not null,
                                          PRIMARY KEY(id),
                                          FOREIGN KEY (id) REFERENCES services (id)
+                                         ON DELETE CASCADE
 );
 
 
@@ -138,30 +145,22 @@ create table Orders_OptionalProducts(
                                         orderId INT,
                                         productId INT,
 
-                                        FOREIGN KEY (orderId) REFERENCES Orders (id),
+                                        FOREIGN KEY (orderId) REFERENCES Orders (id)
+                                        on delete cascade,
                                         FOREIGN KEY (productId) REFERENCES OptionalProducts(id)
+                                        on delete cascade
 );
 
 select * from Orders;
 
 select * from Orders where status = false;
 
--- ELENCO POSSIBILI TRIGGER
--- quando si aggiorna un ordine si controlla se per quell'utente sono spariti tutti i "pending payment" in tal caso rimuove il flag "insolvenza"
--- creare un trigger che in automatico cerca il numero di pagamenti falliti e in caso marchia lutente come insolvente
--- possiamo creare un trigger per aggiornare in automatico questa tabella
--- create table Activation_Schedule(
--- 	orderId 	INT,
---    DeactivationDate
--- );
--- populate with trigger
-
 create table FailedPayments(
                                userId 	   INT,
                                orderId     INT,
                                faildate    datetime DEFAULT CURRENT_TIMESTAMP,
                                FOREIGN KEY (userId) REFERENCES Users (id),
-                               FOREIGN KEY (orderId) REFERENCES Orders (id)
+                               FOREIGN KEY (orderId) REFERENCES Orders (id) 
 );
 
 

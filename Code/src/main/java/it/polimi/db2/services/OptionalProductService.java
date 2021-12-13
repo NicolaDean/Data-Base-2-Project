@@ -58,7 +58,6 @@ public class OptionalProductService extends BasicService{
                     throw new ElementNotFound("No Optional product");
                 }
             }
-
         }
         return products;
     }

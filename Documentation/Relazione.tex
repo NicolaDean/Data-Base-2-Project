@@ -678,7 +678,8 @@ public class RateCost {
     int id;
     int monthValidity;
     int cost;
-    int packageId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "packageId")
 \end{lstlisting}
 
 \paragraph{Service}
@@ -691,7 +692,9 @@ public class Service {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     int id;
-    int packageId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "packageId")
+    Package packageId;
     @Column(name = "DTYPE")
     String type;
 \end{lstlisting}
@@ -728,11 +731,11 @@ public class Package {
     String  name;
 
 
-    @OneToMany
+    @OneToMany(cascade=CascadeType.PERSIST)
     @JoinColumn(name = "packageId")
     List<Service> services;
 
-    @OneToMany
+    @OneToMany(cascade=CascadeType.PERSIST)
     @JoinColumn(name = "packageId")
     List<RateCost> rates;
 
@@ -741,7 +744,7 @@ public class Package {
             schema = "test",
             joinColumns = @JoinColumn(name = "packageId"),
             inverseJoinColumns = @JoinColumn(name = "productId"))
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.PERSIST)
     List<OptionalProduct> products;
 \end{lstlisting}
 

@@ -10,20 +10,18 @@ public class Service {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     int id;
-    int packageId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "packageId")
+    Package packageId;
     @Column(name = "DTYPE")
     String type;
-
-    /*@ManyToOne
-    @JoinColumn(name="packageId", nullable=false)
-    private Package p;*/
 
     public Service()
     {
 
     }
 
-    public void setPackageId(int packageId) {
+    public void setPackageId(Package packageId) {
         this.packageId = packageId;
     }
 

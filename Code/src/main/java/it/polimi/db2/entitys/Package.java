@@ -13,11 +13,11 @@ public class Package {
     String  name;
 
 
-    @OneToMany
+    @OneToMany(cascade=CascadeType.PERSIST)
     @JoinColumn(name = "packageId")
     List<Service> services;
 
-    @OneToMany
+    @OneToMany(cascade=CascadeType.PERSIST)
     @JoinColumn(name = "packageId")
     List<RateCost> rates;
 
@@ -26,7 +26,7 @@ public class Package {
             schema = "test",
             joinColumns = @JoinColumn(name = "packageId"),
             inverseJoinColumns = @JoinColumn(name = "productId"))
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.PERSIST)
     List<OptionalProduct> products;
 
     public int getId() {
@@ -56,8 +56,10 @@ public class Package {
         this.name = name;
     }
 
-    public void setRates(List<RateCost> rates) {
-        this.rates = rates;
+    public void setRates(List<RateCost> newrates) {
+
+        for(int i=0;i<newrates.size();i++) newrates.get(i).setPackageId(this);
+        this.rates = newrates;
     }
 
     public void setProducts(List<OptionalProduct> products) {
@@ -65,6 +67,7 @@ public class Package {
     }
 
     public void setServices(List<Service> services) {
+        for(int i=0;i<services.size();i++)services.get(i).setPackageId(this);
         this.services = services;
     }
 }
