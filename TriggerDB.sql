@@ -320,7 +320,7 @@ create trigger ActivationScheduleServices
         set validity := (select monthValidity from Rate_costs where id = new.rateId);
         
 		insert into ActivationSchedule_Services (packageId,userId,activationdate,deactivationDate)
-				values (new.id,new.userId,new.startDate,DATE_ADD(new.startDate, INTERVAL validity MONTH));
+				values (new.packageId,new.userId,new.startDate,DATE_ADD(new.startDate, INTERVAL validity MONTH));
     end if;
     END $$
     
@@ -359,7 +359,7 @@ create trigger ActivationSchedule_OnUpdate
         
         -- update services activation
        insert into ActivationSchedule_Services (packageId,userId,activationdate,deactivationDate)
-				values (new.id,new.userId,new.startDate,DATE_ADD(new.startDate, INTERVAL validity MONTH));
+				values (new.packageId,new.userId,new.startDate,DATE_ADD(new.startDate, INTERVAL validity MONTH));
 		-- update optional activation
 	   insert into ActivationSchedule_Optional (productId,userId,activationdate,deactivationDate)
 				select id,new.userId,new.startDate,DATE_ADD(new.startDate, INTERVAL validity MONTH) 

@@ -13,7 +13,7 @@ drop table if exists Packages_OptionalProducts;
 drop table if exists Users;
 create table Users(
                       id 		INT AUTO_INCREMENT,
-                      username   VARCHAR(30) not null UNIQUE,
+                      username  VARCHAR(30) not null UNIQUE,
                       password	VARCHAR(30) not null,
                       email		VARCHAR(30) not null  UNIQUE,
                       type      varchar(30) not null,
@@ -40,7 +40,7 @@ drop table if exists Rate_costs;
 drop table if exists Packages;
 
 create table Packages(
-                         id 				INT AUTO_INCREMENT,
+                         id 			INT AUTO_INCREMENT,
                          name			VARCHAR(30) not null,
                          PRIMARY KEY(id)
 );
@@ -163,4 +163,4 @@ create table FailedPayments(
                                FOREIGN KEY (orderId) REFERENCES Orders (id) 
 );
 
-
+select * from Packages;
