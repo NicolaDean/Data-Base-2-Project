@@ -2,7 +2,7 @@
 insert into Users (username,password,email,type) values ("nico","1234","nico@gmail.com","user");
 insert into Users (username,password,email,type) values ("fasa","1234","fasa@gmail.com","user");
 insert into Users (username,password,email,type) values ("babbano","1234","babbano@gmail.com","user");
-insert into Users (username,password,email,type) values ("admin","1234","fasa@gmail.com","admin");
+insert into Users (username,password,email,type) values ("admin","1234","admin@gmail.com","admin");
 
 insert into Packages (name) values ("Basic");
 insert into Packages (name) values ("Family");
