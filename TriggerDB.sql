@@ -331,21 +331,21 @@ create  trigger ActivationScheduleOptional
     begin
     declare usr INT;
     declare actDate timestamp;
-    declare rateId int;
-    declare validity int;
+    declare deacDate timestamp;
+    declare v int;
+    declare stat  bool;
     
-	declare stat  bool;
-	set stat    := (select status from Orders where id=new.orderId);
+    set stat    := (select status from Orders where id=new.orderId);
 
 	if stat = 1 then
 		set usr      := (select userId  from Orders where id = new.orderId);
+        set v := (select r.monthValidity from Rate_costs as r where id in (select rateId from Orders as o where o.id=new.orderId));
 		set actDate  := (select startDate from Orders where id=new.orderId);
-		set rateId   := (select rateId from Orders where id = new.orderId);
-		set validity := (select monthValidity from Rate_costs where id = rateId);
-			
+        set deacDate := DATE_ADD(actDate,INTERVAL v MONTH);
+        
         if(new.productId is not null) then    
 		insert into ActivationSchedule_Optional (productId,userId,activationdate,deactivationDate)
-				values (new.productId, usr , actDate, DATE_ADD(actDate,INTERVAL validity MONTH));
+				values (new.productId, usr , actDate,deacDate );
 		end if;
     end if;
     END $$
@@ -384,5 +384,6 @@ select * from InsolventReport;
 select * from ActivationSchedule_Optional;
 select * from ActivationSchedule_Services;
 
-
+(select monthValidity from Rate_costs where id in (select rateId from Orders where id=3));	
+       
 select 1,id,CURRENT_TIMESTAMP,DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 12 MONTH) from services as s where s.packageId = 2;

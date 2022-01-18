@@ -634,6 +634,75 @@ create trigger UpdateInsolventUser
         end if;
     END$$
 \end{lstlisting}
+\subparagraph{ActivationScheduleServices}
+When a user pay for an order at the first try then add an activation schedule for the selected package.
+
+\begin{lstlisting}
+create trigger ActivationScheduleServices
+	after insert on Orders
+	for each row
+	begin
+    declare validity int;
+    if new.status = true then
+        set validity := (select monthValidity from Rate_costs where id = new.rateId);
+        
+		insert into ActivationSchedule_Services (packageId,userId,activationdate,deactivationDate)
+				values (new.packageId,new.userId,new.startDate,DATE_ADD(new.startDate, INTERVAL validity MONTH));
+    end if;
+    END $$
+\end{lstlisting}
+\subparagraph{ActivationScheduleOptional}
+When a user pay for an order at the first try then for each of the optional product inside the order it is created an activation schedule.
+\begin{lstlisting}
+create  trigger ActivationScheduleOptional
+	after insert on Orders_OptionalProducts
+    for each row
+    begin
+    declare usr INT;
+    declare actDate timestamp;
+    declare deacDate timestamp;
+    declare v int;
+    declare stat  bool;
+    
+    set stat    := (select status from Orders where id=new.orderId);
+
+	if stat = 1 then
+		set usr      := (select userId  from Orders where id = new.orderId);
+        set v := (select r.monthValidity from Rate_costs as r where id in (select rateId from Orders as o where o.id=new.orderId));
+		set actDate  := (select startDate from Orders where id=new.orderId);
+        set deacDate := DATE_ADD(actDate,INTERVAL v MONTH);
+        
+        if(new.productId is not null) then    
+		insert into ActivationSchedule_Optional (productId,userId,activationdate,deactivationDate)
+				values (new.productId, usr , actDate,deacDate );
+		end if;
+    end if;
+    END $$
+\end{lstlisting}
+\subparagraph{ActivationSchedule_OnUpdate}
+When a user pay for a PENDING order then we add an activation schedule both for Package and all optional Products all with this trigger.
+\begin{lstlisting}
+
+create trigger ActivationSchedule_OnUpdate
+	after update on Orders
+    for each row
+    begin
+	declare validity int;
+    if new.status = true then
+        set validity := (select monthValidity from Rate_costs where id = new.rateId);
+        
+        -- update services activation
+       insert into ActivationSchedule_Services (packageId,userId,activationdate,deactivationDate)
+				values (new.packageId,new.userId,new.startDate,DATE_ADD(new.startDate, INTERVAL validity MONTH));
+		-- update optional activation
+	   insert into ActivationSchedule_Optional (productId,userId,activationdate,deactivationDate)
+				select id,new.userId,new.startDate,DATE_ADD(new.startDate, INTERVAL validity MONTH) 
+						from OptionalProducts join Orders_OptionalProducts on id = productId
+                        where orderId = new.id;
+        end if;
+    END$$
+\end{lstlisting}
+
 \newpage
 
 \section{ORM Description}
