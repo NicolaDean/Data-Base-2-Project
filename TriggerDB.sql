@@ -275,12 +275,13 @@ create trigger UpdateBestOptional_OnUpdate
          declare revenue     INT;
          declare validity  INT;
 		 declare count  INT;
+         set validity  := (select monthValidity from Rate_costs where id=(select rateId from Orders where id=new.id));
 		if new.status = 1 then
 			 SET SQL_SAFE_UPDATES=0;    
 				update OptionalProductBestSeller as best join OptionalProducts as op
 									on best.name = op.name
 									set amountSold = amountSold + 1,
-									value = (amountSold + 1) * op.monthlyFee
+									value = value + op.monthlyFee * validity
 									where op.name in (select op1.name from OptionalProducts as op1 join Orders_OptionalProducts as ord
 													on id = productId where ord.orderId =new.id);
 				SET SQL_SAFE_UPDATES=1;    

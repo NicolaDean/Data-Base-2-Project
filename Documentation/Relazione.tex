@@ -92,8 +92,11 @@ This document describes design and implementation of Data Base 2 Project
 % \label is a hyperlink target for cross-referencing to this section using \ref{intro} (optional).
 A telco company offers pre-paid online services to web users. Two client applications using the same database have been developed: a costumer application and an employee application.
 \subsection{Extra hypotesis}
-A Service Package can have more than one Services of the same type (i.e. two fixed phones or different kind of mobile phones).
-
+\begin{itemize}
+	\item A Service Package can have more than one Services of the same type (i.e. two fixed phones or different kind of mobile phones).
+	\item A new Optional product can be associated only to new Packages (during creation stage)
+	\item If a user solve and insolvency then it is removed from Insolvent user table (and same for the suspended order)
+\end{itemize}
 \section{Diagrams and Schemas}
 
 \subsection{SQL DDL}
@@ -589,12 +592,13 @@ Same as UpdateBestOptional but with a unique query for all product associated wi
          declare revenue     INT;
          declare validity  INT;
 		 declare count  INT;
+		 set validity  := (select monthValidity from Rate_costs where id=(select rateId from Orders where id=new.id));
 		if new.status = 1 then
 			 SET SQL_SAFE_UPDATES=0;    
 				update OptionalProductBestSeller as best join OptionalProducts as op
 									on best.name = op.name
 									set amountSold = amountSold + 1,
-									value = (amountSold +1 ) * op.monthlyFee
+									value = value + op.monthlyFee * validity
 									where op.name in (select op1.name from OptionalProducts as op1 join Orders_OptionalProducts as ord
 													on id = productId where ord.orderId =new.id);
 				SET SQL_SAFE_UPDATES=1;    

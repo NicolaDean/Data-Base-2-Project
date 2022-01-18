@@ -15,8 +15,6 @@ import java.io.IOException;
 @WebServlet(name = "create-product", value = "/create-product")
 public class CreateProduct extends BasicServerlet{
 
-    @EJB(name="it.polimi.db2.services/PackageService")
-    private PackageService packageService;
 
     @EJB(name="it.polimi.db2.services/OptionalProductService")
     private OptionalProductService optionalProductService;
@@ -27,8 +25,7 @@ public class CreateProduct extends BasicServerlet{
 
         String name = null;
         int    fee  = 0;
-
-
+         //A NEW OPTIONAL PRODUCT CAN BE ASSIGNED ONLY TO NEW PACKAGES
         try {
             name = StringEscapeUtils.escapeJava(request.getParameter("name"));
             fee = Integer.parseInt(StringEscapeUtils.escapeJava(request.getParameter("monthFee")));

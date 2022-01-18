@@ -19,8 +19,6 @@ import java.util.List;
 public class PackageDetails extends BasicServerlet{
     @EJB(name="it.polimi.db2.services/PackageService")
     private PackageService packageService;
-    @EJB(name = "it.polimi.db2.services/ContractServices")
-    private ContractServices contractServices;
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {

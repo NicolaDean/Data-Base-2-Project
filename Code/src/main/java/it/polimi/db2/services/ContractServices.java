@@ -14,6 +14,7 @@ import java.util.List;
 @Stateless
 public class ContractServices extends BasicService{
 
+    //3 + N transactions (N is the number of optionals)
     @EJB(name="it.polimi.db2.services/PackageService")
     private PackageService packageService;
 

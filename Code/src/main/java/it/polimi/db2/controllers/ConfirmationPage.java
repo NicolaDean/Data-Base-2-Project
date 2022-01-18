@@ -49,6 +49,9 @@ public class ConfirmationPage extends BasicServerlet {
         Date startingDate = null;
         try {
             startingDate = new SimpleDateFormat("yyyy-MM-dd").parse(rawData);
+
+            //if(startingDate.before((new Date())))
+            //   throw new Exception("Not valid date");
         } catch (ParseException e) {
             e.printStackTrace();
 
@@ -59,6 +62,8 @@ public class ConfirmationPage extends BasicServerlet {
             }
             this.setError(request,response,"Invalid Date",TemplatePathManager.packageDetails);
             return;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         if(startingDate == null){

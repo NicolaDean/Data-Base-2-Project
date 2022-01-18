@@ -92,7 +92,7 @@ public class CreatePackage extends BasicServerlet {
             services = this.createMobileInternetServicesFromForm(services,MIS_Gb,MIS_extraGb,MIS_type);
             services = this.createFixedPhoneServiceFromForm(services,FPS);
 
-            //Persist
+            //Persist ( 1 transaction for persistance and N product select transaction)
             packageService.persistPackage(name,optionals,rateCosts,services);
             response.sendRedirect("admin");
         }catch (MissingFormData e)
@@ -127,7 +127,6 @@ public class CreatePackage extends BasicServerlet {
     public List<RateCost> createRatesFromForms(String[] rate_validity, String[] rate_price) throws MissingFormData, NotValidRates {
         boolean flag = false;
 
-        //TODO check if the rates are valid (eg higher validity-> lower price)
         if(rate_price == null) flag = true;
         if(rate_validity == null) flag = true;
 
@@ -155,7 +154,7 @@ public class CreatePackage extends BasicServerlet {
 
         }
 
-
+        //CHECK RATES VALIDITY
         for(int i=0;i<rates.size();i++)
         {
             for(int j=0;j<rates.size();j++)

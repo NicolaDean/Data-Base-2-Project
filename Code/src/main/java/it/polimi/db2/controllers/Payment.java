@@ -21,8 +21,6 @@ public class Payment extends BasicServerlet {
 
     @EJB(name = "it.polimi.db2.services/ContractServices")
     private ContractServices contractServices;
-    @EJB(name = "it.polimi.db2.services/User")
-    private UserServices userServices;
 
 
     private Random random= new Random();
