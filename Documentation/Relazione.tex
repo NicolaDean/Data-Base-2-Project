@@ -95,7 +95,7 @@ A telco company offers pre-paid online services to web users. Two client applica
 \begin{itemize}
 	\item A Service Package can have more than one Services of the same type (i.e. two fixed phones or different kind of mobile phones).
 	\item A new Optional product can be associated only to new Packages (during creation stage)
-	\item If a user solve and insolvency then it is removed from Insolvent user table (and same for the suspended order)
+	\item If a user solve an insolvency then it is removed from Insolvent user table (and same for the suspended order)
 \end{itemize}
 \newpage
 \section{Diagrams and Schemas}
@@ -117,6 +117,8 @@ Then Services references to three different tables depending on the type of offe
 \caption{SQL DDL Services Details}
 \label{fig:services}
 \end{figure}
+
+\newpage
 \subsection{ER Diagram}
 In the image can be seen the ER diagram from which we have obtained the tables structure that is shown in next subsection.
 
@@ -125,17 +127,18 @@ In the image can be seen the ER diagram from which we have obtained the tables s
 \includegraphics[width=0.99\textwidth]{ER-Simplified.png}
 \caption{ER Diagram}
 \end{figure}
+\newpage
 \subsection{Database visual Schema}
-In this section is showed a detailed visualization of the table structure we developed, with all relations, primary and foreign keys.
+In this section is showed a detailed visualisation of the table structure we developed, with all relations, primary and foreign keys.
 
 \begin{figure}[hbt!]
 \centering
 \includegraphics[width=0.99\textwidth]{er2.png}
-\caption{ER Diagram}
+\caption{ER Diagram from Workbench}
 \end{figure}
-
-
 \newpage
+
+
 \section{SQL Description}
 
 Detailed description of SQL code used in the project.
@@ -215,7 +218,7 @@ create view ValueOfSalesDetailed as(
 \end{lstlisting}                                     
 
 
-In \emph{InsolventReport} are selected all Users with \emph{having count(*)>=3} of insolvent orders stored in \emph{FailedPayments}.
+In \emph{InsolventReport} are selected all Users with \emph{having count(*)\textgreater=3} of insolvent orders stored in \emph{FailedPayments}.
 \begin{lstlisting}
 create view InsolventReport as(
         select u.id as id,u.username as username,u.email as email,
